@@ -2,3 +2,5 @@
 Files related to MEJ projects
 
 Welcome to the MEJ repo! You can find data processing and analysis files here.
+
+Please contact us if you have any other questions.
