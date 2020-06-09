@@ -1,4 +1,4 @@
-# mapping-for-environmental-justice
+# Mapping for Environmental Justice
 
 Welcome to the Mapping for Environmental Justice(MEJ) repo! MEJ aims to create easy-to-use, publicly-available maps that paint a holistic picture of intersecting environmental, social, and health impacts experienced by communities across the US.
 
