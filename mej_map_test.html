@@ -43,7 +43,7 @@
     <div id="wraper-dropdown-selector">
       <select class="js-dropdown-selector">
         <option value="final_score" selected>Final score</option>
-        <option value="nonwhiteper">Non-white percentage</option>
+        <option value="nonwhitepe">Non-white percentage</option>
       </select>
     </div>
 
@@ -63,7 +63,7 @@
       // const query = 'SELECT * FROM colorado_sample';
       // const source = new carto.source.SQL(query);
       const source = new carto.source.Dataset('colorado_sample');
-      const style = new carto.style.CartoCSS(`
+      const layerStyle = new carto.style.CartoCSS(`
         #layer {
           polygon-fill: ramp([finalscore], (#ffc6c4, #ee919b, #cc607d, #9e3963, #672044), quantiles(5));
             ::outline {
@@ -74,23 +74,46 @@
         }
       `);
 
-      const layer = new carto.layer.Layer(source, style);
+      const layer = new carto.layer.Layer(source, layerStyle);
 
       client.addLayer(layer);
       client.getLeafletLayer().addTo(map);
 
       const selector = $(".js-dropdown-selector");
 
-      change sql query with dropdown value
+      //change sql query with dropdown value
       selector.on('change', function(e) {
         let value = e.target.value;
         console.log(value);
-        if (value == 'nonwhiteper') {
-          source.setQuery(`SELECT * FROM colorado_sample where pop_max > 5000000`);
-        } 
-        // else {
-        //   source.setQuery(`SELECT * FROM colorado_sample`);
-        // }
+        if (value == 'nonwhitepe') {
+          layerStyle.setContent(`
+            #layer {
+              polygon-fill: ramp([nonwhitepe], (#ffc6c4, #ee919b, #cc607d, #9e3963, #672044), quantiles(5));
+                ::outline {
+                  line-width: 1;
+                  line-color: #FFFFFF;
+                  line-opacity: 0.5;
+                }
+            }`)
+           .then(() => {
+             console.log('cartoCSS was updated');
+           })
+           .catch(() => {
+             console.error('Error updating the cartoCSS for the layer');
+           });
+        } else {
+          let cartoCSS = layer.getStyle();
+          // cartoCSS.setContent('
+          //   #layer {
+          //     polygon-fill: ramp([finalscore], (#ffc6c4, #ee919b, #cc607d, #9e3963, #672044), quantiles(5));
+          //       ::outline {
+          //         line-width: 1;
+          //         line-color: #FFFFFF;
+          //         line-opacity: 0.5;
+          //       }
+          //   }
+          // ');
+        }
       });
     </script>
   </body>
