@@ -48,7 +48,7 @@
 
     <script>
       const map = L.map('map').setView([40, -3], 2);
-      map.scrollWheelZoom.disable();
+      // map.scrollWheelZoom.disable();
 
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png', {
         maxZoom: 18
@@ -56,23 +56,32 @@
 
       const client = new carto.Client({
         apiKey: 'default_public',
-        username: 'cartojs-test'
+        username: 'tiffanyhuynh'
       });
 
-      const source = new carto.source.SQL(`
-        SELECT * FROM ne_10m_populated_places_simple
-      `);
+      const query = 'SELECT * FROM colorado_sample';
+      const source = new carto.source.Dataset(query, {
+        username: 'tiffanyhuynh',
+        apiKey: 'default_public'
+      });
       const style = new carto.style.CartoCSS(`
         #layer {
-          marker-width: ramp([pop_max], range(2,11), quantiles(7));
-          marker-fill: ramp([featurecla], cartocolor(Bold), category(7));
-          marker-opacity: 0.9;
-          marker-line-color: #FFFFFF;
-          marker-line-opacity: 0.7;
+          // marker-width: ramp([pop_max], range(2,11), (18.2, 34.7, 51.2, 67.7, 84.3), "<");
+          // marker-fill: ramp([featurecla], cartocolor(Bold), category(7));
+          // marker-opacity: 0.9;
+          // marker-line-color: #FFFFFF;
+          // marker-line-opacity: 0.7;
+          polygon-fill: ramp([finalscore], (#ffc6c4, #ee919b, #cc607d, #9e3963, #672044), (18.2, 34.7, 51.2, 67.7, 84.3), "<");
+            ::outline {
+              line-width: 1;
+              line-color: #FFFFFF;
+              line-opacity: 0.5;
+            }
         }
       `);
-      const layer = new carto.layer.Layer(source, style);
+      const layer = new carto.layer.Layer('final_score', source, style);
 
+      layer.addTo(map);
       client.addLayer(layer);
       client.getLeafletLayer().addTo(map);
 
