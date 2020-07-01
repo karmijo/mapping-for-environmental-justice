@@ -4,6 +4,8 @@
     <title>Dropdown + setQuery | CARTO.js</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700|Open+Sans:300,400,600" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
     <!-- Include jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!-- Include Leaflet -->
@@ -25,7 +27,7 @@
         padding: 0;
         margin: 0;
       }
-      #wraper-dropdown-selector {
+      #wrapper-dropdown-selector {
         position: absolute;
         top: 20px;
         right: 20px;
@@ -34,17 +36,34 @@
       .js-dropdown-selector {
         width: 160px;
       }
+      /* .legend {
+        line-height: 18px;
+        color: #555;
+      }
+      .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+      } */
     </style>
   </head>
   <body>
     <div id="map"></div>
 
     <!-- dropdown selector -->
-    <div id="wraper-dropdown-selector">
+    <div id="wrapper-dropdown-selector">
       <select class="js-dropdown-selector">
         <option value="final_score" selected>Final score</option>
         <option value="nonwhitepe">Non-white percentage</option>
       </select>
+    </div>
+
+    <div id="legend">
+      <h1>Legend</h1>
+      <div id="legend-content">
+      </div>
     </div>
 
     <script>
@@ -74,7 +93,9 @@
         }
       `);
 
-      const layer = new carto.layer.Layer(source, layerStyle);
+      const layer = new carto.layer.Layer(source, layerStyle, {
+        featureOverColumns: ['geoid', 'nonwhitepe', 'finalscore']
+      });
 
       client.addLayer(layer);
       client.getLeafletLayer().addTo(map);
@@ -102,19 +123,77 @@
              console.error('Error updating the cartoCSS for the layer');
            });
         } else {
-          let cartoCSS = layer.getStyle();
-          // cartoCSS.setContent('
-          //   #layer {
-          //     polygon-fill: ramp([finalscore], (#ffc6c4, #ee919b, #cc607d, #9e3963, #672044), quantiles(5));
-          //       ::outline {
-          //         line-width: 1;
-          //         line-color: #FFFFFF;
-          //         line-opacity: 0.5;
-          //       }
-          //   }
-          // ');
+          layerStyle.setContent(`
+            #layer {
+              polygon-fill: ramp([finalscore], (#ffc6c4, #ee919b, #cc607d, #9e3963, #672044), quantiles(5));
+                ::outline {
+                  line-width: 1;
+                  line-color: #FFFFFF;
+                  line-opacity: 0.5;
+                }
+            }`)
+           .then(() => {
+             console.log('cartoCSS was updated');
+           })
+           .catch(() => {
+             console.error('Error updating the cartoCSS for the layer');
+           });
         }
       });
-    </script>
+
+      // create popups
+      const popup = L.popup({closeButton: false});
+
+      function openPopup(featureEvent) {
+        let content = '<div class="widget">';
+
+        if (featureEvent.data.geoid) {
+          content += '<h2 class="h2">$featureEvent.data.name}</h2>';
+        }
+
+        if (featureEvent.data.nonwhitepe || featureEvent.data.finalscore) {
+          content += '<ul>';
+
+          if (featureEvent.data.nonwhitepe) {
+            content += `<li><h3>Non-white Perc:</h3><p class="open-sans">${featureEvent.data.nonwhitepe}</p></li>`;
+          }
+
+          if (featureEvent.data.finalscore) {
+            content += `<li><h3>Final Score:</h3><p class="open-sans">${featureEvent.data.finalscore}</p></li>`;
+          }
+
+          content += '</ul>';
+        }
+        content += '/div>';
+        popup.setContent(content);
+        popup.setLatLng(featureEvent.latLng);
+        if (!popup.isOpen()) {
+          popup.openOn(map);
+        }
+      }
+
+      layer.on('featureOver', openPopup);
+      layer.on('featureOut', closePopup);
+
+      // var legend = L.control({position: 'bottomright'});
+      //
+      // legend.onAdd = function (map) {
+      //
+      //     var div = L.DomUtil.create('div', 'info legend'),
+      //         grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+      //         labels = [];
+      //
+      //     // loop through our density intervals and generate a label with a colored square for each interval
+      //     for (var i = 0; i < grades.length; i++) {
+      //         div.innerHTML +=
+      //             '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+      //             grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+      //     }
+      //
+      //     return div;
+      // };
+      //
+      // legend.addTo(map);
+  </script>
   </body>
 </html>
