@@ -142,13 +142,15 @@
       });
 
       // create popups
-      const popup = L.popup({closeButton: false});
+      const popup = L.popup({closeButton: true});
 
       function openPopup(featureEvent) {
         let content = '<div class="widget">';
 
+        // <h2 class="open-sans">${featureEvent.data.geoid}</h2>'
+
         if (featureEvent.data.geoid) {
-          content += '<h2 class="h2">$featureEvent.data.name}</h2>';
+          content += `<h2 class="open-sans">${featureEvent.data.geoid}</h2>`;
         }
 
         if (featureEvent.data.nonwhitepe || featureEvent.data.finalscore) {
@@ -172,8 +174,8 @@
         }
       }
 
-      layer.on('featureOver', openPopup);
-      layer.on('featureOut', closePopup);
+      layer.off('featureOut');
+      layer.on('featureClicked', openPopup);
 
       // var legend = L.control({position: 'bottomright'});
       //
