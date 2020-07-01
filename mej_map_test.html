@@ -154,7 +154,7 @@
         }
 
         if (featureEvent.data.nonwhitepe || featureEvent.data.finalscore) {
-          content += '<ul>';
+          content += '<ul style="list-style-type:none; padding-left:0">';
 
           if (featureEvent.data.nonwhitepe) {
             content += `<li><h3>Non-white Perc:</h3><p class="open-sans">${featureEvent.data.nonwhitepe}</p></li>`;
