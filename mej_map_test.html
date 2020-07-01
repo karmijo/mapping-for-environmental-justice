@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Dropdown + setQuery | CARTO.js</title>
+    <title>MEJ Colorado</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700|Open+Sans:300,400,600" rel="stylesheet">
@@ -14,6 +14,7 @@
     <!-- Include CARTO.js -->
     <script src="https://libs.cartocdn.com/carto.js/v4.0.8/carto.min.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css" rel="stylesheet">
+
     <style type="text/css">
       html,
       body {
@@ -49,6 +50,7 @@
       } */
     </style>
   </head>
+
   <body>
     <div id="map"></div>
 
@@ -102,7 +104,7 @@
 
       const selector = $(".js-dropdown-selector");
 
-      //change sql query with dropdown value
+      //change content styling with dropdown value
       selector.on('change', function(e) {
         let value = e.target.value;
         console.log(value);
@@ -174,6 +176,7 @@
         }
       }
 
+      //click-on popup (can change to hover too)
       layer.off('featureOut');
       layer.on('featureClicked', openPopup);
 
