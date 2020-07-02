@@ -72,8 +72,15 @@
       const map = L.map('map').setView([39.019715, -105.765333], 7);
       // map.scrollWheelZoom.disable();
 
+      //basemap
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png', {
         maxZoom: 18
+      }).addTo(map);
+
+      // Adding Voyager Labels
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        zIndex: 10
       }).addTo(map);
 
       const client = new carto.Client({
