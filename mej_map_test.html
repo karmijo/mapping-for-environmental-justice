@@ -37,17 +37,42 @@
       .js-dropdown-selector {
         width: 160px;
       }
-      /* .legend {
-        line-height: 18px;
-        color: #555;
-      }
-      .legend i {
-        width: 18px;
-        height: 18px;
-        float: left;
-        margin-right: 8px;
+      #legend {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        height: auto;
+        width: auto;
+        padding: 20px 24px;
+        background: white;
+        box-shadow: 0 0 16px rgba(0, 0, 0, 0.12);
+        border-radius: 4px;
         opacity: 0.7;
-      } */
+        z-index: 1;
+        display: block;
+        list-style-type: none;
+      }
+      #legend h1 {
+        font: 800 12px/16px 'Montserrat';
+        color: #2D3C43;
+      }
+      #legend h2 {
+        font: 600 12px/16px 'Open Sans';
+        color: #2D3C43;
+        margin-bottom: 12px;
+      }
+      #legend li {
+        width: 40px;
+        height: 40px;
+        opacity: 0.9;
+        margin-bottom: 6px;
+      }
+      #legend-content span {
+        display: inline-block;
+        font: 500 12px/16px 'Open Sans';
+        color: #2D3C43;
+        margin-bottom: 6px;
+      }
     </style>
   </head>
 
@@ -62,8 +87,9 @@
       </select>
     </div>
 
+    <!-- legend -->
     <div id="legend">
-      <h1>Legend</h1>
+      <h1 id="legend_title">Final Score</h1>
       <div id="legend-content">
       </div>
     </div>
@@ -109,6 +135,8 @@
       client.addLayer(layer);
       client.getLeafletLayer().addTo(map);
 
+/////////////////////////// change layers with dropdown ///////////////////////////////
+
       const selector = $(".js-dropdown-selector");
 
       //change content styling with dropdown value
@@ -150,6 +178,8 @@
         }
       });
 
+/////////////////////////// popups ///////////////////////////////
+
       // create popups
       const popup = L.popup({closeButton: true});
 
@@ -187,25 +217,40 @@
       layer.off('featureOut');
       layer.on('featureClicked', openPopup);
 
-      // var legend = L.control({position: 'bottomright'});
+/////////////////////////// change legend ///////////////////////////////
+
+      // // change legend when data classification method changes
       //
-      // legend.onAdd = function (map) {
+      // //should this be var?
+      // const legend = $("legend-content");
       //
-      //     var div = L.DomUtil.create('div', 'info legend'),
-      //         grades = [0, 10, 20, 50, 100, 200, 500, 1000], // OOOH MAYBE can use sql query to get buckets
-      //         labels = [];
+      // //should this be var?
+      // const mins = [], maxs = [], colors = [];
+      // layer.on('load', function(event){
       //
-      //     // loop through our density intervals and generate a label with a colored square for each interval
-      //     for (var i = 0; i < grades.length; i++) {
-      //         div.innerHTML +=
-      //             '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-      //             grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-      //     }
+      //   // clear previous legend
+      //   colors.length = 0;
+      //   maxs.length = 0;
+      //   mins.length = 0;
+      //   legend.empty();
       //
-      //     return div;
-      // };
+      //   // get buckets
+      //   // const buckets = event.styles[0]._buckets;
+      //   const buckets = layer.metadata.Buckets;
       //
-      // legend.addTo(map);
+      //   // populate mins, maxs and colors array
+      //   for (bucket of buckets){
+      //     mins.push(bucket.min.toFixed(2));
+      //     maxs.push(bucket.max.toFixed(2));
+      //     colors.push(bucket.value);
+      //   }
+      //
+      //   // append colors and ranges to the legend
+      //   $(colors).each(function(i, e) {
+      //     legend.append('<li style="background: $colors[i]}"></li><span>${mins[i]} - ${maxs[i]}</span>');
+      //   });
+      //   }
+      // // window.onload = main;
   </script>
   </body>
 </html>
