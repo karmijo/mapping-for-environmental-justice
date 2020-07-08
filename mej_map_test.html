@@ -353,15 +353,15 @@
 
       //should this be var?
       var legend  = L.control({position: 'bottomright'})
-      var mins = [], maxs = [], colors = [];
+      // var mins = [], maxs = [], colors = [];
       layer.on('metadataChanged', function(event){
 
         console.log(event.styles[0]._buckets); //array of buckets
 
         // clear previous legend
-        colors.length = 0;
-        maxs.length = 0;
-        mins.length = 0;
+        // colors.length = 0;
+        // maxs.length = 0;
+        // mins.length = 0;
         // legend.empty();
 
         // get buckets
@@ -371,16 +371,16 @@
 
         // populate mins, maxs and colors array
         // for (bucket of buckets){
-        var min = 0;
-        var max = 0;
-        for (bucket in buckets) {
-          console.log(parseFloat(bucket.min).toFixed(2));
-          min = parseFloat(bucket.min).toFixed(2); //var > string, so need to parse to float
-          max = parseFloat(bucket.max).toFixed(2);
-          mins.push(min);
-          maxs.push(max);
-          colors.push(bucket.value);
-        };
+        // var min = 0;
+        // var max = 0;
+        // for (bucket in buckets) {
+        //   console.log(parseFloat(bucket.min).toFixed(2));
+        //   min = parseFloat(bucket.min).toFixed(2); //var > string, so need to parse to float
+        //   max = parseFloat(bucket.max).toFixed(2);
+        //   mins.push(min);
+        //   maxs.push(max);
+        //   colors.push(bucket.value);
+        // };
 
         legend.onAdd = function (map) {
           var div = L.DomUtil.create('div', 'info legend');
