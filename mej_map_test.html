@@ -17,6 +17,7 @@
     <!--Geocoder-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
     <style type="text/css">
       html,
       body {
@@ -177,19 +178,19 @@
           content += `<h2 class="open-sans">${featureEvent.data.geoid}</h2>`;
         }
 
-        if (featureEvent.data.nonwhitepe || featureEvent.data.finalscore) {
+        if (featureEvent.data.nonwhitepe || featureEvent.data.finalscore.toFixed(2)) {
           content += '<ul style="list-style-type:none; padding-left:0">';
 
           if (featureEvent.data.nonwhitepe) {
-            content += `<li><h3><a href="https://www.ocf.berkeley.edu/~ejmp/about-our-map/" target="_blank">Non-white Perc:</a></h3><p class="open-sans">${featureEvent.data.nonwhitepe}</p></li>`;
+            content += `<li><h3><a href="https://www.ocf.berkeley.edu/~ejmp/about-our-map/" target="_blank">Non-white Perc:</a></h3><p class="open-sans">${featureEvent.data.nonwhitepe.toFixed(2)}</p></li>`;
           }
 
           if (featureEvent.data.finalscore) {
-            content += `<li><h3>Final Score:</h3><p class="open-sans">${featureEvent.data.finalscore}</p></li>`;
+            content += `<li><h3>Final Score:</h3><p class="open-sans">${featureEvent.data.finalscore.toFixed(2)}</p></li>`;
           }
 
           if (featureEvent.data.final_rank) {
-            content += `<li><h3>Percentile:</h3><p class="open-sans">${featureEvent.data.final_rank}</p></li>`;
+            content += `<li><h3>Percentile:</h3><p class="open-sans">${featureEvent.data.final_rank.toFixed(2)}</p></li>`;
           }
 
           content += '</ul>';
