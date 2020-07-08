@@ -39,52 +39,16 @@
       .js-dropdown-selector {
         width: 160px;
       }
-      /* #legend {
-        position: absolute;
-        bottom: 12px;
-        left: 12px;
-        height: auto;
-        width: auto;
-        padding: 20px 24px;
-        background: white;
-        box-shadow: 0 0 16px rgba(0, 0, 0, 0.12);
-        border-radius: 4px;
-        opacity: 0.7;
-        z-index: 1000;
-        display: block;
-        list-style-type: none;
-      }
-      #legend h1 {
-        font: 800 12px/16px 'Montserrat';
-        color: #2D3C43;
-      }
-      #legend h2 {
-        font: 600 12px/16px 'Open Sans';
-        color: #2D3C43;
-        margin-bottom: 12px;
-      }
-      #legend li {
-        width: 40px;
-        height: 40px;
-        opacity: 0.9;
-        margin-bottom: 6px;
-      }
-      #legend-content span {
-        display: inline-block;
-        font: 500 12px/16px 'Open Sans';
-        color: #2D3C43;
-        margin-bottom: 6px;
-      } */
       .legend {
         line-height: 18px;
         color: #555;
       }
       .legend i {
-          width: 18px;
-          height: 18px;
-          float: left;
-          margin-right: 8px;
-          opacity: 0.7;
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
       }
       .info {
         padding: 6px 8px;
@@ -95,8 +59,8 @@
         border-radius: 5px;
       }
       .info h4 {
-          /* margin: 0 0 5px; */
-          color: #777;
+        /* margin: 0 0 5px; */
+        color: #777;
       }
     </style>
   </head>
@@ -111,13 +75,6 @@
         <option value="nonwhitepe">Non-white percentage</option>
       </select>
     </div>
-
-    <!-- legend -->
-    <!-- <div id="legend">
-      <h1 id="legend_title">Final Score</h1>
-      <div id="legend-content">
-      </div>
-    </div> -->
 
     <script>
       const map = L.map('map').setView([39.019715, -105.765333], 7); // set to focus on CO
@@ -249,138 +206,17 @@
       layer.off('featureOut');
       layer.on('featureClicked', openPopup);
 
-/////////////////////////// change legend ///////////////////////////////
+///////////////////////////// add/change legend ///////////////////////////////
 
-      // // change legend when data classification method changes
-      //
-      // //should this be var?
-      // var legend = $("legend-content");
-      // // console.log(layer.metadata.getBuckets());
-      //
-      // //should this be var?
-      // var mins = [], maxs = [], colors = [];
-      // layer.on('metadataChanged', function(event){
-      //
-      //   console.log(event.styles[0]._buckets); //array of buckets
-      //
-      //   // clear previous legend
-      //   colors.length = 0;
-      //   maxs.length = 0;
-      //   mins.length = 0;
-      //   legend.empty();
-      //
-      //   // get buckets
-      //   var buckets = event.styles[0]._buckets;
-      //   // var buckets = event.getBuckets(); //list of Bucket objects
-      //   //each Bucket has props: min, max, and value (which here is the color string code)
-      //
-      //   // populate mins, maxs and colors array
-      //   // for (bucket of buckets){
-      //   for (bucket in buckets) {
-      //     mins.push(bucket.min);
-      //     maxs.push(bucket.max);
-      //     colors.push(bucket.value);
-      //   };
-      //
-      //   // append colors and ranges to the legend
-        // $(colors).each(function(i, e){
-        //   $('legend-content').html(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
-        //   // legend.append(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
-        // });
-      // });
-      // // window.onload = main;
-
-///////// ///////////// try out new////
-
-      // // change legend when data classification method changes
-      //
-      // //should this be var?
-      // var legend = L.control({position: 'bottomright'});
-      // console.log(layer.metadata.Base.getBuckets());
-      //
-      // //should this be var?
-      // var mins = [], maxs = [], colors = [];
-      // function addLegend(event) {
-      //
-      //   // console.log(event.styles[0]._buckets); //array of buckets
-      //
-      //   // clear previous legend
-      //   colors.length = 0;
-      //   maxs.length = 0;
-      //   mins.length = 0;
-      //   // legend.empty();
-      //
-      //   // get buckets
-      //   var buckets = event.styles[0]._buckets;
-      //   // var buckets = event.getBuckets(); //list of Bucket objects
-      //   //each Bucket has props: min, max, and value (which here is the color string code)
-      //
-      //   // populate mins, maxs and colors array
-      //   // for (bucket of buckets){
-      //   // for (bucket in buckets) {
-      //   //   mins.push(bucket.min);
-      //   //   maxs.push(bucket.max);
-      //   //   colors.push(bucket.value);
-      //   // };
-      //
-      //   var div = L.DomUtil.create('div', 'info legend');
-      //
-      //   for (var i = 0; i < 7; i++) {
-      //     div.innerHTML +=
-      //       `<i style="background: ${buckets[i].value}"></i> ${buckets[i].min} &ndash ${buckets[i].max}`;
-      //   }
-      //
-      //   layer.add(legend);
-      //
-      //   // append colors and ranges to the legend
-      //   // $(colors).each(function(i, e){
-      //   //   $('legend-content').html(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
-      //   //   // legend.append(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
-      //   // });
-      // };
-      //
-      // layer.on('metadataChanged', addLegend);
-      //
-      // // window.onload = main;
-
-///////////////////
-
-      // change legend when data classification method changes
-
-      //should this be var?
-      // var legend = $("legend-content");
-      // console.log(layer.metadata.getBuckets());
-
-      //should this be var?
       var legend  = L.control({position: 'bottomright'})
-      // var mins = [], maxs = [], colors = [];
+
       layer.on('metadataChanged', function(event){
 
-        console.log(event.styles[0]._buckets); //array of buckets
-
-        // clear previous legend
-        // colors.length = 0;
-        // maxs.length = 0;
-        // mins.length = 0;
-        // legend.empty();
+        console.log(event.styles[0]._buckets); //print array of buckets
 
         // get buckets
         var buckets = event.styles[0]._buckets;
-        // var buckets = event.getBuckets(); //list of Bucket objects
         //each Bucket has props: min, max, and value (which here is the color string code)
-
-        // populate mins, maxs and colors array
-        // for (bucket of buckets){
-        // var min = 0;
-        // var max = 0;
-        // for (bucket in buckets) {
-        //   console.log(parseFloat(bucket.min).toFixed(2));
-        //   min = parseFloat(bucket.min).toFixed(2); //var > string, so need to parse to float
-        //   max = parseFloat(bucket.max).toFixed(2);
-        //   mins.push(min);
-        //   maxs.push(max);
-        //   colors.push(bucket.value);
-        // };
 
         legend.onAdd = function (map) {
           var div = L.DomUtil.create('div', 'info legend');
@@ -391,15 +227,8 @@
           }
           return div;
         };
-
         legend.addTo(map);
-        // append colors and ranges to the legend
-        // $(colors).each(function(i, e){
-        //   $('legend-content').html(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
-        //   // legend.append(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
-        // });
       });
-      // window.onload = main;
   </script>
   </body>
 </html>
