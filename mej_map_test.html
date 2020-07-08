@@ -371,9 +371,13 @@
 
         // populate mins, maxs and colors array
         // for (bucket of buckets){
+        var min = 0;
+        var max = 0;
         for (bucket in buckets) {
-          mins.push(bucket.min);
-          maxs.push(bucket.max);
+          min = parseFloat(bucket.min).toFixed(2);
+          max = parseFloat(bucket.max).toFixed(2);
+          mins.push(min);
+          maxs.push(max);
           colors.push(bucket.value);
         };
 
@@ -382,7 +386,7 @@
 
           for (var i = 0; i < 7; i++) {
             div.innerHTML +=
-              `<i style="background: ${buckets[i].value}"></i> ${buckets[i].min} &ndash ${buckets[i].max}`;
+              `<ul><i style="background: ${buckets[i].value}"></i> <span>${buckets[i].min} - ${buckets[i].max}</span></ul>`;
           }
           return div;
         };
