@@ -387,7 +387,7 @@
 
           for (var i = 0; i < 7; i++) {
             div.innerHTML +=
-              `<ul><i style="background: ${buckets[i].value}"></i> <span>${buckets[i].min} - ${buckets[i].max}</span></ul>`;
+              `<ul><i style="background: ${buckets[i].value}"></i> <span>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</span></ul>`;
           }
           return div;
         };
