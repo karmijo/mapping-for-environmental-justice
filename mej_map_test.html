@@ -14,7 +14,9 @@
     <!-- Include CARTO.js -->
     <script src="https://libs.cartocdn.com/carto.js/v4.0.8/carto.min.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css" rel="stylesheet">
-
+    <!--Geocoder-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <style type="text/css">
       html,
       body {
@@ -37,7 +39,7 @@
       .js-dropdown-selector {
         width: 160px;
       }
-      #legend {
+      /* #legend {
         position: absolute;
         bottom: 12px;
         left: 12px;
@@ -48,7 +50,7 @@
         box-shadow: 0 0 16px rgba(0, 0, 0, 0.12);
         border-radius: 4px;
         opacity: 0.7;
-        z-index: 1;
+        z-index: 1000;
         display: block;
         list-style-type: none;
       }
@@ -72,6 +74,29 @@
         font: 500 12px/16px 'Open Sans';
         color: #2D3C43;
         margin-bottom: 6px;
+      } */
+      .legend {
+        line-height: 18px;
+        color: #555;
+      }
+      .legend i {
+          width: 18px;
+          height: 18px;
+          float: left;
+          margin-right: 8px;
+          opacity: 0.7;
+      }
+      .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+      }
+      .info h4 {
+          margin: 0 0 5px;
+          color: #777;
       }
     </style>
   </head>
@@ -88,14 +113,14 @@
     </div>
 
     <!-- legend -->
-    <div id="legend">
+    <!-- <div id="legend">
       <h1 id="legend_title">Final Score</h1>
       <div id="legend-content">
       </div>
-    </div>
+    </div> -->
 
     <script>
-      const map = L.map('map').setView([39.019715, -105.765333], 7);
+      const map = L.map('map').setView([39.019715, -105.765333], 7); // set to focus on CO
       // map.scrollWheelZoom.disable();
 
       //basemap
@@ -129,24 +154,27 @@
       `);
 
       const layer = new carto.layer.Layer(source, layerStyle, {
-        featureOverColumns: ['geoid', 'nonwhitepe', 'finalscore']
+        featureOverColumns: ['geoid', 'nonwhitepe', 'finalscore', 'final_rank']
       });
 
       client.addLayer(layer);
       client.getLeafletLayer().addTo(map);
 
-/////////////////////////// change layers with dropdown ///////////////////////////////
+      // Geocoder
+      // L.Control.geocoder({position: 'topleft'}).addTo(map);
+
+/////////////////////////// change layer styling with dropdown ///////////////////////////////
 
       const selector = $(".js-dropdown-selector");
 
       //change content styling with dropdown value
       selector.on('change', function(e) {
         let value = e.target.value;
-        console.log(value);
+        console.log(value); // view console through inspect function on the site
         if (value == 'nonwhitepe') {
           layerStyle.setContent(`
             #layer {
-              polygon-fill: ramp([nonwhitepe], (#c4e6c3, #96d2a4, #6dbc90, #4da284, #36877a, #266b6e, #1d4f60), quantiles(7));
+              polygon-fill: ramp([nonwhitepe], (#f3e0f7, #e4c7f1, #d1afe8, #b998dd, #9f82ce, #826dba, #63589f), quantiles(7));
                 ::outline {
                   line-width: 0.5;
                   line-color: #FFFFFF;
@@ -203,6 +231,10 @@
             content += `<li><h3>Final Score:</h3><p class="open-sans">${featureEvent.data.finalscore}</p></li>`;
           }
 
+          if (featureEvent.data.final_rank) {
+            content += `<li><h3>Percentile:</h3><p class="open-sans">${featureEvent.data.final_rank}</p></li>`;
+          }
+
           content += '</ul>';
         }
         content += '</ul>';
@@ -222,11 +254,14 @@
       // // change legend when data classification method changes
       //
       // //should this be var?
-      // const legend = $("legend-content");
+      // var legend = $("legend-content");
+      // // console.log(layer.metadata.getBuckets());
       //
       // //should this be var?
-      // const mins = [], maxs = [], colors = [];
-      // layer.on('load', function(event){
+      // var mins = [], maxs = [], colors = [];
+      // layer.on('metadataChanged', function(event){
+      //
+      //   console.log(event.styles[0]._buckets); //array of buckets
       //
       //   // clear previous legend
       //   colors.length = 0;
@@ -235,22 +270,131 @@
       //   legend.empty();
       //
       //   // get buckets
-      //   // const buckets = event.styles[0]._buckets;
-      //   const buckets = layer.metadata.Buckets;
+      //   var buckets = event.styles[0]._buckets;
+      //   // var buckets = event.getBuckets(); //list of Bucket objects
+      //   //each Bucket has props: min, max, and value (which here is the color string code)
       //
       //   // populate mins, maxs and colors array
-      //   for (bucket of buckets){
-      //     mins.push(bucket.min.toFixed(2));
-      //     maxs.push(bucket.max.toFixed(2));
+      //   // for (bucket of buckets){
+      //   for (bucket in buckets) {
+      //     mins.push(bucket.min);
+      //     maxs.push(bucket.max);
       //     colors.push(bucket.value);
-      //   }
+      //   };
       //
       //   // append colors and ranges to the legend
-      //   $(colors).each(function(i, e) {
-      //     legend.append('<li style="background: $colors[i]}"></li><span>${mins[i]} - ${maxs[i]}</span>');
-      //   });
-      //   }
+        // $(colors).each(function(i, e){
+        //   $('legend-content').html(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
+        //   // legend.append(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
+        // });
+      // });
       // // window.onload = main;
+
+///////// ///////////// try out new////
+
+      // // change legend when data classification method changes
+      //
+      // //should this be var?
+      // var legend = L.control({position: 'bottomright'});
+      // console.log(layer.metadata.Base.getBuckets());
+      //
+      // //should this be var?
+      // var mins = [], maxs = [], colors = [];
+      // function addLegend(event) {
+      //
+      //   // console.log(event.styles[0]._buckets); //array of buckets
+      //
+      //   // clear previous legend
+      //   colors.length = 0;
+      //   maxs.length = 0;
+      //   mins.length = 0;
+      //   // legend.empty();
+      //
+      //   // get buckets
+      //   var buckets = event.styles[0]._buckets;
+      //   // var buckets = event.getBuckets(); //list of Bucket objects
+      //   //each Bucket has props: min, max, and value (which here is the color string code)
+      //
+      //   // populate mins, maxs and colors array
+      //   // for (bucket of buckets){
+      //   // for (bucket in buckets) {
+      //   //   mins.push(bucket.min);
+      //   //   maxs.push(bucket.max);
+      //   //   colors.push(bucket.value);
+      //   // };
+      //
+      //   var div = L.DomUtil.create('div', 'info legend');
+      //
+      //   for (var i = 0; i < 7; i++) {
+      //     div.innerHTML +=
+      //       `<i style="background: ${buckets[i].value}"></i> ${buckets[i].min} &ndash ${buckets[i].max}`;
+      //   }
+      //
+      //   layer.add(legend);
+      //
+      //   // append colors and ranges to the legend
+      //   // $(colors).each(function(i, e){
+      //   //   $('legend-content').html(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
+      //   //   // legend.append(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
+      //   // });
+      // };
+      //
+      // layer.on('metadataChanged', addLegend);
+      //
+      // // window.onload = main;
+
+///////////////////
+
+      // change legend when data classification method changes
+
+      //should this be var?
+      // var legend = $("legend-content");
+      // console.log(layer.metadata.getBuckets());
+
+      //should this be var?
+      var legend  = L.control({position: 'bottomright'})
+      var mins = [], maxs = [], colors = [];
+      layer.on('metadataChanged', function(event){
+
+        console.log(event.styles[0]._buckets); //array of buckets
+
+        // clear previous legend
+        colors.length = 0;
+        maxs.length = 0;
+        mins.length = 0;
+        // legend.empty();
+
+        // get buckets
+        var buckets = event.styles[0]._buckets;
+        // var buckets = event.getBuckets(); //list of Bucket objects
+        //each Bucket has props: min, max, and value (which here is the color string code)
+
+        // populate mins, maxs and colors array
+        // for (bucket of buckets){
+        for (bucket in buckets) {
+          mins.push(bucket.min);
+          maxs.push(bucket.max);
+          colors.push(bucket.value);
+        };
+
+        legend.onAdd = function (map) {
+          var div = L.DomUtil.create('div', 'info legend');
+
+          for (var i = 0; i < 7; i++) {
+            div.innerHTML +=
+              `<i style="background: ${buckets[i].value}"></i> ${buckets[i].min} &ndash ${buckets[i].max}`;
+          }
+          return div;
+        };
+
+        legend.addTo(map);
+        // append colors and ranges to the legend
+        // $(colors).each(function(i, e){
+        //   $('legend-content').html(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
+        //   // legend.append(`<li style="background: ${colors[i]}"> </li><span>${mins[i]} - ${maxs[i]}</span>}`);
+        // });
+      });
+      // window.onload = main;
   </script>
   </body>
 </html>
