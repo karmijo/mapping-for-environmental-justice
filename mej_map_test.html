@@ -31,7 +31,7 @@
         padding: 0;
         margin: 0;
       }
-      .wrapper-dropdown-selector {
+      #wrapper-dropdown-selector {
         position: absolute;
         top: 20px;
         right: 20px;
@@ -186,7 +186,6 @@
         console.log(trying.indicator_name);
         console.log(typeof ind_dict['nonwhitepe']);
         var dropdown_html = '<select class="js-dropdown-selector">';
-        dropdown_html += '<option value="final_score" selected>Final score</option>'; //taken outside for loop because want final_score to be default selected
         for (var key in ind_dict) {
           var get_value = ind_dict[key];
           console.log(get_value);
