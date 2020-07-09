@@ -37,7 +37,7 @@
         right: 20px;
         z-index: 999;
       }
-      .js-dropdown-selector {
+      #js-dropdown-selector {
         width: 160px;
       }
       .legend {
@@ -71,6 +71,10 @@
 
     <!-- dropdown selector-->
     <div id="wrapper-dropdown-selector">
+      <select id="js-dropdown-selector">
+        <!-- <option value="final_score" selected>Final score</option>
+        <option value="nonwhitepe">Non white percentage</option> -->
+      </select>
     </div>
 
     <script>
@@ -177,43 +181,38 @@
       // });
 
       window.onload = function() {
-        console.log("hi");
         replace_dropdown();
       }
 
       function replace_dropdown() {
-        var trying = ind_dict['nonwhitepe'];
-        console.log(trying.indicator_name);
-        console.log(typeof ind_dict['nonwhitepe']);
-        var dropdown_html = '<select class="js-dropdown-selector">';
+        // var dropdown_html = '<select class="js-dropdown-selector">';
+        var dropdown_html = `<option value="finalscore" selected>Final score</option>`;
         for (var key in ind_dict) {
           var get_value = ind_dict[key];
-          console.log(get_value);
-          console.log(get_value.indicator_name);
-          if (key == 'finalscore') {
-            dropdown_html += `<option value="finalscore" selected>${get_value.indicator_name}</option>`;
-          } else {
+          if (key != 'finalscore') {
             dropdown_html += `<option value="${key}">${get_value.indicator_name}</option>`;
           }
         }
-        dropdown_html += '</select>';
-        document.getElementById("wrapper-dropdown-selector").innerHTML = dropdown_html;
-        console.log(dropdown_html);
+        // dropdown_html += '</select>';
+        document.getElementById("js-dropdown-selector").innerHTML = dropdown_html;
         console.log(document.getElementById("wrapper-dropdown-selector").innerHTML);
       }
 
 /////////////////////////// change layers using JSON data ////////
 
-      const selector = $(".js-dropdown-selector");
+      // const selector = $(".js-dropdown-selector");
 
+      // console.log(selector);
       //change content styling with dropdown values
-      selector.on('change', function(e) {
+      $("#js-dropdown-selector").on('change', function(e) {
+        console.log('hi');
         let value = e.target.value;
         console.log(value);
+        var returned_value = ind_dict[value];
         // consol.log(ind_dict['nonwhitepe']);
         layerStyle.setContent(`
           #layer {
-            polygon-fill: ramp([${ind_dict[value].indicator_col}], (${ind_dict[value].choropleth_colors}), quantiles(${ind_dict[value].num_quantiles}));
+            polygon-fill: ramp([${returned_value.indicator_col}], (${returned_value.choropleth_colors}), quantiles(${returned_value.num_quantiles}));
               ::outline {
                 line-width: 0.5;
                 line-color: #FFFFFF;
