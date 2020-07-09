@@ -31,7 +31,7 @@
         padding: 0;
         margin: 0;
       }
-      #wrapper-dropdown-selector {
+      .wrapper-dropdown-selector {
         position: absolute;
         top: 20px;
         right: 20px;
@@ -69,12 +69,8 @@
   <body>
     <div id="map"></div>
 
-    <!-- dropdown selector -->
+    <!-- dropdown selector-->
     <div id="wrapper-dropdown-selector">
-      <select class="js-dropdown-selector">
-        <option value="final_score" selected>Final score</option>
-        <option value="nonwhitepe">Non-white percentage</option>
-      </select>
     </div>
 
     <script>
@@ -123,68 +119,155 @@
 
 /////////////////////////// JSON for indicators data ///////////////////////////////
 
-      var indicators = [];
-      indicators.push({"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392", "#39b185", "#9ccb86", "#e9e29c", "#eeb479", "#e88471", "#cf597e"], "num_quantiles": 7});
-      indicators.push({"indicator_name" : "Non-white percentage", "indicator_col" : "nonwhitepe", "choropleth_colors":["#f3e0f7", "#e4c7f1", "#d1afe8", "#b998dd", "#9f82ce", "#826dba", "#63589f"], "num_quantiles": 7});
+      //try with dictionary
+      ind_dict = {'finalscore': {"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392", "#39b185", "#9ccb86", "#e9e29c", "#eeb479", "#e88471", "#cf597e"], "num_quantiles": 7},
+    'nonwhitepe': {"indicator_name" : "Non-white percentage", "indicator_col" : "nonwhitepe", "choropleth_colors":["#f3e0f7", "#e4c7f1", "#d1afe8", "#b998dd", "#9f82ce", "#826dba", "#63589f"], "num_quantiles": 7}};
 
-      var result = JSON.stringify(indicators); //double check
-      console.log(result);
+      // var indicators = [];
+      // indicators.push({"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392", "#39b185", "#9ccb86", "#e9e29c", "#eeb479", "#e88471", "#cf597e"], "num_quantiles": 7});
+      // indicators.push({"indicator_name" : "Non-white percentage", "indicator_col" : "nonwhitepe", "choropleth_colors":["#f3e0f7", "#e4c7f1", "#d1afe8", "#b998dd", "#9f82ce", "#826dba", "#63589f"], "num_quantiles": 7});
 
-      // document.getElementById('wrapper-dropdown-selector').innerHTML = '<select class="js-dropdown-selector"><option value="final_score" selected>Final score</option><option value="nonwhitepe">Non-white percentage</option><option value="nonwhitepe">testing</option></select>';
+      //dictionary of indicator columns to
 
-      var dropdown_html = document.getElementById('wrapper-dropdown-selector').innerHTML;
-      dropdown_html += '<select class="js-dropdown-selector">';
-      dropdown_html += '<option value="final_score" selected>Final score</option>';
-      for (var i = 1; i < indicators.length; i++) {
-        dropdown_html += '<option value="${indicators[i].indicator_col}">${indicators[i].indicator_name}</option>';
-        // dropdown_html += `<li><h3>Final Score:</h3><p class="open-sans">${featureEvent.data.finalscore.toFixed(2)}</p></li>`;
+      // var result = JSON.stringify(indicators); //double check
+      // console.log(result);
+
+      // populate dropdown menu values and texts by indicators JSON data
+      // var dropdown_html = document.getElementById('wrapper-dropdown-selector').innerHTML;
+      // dropdown_html += '<select class="js-dropdown-selector">';
+      // dropdown_html += '<option value="final_score" selected>Final score</option>'; //taken outside for loop because want final_score to be default selected
+      // for (var i = 1; i < Object.keys(ind_dict).length; i++) {
+      // console.log(ind_dict[key].indicator_name);
+      // for (var key in ind_dict) {
+      //   // dropdown_html += '<option value="${indicators[i].indicator_col}">${indicators[i].indicator_name}</option>';
+      //   if (key == 'finalscore') {
+      //     dropdown_html += '<option value="finalscore" selected>${ind_dict[key].indicator_name}</option>';
+      //   } else {
+      //     dropdown_html += '<option value="${key}">${ind_dict[key].indicator_name}</option>';
+      //   }
+      // }
+      // dropdown_html += '</select>';
+
+      // <!-- dropdown selector
+      // <div id="wrapper-dropdown-selector">
+      //   <select class="js-dropdown-selector">
+      //   </select>
+      // </div>-->
+
+      // var dropdown_html;
+      //
+      // map.on('load', function(event){
+      //
+      //   dropdown_html.onAdd = function (map) {
+      //     var drop_div = L.DomUtil.create('div', 'wrapper-dropdown-selector');
+      //
+      //     drop_div.innerHTML += '<select class="js-dropdown-selector">';
+      //     for (var key in ind_dict) {
+      //       if (key == 'finalscore') {
+      //         drop_div.innerHTML += '<option value="finalscore" selected>${ind_dict[key].indicator_name}</option>';
+      //       } else {
+      //         drop_div.innerHTML += '<option value="${key}">${ind_dict[key].indicator_name}</option>';
+      //       }
+      //     }
+      //     drop_div.innerHTML += '</select>';
+      //     console.out(drop_div);
+      //     return drop_div;
+      //   };
+      //   dropdown_html.addTo(map);
+      // });
+
+      window.onload = function() {
+        console.log("hi");
+        replace_dropdown();
       }
-      dropdown_html += '</select>';
 
-      // console.log(document.getElementById('wrapper-dropdown-selector').innerHTML);
+      function replace_dropdown() {
+        var trying = ind_dict['nonwhitepe'];
+        console.log(trying.indicator_name);
+        console.log(typeof ind_dict['nonwhitepe']);
+        var dropdown_html = '<select class="js-dropdown-selector">';
+        dropdown_html += '<option value="final_score" selected>Final score</option>'; //taken outside for loop because want final_score to be default selected
+        for (var key in ind_dict) {
+          var get_value = ind_dict[key];
+          console.log(get_value);
+          console.log(get_value.indicator_name);
+          if (key == 'finalscore') {
+            dropdown_html += `<option value="finalscore" selected>${get_value.indicator_name}</option>`;
+          } else {
+            dropdown_html += `<option value="${key}">${get_value.indicator_name}</option>`;
+          }
+        }
+        dropdown_html += '</select>';
+        document.getElementById("wrapper-dropdown-selector").innerHTML = dropdown_html;
+        console.log(dropdown_html);
+        console.log(document.getElementById("wrapper-dropdown-selector").innerHTML);
+      }
 
 /////////////////////////// change layers using JSON data ////////
 
       const selector = $(".js-dropdown-selector");
 
-      //change content styling with dropdown value
+      //change content styling with dropdown values
       selector.on('change', function(e) {
         let value = e.target.value;
-        console.log(value); // view console through inspect function on the site
-        if (value == 'nonwhitepe') {
-          layerStyle.setContent(`
-            #layer {
-              polygon-fill: ramp([${indicators[0].indicator_col}], (${indicators[0].choropleth_colors}), quantiles(${indicators[0].num_quantiles}));
-                ::outline {
-                  line-width: 0.5;
-                  line-color: #FFFFFF;
-                  line-opacity: 0.5;
-                }
-            }`)
-           .then(() => {
-             console.log('cartoCSS was updated');
-           })
-           .catch(() => {
-             console.error('Error updating the cartoCSS for the layer');
-           });
-        } else {
-          layerStyle.setContent(`
-            #layer {
-              polygon-fill: ramp([finalscore], (#009392, #39b185, #9ccb86, #e9e29c, #eeb479, #e88471, #cf597e), quantiles(7));
-                ::outline {
-                  line-width: 0.5;
-                  line-color: #FFFFFF;
-                  line-opacity: 0.5;
-                }
-            }`)
-           .then(() => {
-             console.log('cartoCSS was updated');
-           })
-           .catch(() => {
-             console.error('Error updating the cartoCSS for the layer');
-           });
-        }
+        console.log(value);
+        // consol.log(ind_dict['nonwhitepe']);
+        layerStyle.setContent(`
+          #layer {
+            polygon-fill: ramp([${ind_dict[value].indicator_col}], (${ind_dict[value].choropleth_colors}), quantiles(${ind_dict[value].num_quantiles}));
+              ::outline {
+                line-width: 0.5;
+                line-color: #FFFFFF;
+                line-opacity: 0.5;
+              }
+          }`)
+         .then(() => {
+           console.log('cartoCSS was updated');
+         })
+         .catch(() => {
+           console.error('Error updating the cartoCSS for the layer');
+         });
       });
+
+      //change content styling with dropdown value
+      // selector.on('change', function(e) {
+      //   let value = e.target.value;
+      //   console.log(value); // view console through inspect function on the site
+      //   console.log(e);
+      //   if (value == 'nonwhitepe') {
+      //     layerStyle.setContent(`
+      //       #layer {
+      //         polygon-fill: ramp([${ind_dict[value].indicator_col}], (${ind_dict[value].choropleth_colors}), quantiles(${ind_dict[value].num_quantiles}));
+      //           ::outline {
+      //             line-width: 0.5;
+      //             line-color: #FFFFFF;
+      //             line-opacity: 0.5;
+      //           }
+      //       }`)
+      //      .then(() => {
+      //        console.log('cartoCSS was updated');
+      //      })
+      //      .catch(() => {
+      //        console.error('Error updating the cartoCSS for the layer');
+      //      });
+      //   } else {
+      //     layerStyle.setContent(`
+      //       #layer {
+      //         polygon-fill: ramp([finalscore], (#009392, #39b185, #9ccb86, #e9e29c, #eeb479, #e88471, #cf597e), quantiles(7));
+      //           ::outline {
+      //             line-width: 0.5;
+      //             line-color: #FFFFFF;
+      //             line-opacity: 0.5;
+      //           }
+      //       }`)
+      //      .then(() => {
+      //        console.log('cartoCSS was updated');
+      //      })
+      //      .catch(() => {
+      //        console.error('Error updating the cartoCSS for the layer');
+      //      });
+      //   }
+      // });
 
 
 /////////////////////////// change layer styling with dropdown ///////////////////////////////
@@ -281,7 +364,7 @@
 
       layer.on('metadataChanged', function(event){
 
-        console.log(event.styles[0]._buckets); //print array of buckets
+        // console.log(event.styles[0]._buckets); //print array of buckets
 
         // get buckets
         var buckets = event.styles[0]._buckets;
