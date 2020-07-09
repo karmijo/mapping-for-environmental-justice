@@ -184,8 +184,6 @@
     function openPopup(featureEvent) {
       let content = '<div class="widget">';
 
-      // <h2 class="open-sans">${featureEvent.data.geoid}</h2>'
-
       //need to write geoid first
       content += `<h4 class="open-sans">Census tract: ${featureEvent.data.geoid}</h4>`;
 
@@ -202,90 +200,12 @@
       if (!popup.isOpen()) {
         popup.openOn(map);
       }
-
-      // for (var key in featureEvent.data) {
-      //   console.log(key);
-      //   console.log(featureEvent.data[key]);
-      // }
-
-      // if (featureEvent.data.geoid) {
-      //   content += `<h3 class="open-sans">Census tract: ${featureEvent.data.geoid}</h3>`;
-      // }
-      //
-      // if (featureEvent.data.nonwhitepe || featureEvent.data.finalscore.toFixed(2)) {
-      //   content += '<ul style="list-style-type:none; padding-left:0">';
-      //
-      //   if (featureEvent.data.nonwhitepe) {
-      //     content += `<li><h3><a href="https://www.ocf.berkeley.edu/~ejmp/about-our-map/" target="_blank">Non-white Perc:</a></h3><p class="open-sans">${featureEvent.data.nonwhitepe.toFixed(2)}</p></li>`;
-      //   }
-      //
-      //   if (featureEvent.data.finalscore) {
-      //     content += `<li><h3>Final Score:</h3><p class="open-sans">${featureEvent.data.finalscore.toFixed(2)}</p></li>`;
-      //   }
-      //
-      //   if (featureEvent.data.final_rank) {
-      //     content += `<li><h3>Percentile:</h3><p class="open-sans">${featureEvent.data.final_rank.toFixed(2)}</p></li>`;
-      //   }
-      //
-      //   content += '</ul>';
-      // }
-      // content += '</ul>';
-      // popup.setContent(content);
-      // popup.setLatLng(featureEvent.latLng);
-      // if (!popup.isOpen()) {
-      //   popup.openOn(map);
-      // }
     }
 
     //click-on popup (can change to hover too)
     layer.off('featureOut');
     layer.on('featureClicked', openPopup);
 
-
-/////////////////////////// popups ///////////////////////////////
-
-      // // create popups
-      // const popup = L.popup({closeButton: true});
-      //
-      // function openPopup(featureEvent) {
-      //   let content = '<div class="widget">';
-      //
-      //   // <h2 class="open-sans">${featureEvent.data.geoid}</h2>'
-      //
-      //   //future: iterate through all possible in featureEvent.data
-      //
-      //   if (featureEvent.data.geoid) {
-      //     content += `<h2 class="open-sans">${featureEvent.data.geoid}</h2>`;
-      //   }
-      //
-      //   if (featureEvent.data.nonwhitepe || featureEvent.data.finalscore.toFixed(2)) {
-      //     content += '<ul style="list-style-type:none; padding-left:0">';
-      //
-      //     if (featureEvent.data.nonwhitepe) {
-      //       content += `<li><h3><a href="https://www.ocf.berkeley.edu/~ejmp/about-our-map/" target="_blank">Non-white Perc:</a></h3><p class="open-sans">${featureEvent.data.nonwhitepe.toFixed(2)}</p></li>`;
-      //     }
-      //
-      //     if (featureEvent.data.finalscore) {
-      //       content += `<li><h3>Final Score:</h3><p class="open-sans">${featureEvent.data.finalscore.toFixed(2)}</p></li>`;
-      //     }
-      //
-      //     if (featureEvent.data.final_rank) {
-      //       content += `<li><h3>Percentile:</h3><p class="open-sans">${featureEvent.data.final_rank.toFixed(2)}</p></li>`;
-      //     }
-      //
-      //     content += '</ul>';
-      //   }
-      //   content += '</ul>';
-      //   popup.setContent(content);
-      //   popup.setLatLng(featureEvent.latLng);
-      //   if (!popup.isOpen()) {
-      //     popup.openOn(map);
-      //   }
-      // }
-      //
-      // //click-on popup (can change to hover too)
-      // layer.off('featureOut');
-      // layer.on('featureClicked', openPopup);
 
 ///////////////////////////// add/change legend ///////////////////////////////
 
