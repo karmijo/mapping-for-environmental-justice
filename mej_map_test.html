@@ -118,53 +118,32 @@
         featureOverColumns: ['name',
          'fips_tract',
          'lead_score',
-         'lead_rank',
          'total_pop',
          'poverty_sc',
-         'poverty_ra',
          'edu_score',
-         'edu_rank',
          'lin_score',
-         'lin_rank',
          'unemploy_s',
-         'unemploy_r',
          'nonwhitepe',
-         'nonwhite_r',
-         'houseburde',
          'houseburde',
          'ozone_scor',
-         'ozone_rank',
          'diesel_sco',
-         'diesel_ran',
          'toxics_sco',
-         'toxics_ran',
          'pm25_score',
-         'pm25_rank',
          'avg_ptraf',
          'avg_ptsdf',
          'avg_prmp',
          'avg_pwdis',
          'avg_pnpl',
-         'ptraf_rank',
-         'ptsdf_rank',
-         'prmp_rank',
-         'pwdis_rank',
-         'pnpl_rank',
          'asthma_sco',
-         'asthma_ran',
          'lb_score',
-         'lb_rank',
          'hd_score',
-         'hd_rank',
          'demographi',
          'exposure_s',
          'effects_sc',
          'sensitive_',
          'pollution_',
          'pop_char',
-         'finalscore',
-         'missing_va',
-         'final_rank']
+         'finalscore']
       });
 
       client.addLayer(layer);
@@ -177,9 +156,9 @@
 
       //try with dictionary
       ind_dict = {'finalscore': {"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392", "#39b185", "#9ccb86", "#e9e29c", "#eeb479", "#e88471", "#cf597e"], "num_quantiles": 7},
-      'total_pop': {"indicator_name" : "Total population", "indicator_col" : "total_pop", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'total_pop': {"indicator_name" : "Total population", "indicator_col" : "total_pop", "choropleth_colors":[['#c4e6c3','#96d2a4','#6dbc90','#4da284','#36877a','#266b6e','#1d4f60']], "num_quantiles": 7},
       'lead_score': {"indicator_name" : "Lead Exposure", "indicator_col" : "lead_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
-      'poverty_sc': {"indicator_name" : "Poverty", "indicator_col" : "poverty_sc", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'poverty_sc': {"indicator_name" : "Poverty", "indicator_col" : "poverty_sc", "choropleth_colors":['#fde0c5','#facba6','#f8b58b','#f59e72','#f2855d','#ef6a4c','#eb4a40'], "num_quantiles": 7},
       'edu_score': {"indicator_name" : "Educational Attainment", "indicator_col" : "edu_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
       'lin_score': {"indicator_name" : "Linguistic Isolation", "indicator_col" : "lin_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
       'unemploy_s': {"indicator_name" : "Unemployment", "indicator_col" : "unemploy_s", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
@@ -252,10 +231,11 @@
 /////////////////////////// popups using indicator JSON ///////////////////////////////
 
     // create popups
-    const popup = L.popup({closeButton: true});
+    const popup = L.popup({closeButton: true, maxHeight: 200});
 
     function openPopup(featureEvent) {
       let content = '<div class="widget">';
+      console.log(featureEvent.data);
 
       //need to write FIPS tract id first
       content += `<h4 class="open-sans">Census tract: ${featureEvent.data.fips_tract}</h4>`;
@@ -263,8 +243,11 @@
       content += '<ul class="popup-list" style="list-style-type:none; padding-left:0">';
       //iterate through all in featureEvent.data
       for (var key in featureEvent.data) {
-        if ((key != 'cartodb_id') && (!key.includes("rank")) && (key != 'fips_tract')) {
+        //need way to exclude ranks?? or include them later with formatting
+        if ((key != 'cartodb_id') && (!key.includes("rank")) && (key != 'fips_tract') && (key !='name')) {
             var actual_name = ind_dict[key];
+            console.log(key);
+            console.log(actual_name);
             content += `<li><p>${actual_name.indicator_name}: ${featureEvent.data[key].toFixed(2)}</p></li>`;
         }
       }
