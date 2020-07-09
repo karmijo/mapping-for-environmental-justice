@@ -115,7 +115,7 @@
       `);
 
       const layer = new carto.layer.Layer(source, layerStyle, {
-        featureOverColumns: ['geoid', 'nonwhitepe', 'finalscore', 'final_rank']
+        featureOverColumns: ['geoid', 'nonwhitepe', 'finalscore', 'final_rank', 'lead_score']
       });
 
       client.addLayer(layer);
@@ -128,6 +128,7 @@
 
       //try with dictionary
       ind_dict = {'finalscore': {"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392", "#39b185", "#9ccb86", "#e9e29c", "#eeb479", "#e88471", "#cf597e"], "num_quantiles": 7},
+      'lead_score': {"indicator_name" : "Lead score", "indicator_col" : "lead_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
       'nonwhitepe': {"indicator_name" : "Non-white percentage", "indicator_col" : "nonwhitepe", "choropleth_colors":["#f3e0f7", "#e4c7f1", "#d1afe8", "#b998dd", "#9f82ce", "#826dba", "#63589f"], "num_quantiles": 7}};
 
 
