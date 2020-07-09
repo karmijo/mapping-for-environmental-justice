@@ -192,7 +192,8 @@
       //iterate through all in featureEvent.data
       for (var key in featureEvent.data) {
         if ((key != 'cartodb_id') && (!key.includes("rank")) && (key != 'geoid')) {
-            content += `<li><p>${key}: ${featureEvent.data[key].toFixed(2)}</p></li>`;
+            var actual_name = ind_dict[key];
+            content += `<li><p>${actual_name.indicator_name}: ${featureEvent.data[key].toFixed(2)}</p></li>`;
         }
       }
       content += '</ul>';
