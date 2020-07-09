@@ -121,6 +121,21 @@
       // Geocoder
       // L.Control.geocoder({position: 'topleft'}).addTo(map);
 
+/////////////////////////// JSON object for indicators data ///////////////////////////////
+
+      // var s = JSON.parse('indicators: [{"indicator_name" : "Non-white percentage", "indicator_col" : "nonwhitepe", "choropleth_colors":["#f3e0f7", "#e4c7f1", "#d1afe8", "#b998dd", "#9f82ce", "#826dba", "#63589f"], "num_quantiles": 7},
+      // {"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392", "#39b185", "#9ccb86", "#e9e29c", "#eeb479", "#e88471", "#cf597e"], "num_quantiles": 7}]');
+
+      var s = [];
+      s.push({"indicator_name" : "Non-white percentage", "indicator_col" : "nonwhitepe", "choropleth_colors":["#f3e0f7", "#e4c7f1", "#d1afe8", "#b998dd", "#9f82ce", "#826dba", "#63589f"], "num_quantiles": 7});
+      s.push({"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392", "#39b185", "#9ccb86", "#e9e29c", "#eeb479", "#e88471", "#cf597e"], "num_quantiles": 7});
+      // console.log(diff_indicators[0].choropleth_colors);
+
+      // var s = '{"genericformfieldId": "1","userId": "2","formData": {"_1443551400000": [{"mValue": "HARYANA","type": "DropDown","name": "selectState"}],"_1443637800000": [{"mValue": "CHHATTISGARH","type": "DropDown","name": "selectState"}],"_1443810600000": [{"mValue": "sac","type": "SingleLineText","name": "departureFrom"}]}}';
+
+      var result = JSON.stringify(s);
+      console.log(result);
+
 /////////////////////////// change layer styling with dropdown ///////////////////////////////
 
       const selector = $(".js-dropdown-selector");
@@ -132,7 +147,7 @@
         if (value == 'nonwhitepe') {
           layerStyle.setContent(`
             #layer {
-              polygon-fill: ramp([nonwhitepe], (#f3e0f7, #e4c7f1, #d1afe8, #b998dd, #9f82ce, #826dba, #63589f), quantiles(7));
+              polygon-fill: ramp([${s[0].indicator_col}], (${s[0].choropleth_colors}), quantiles(${s[0].num_quantiles}));
                 ::outline {
                   line-width: 0.5;
                   line-color: #FFFFFF;
@@ -173,6 +188,8 @@
         let content = '<div class="widget">';
 
         // <h2 class="open-sans">${featureEvent.data.geoid}</h2>'
+
+        //future: iterate through all possible in featureEvent.data
 
         if (featureEvent.data.geoid) {
           content += `<h2 class="open-sans">${featureEvent.data.geoid}</h2>`;
