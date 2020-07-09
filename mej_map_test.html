@@ -115,7 +115,56 @@
       `);
 
       const layer = new carto.layer.Layer(source, layerStyle, {
-        featureOverColumns: ['fips_tract', 'nonwhitepe', 'finalscore', 'final_rank', 'lead_score']
+        featureOverColumns: ['name',
+         'fips_tract',
+         'lead_score',
+         'lead_rank',
+         'total_pop',
+         'poverty_sc',
+         'poverty_ra',
+         'edu_score',
+         'edu_rank',
+         'lin_score',
+         'lin_rank',
+         'unemploy_s',
+         'unemploy_r',
+         'nonwhitepe',
+         'nonwhite_r',
+         'houseburde',
+         'houseburde',
+         'ozone_scor',
+         'ozone_rank',
+         'diesel_sco',
+         'diesel_ran',
+         'toxics_sco',
+         'toxics_ran',
+         'pm25_score',
+         'pm25_rank',
+         'avg_ptraf',
+         'avg_ptsdf',
+         'avg_prmp',
+         'avg_pwdis',
+         'avg_pnpl',
+         'ptraf_rank',
+         'ptsdf_rank',
+         'prmp_rank',
+         'pwdis_rank',
+         'pnpl_rank',
+         'asthma_sco',
+         'asthma_ran',
+         'lb_score',
+         'lb_rank',
+         'hd_score',
+         'hd_rank',
+         'demographi',
+         'exposure_s',
+         'effects_sc',
+         'sensitive_',
+         'pollution_',
+         'pop_char',
+         'finalscore',
+         'missing_va',
+         'final_rank']
       });
 
       client.addLayer(layer);
@@ -128,9 +177,32 @@
 
       //try with dictionary
       ind_dict = {'finalscore': {"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392", "#39b185", "#9ccb86", "#e9e29c", "#eeb479", "#e88471", "#cf597e"], "num_quantiles": 7},
-      'lead_score': {"indicator_name" : "Lead score", "indicator_col" : "lead_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
-      'nonwhitepe': {"indicator_name" : "Non-white percentage", "indicator_col" : "nonwhitepe", "choropleth_colors":["#f3e0f7", "#e4c7f1", "#d1afe8", "#b998dd", "#9f82ce", "#826dba", "#63589f"], "num_quantiles": 7}};
-
+      'total_pop': {"indicator_name" : "Total population", "indicator_col" : "total_pop", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'lead_score': {"indicator_name" : "Lead Exposure", "indicator_col" : "lead_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'poverty_sc': {"indicator_name" : "Poverty", "indicator_col" : "poverty_sc", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'edu_score': {"indicator_name" : "Educational Attainment", "indicator_col" : "edu_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'lin_score': {"indicator_name" : "Linguistic Isolation", "indicator_col" : "lin_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'unemploy_s': {"indicator_name" : "Unemployment", "indicator_col" : "unemploy_s", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'nonwhitepe': {"indicator_name" : "Race", "indicator_col" : "nonwhitepe", "choropleth_colors":["#f3e0f7", "#e4c7f1", "#d1afe8", "#b998dd", "#9f82ce", "#826dba", "#63589f"], "num_quantiles": 7},
+      'houseburde': {"indicator_name" : "Housing Burden", "indicator_col" : "houseburde", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'ozone_scor': {"indicator_name" : "Ozone", "indicator_col" : "ozone_scor", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'diesel_sco': {"indicator_name" : "DieselPM", "indicator_col" : "diesel_sco", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'toxics_sco': {"indicator_name" : "Toxic Releases", "indicator_col" : "toxics_sco", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'pm25_score': {"indicator_name" : "PM2.5", "indicator_col" : "pm25_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'avg_ptraf': {"indicator_name" : "Traffic Exposure", "indicator_col" : "avg_ptraf", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'avg_ptsdf': {"indicator_name" : "Hazardous Waste Facilities", "indicator_col" : "avg_ptsdf", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'avg_prmp': {"indicator_name" : "High-Risk Chemical Facilities", "indicator_col" : "avg_prmp", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'avg_pwdis': {"indicator_name" : "Wastewater Discharges", "indicator_col" : "avg_pwdis", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'avg_pnpl': {"indicator_name" : "Superfund Sites", "indicator_col" : "avg_pnpl", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'asthma_sco': {"indicator_name" : "Asthma", "indicator_col" : "asthma_sco", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'lb_score': {"indicator_name" : "Low Birth-Weight Infants", "indicator_col" : "lb_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'hd_score': {"indicator_name" : "Cardiovascular Disease", "indicator_col" : "hd_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'demographi': {"indicator_name" : "Demographics Score", "indicator_col" : "demographi", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'exposure_s': {"indicator_name" : "Exposure Score", "indicator_col" : "exposure_s", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'effects_sc': {"indicator_name" : "Effects Score", "indicator_col" : "effects_sc", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'sensitive_': {"indicator_name" : "Sensitive Score", "indicator_col" : "sensitive_", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'pollution_': {"indicator_name" : "Pollution Score", "indicator_col" : "pollution_", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
+      'pop_char': {"indicator_name" : "Population Characteristics", "indicator_col" : "pop_char", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7}};
 
 /////////////////////////// populate dropdown using JSON data ///////////////////////////////
 
