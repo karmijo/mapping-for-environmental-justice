@@ -249,7 +249,11 @@
             var actual_name = ind_dict[key];
             console.log(key);
             console.log(actual_name);
-            content += `<li><p>${actual_name.indicator_name}: ${featureEvent.data[key].toFixed(2)}</p></li>`;
+            if (featureEvent.data[key] == null) {
+              content += `<li><p><b>${actual_name.indicator_name}:</b> N/A</p></li>`;
+            } else {
+              content += `<li><p><b>${actual_name.indicator_name}:</b> ${featureEvent.data[key].toFixed(2)}</p></li>`;
+            }
         }
       }
       content += '</ul>';
