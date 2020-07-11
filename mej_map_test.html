@@ -286,7 +286,11 @@
             console.log(key);
             console.log(actual_name);
             if (featureEvent.data[key] == null) {
-              content += `<li><p><b>${actual_name.indicator_name}:</b> N/A</p></li>`;
+              if ((key == 'oil_score')||(key == 'oil_densit')) {
+                content += `<li><p><b>${actual_name.indicator_name}:</b> 0</p></li>`;
+              } else {
+                content += `<li><p><b>${actual_name.indicator_name}:</b> N/A</p></li>`;
+              }
             } else {
               content += `<li><p><b>${actual_name.indicator_name}:</b> ${featureEvent.data[key].toFixed(2)}</p></li>`;
             }
@@ -313,17 +317,29 @@
 
         // console.log(event.styles[0]._buckets); //print array of buckets
 
+        console.log('checkingg');
+        console.log(event.styles[0]._column);
+
         // get buckets
         var buckets = event.styles[0]._buckets;
         //each Bucket has props: min, max, and value (which here is the color string code)
 
         legend.onAdd = function (map) {
           var div = L.DomUtil.create('div', 'info legend');
-
-          // wrote this for 7 quantiles, need to change if we vary quantiles for different indicators
-          for (var i = 0; i < 7; i++) {
+          var column = event.styles[0]._column;
+          if ((column == 'oil_densit') || (column == 'oil_score')) {
             div.innerHTML +=
-              `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</span></ul>`;
+                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[0].value}"></i> <span>0 - ${parseFloat(buckets[0].max).toFixed(2)}</span></ul>`;
+            for (var i = 1; i < 7; i++) {
+              div.innerHTML +=
+                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</span></ul>`;
+            }
+          } else {
+            // wrote this for 7 quantiles, need to change if we vary quantiles for different indicators
+            for (var i = 0; i < 7; i++) {
+              div.innerHTML +=
+                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</span></ul>`;
+            }
           }
           return div;
         };
