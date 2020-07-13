@@ -148,7 +148,7 @@
       `);
 
       const layer = new carto.layer.Layer(source, layerStyle, {
-        featureOverColumns: ['name',
+        featureOverColumns: ['cartodb_id', 'name',
          'fips_tract',
          'lead_score',
          'total_pop',
@@ -211,6 +211,7 @@
       // }
 
       // function highlightFeature(e) {
+      //   console.log("highlighting");
       //   var highlight_layer = e.target;
       //
       //   highlight_layer.setStyle({
@@ -224,29 +225,103 @@
       // }
       //
       // function resetHighlight(e) {
+      //   console.log('resetting highlight');
       //   geojson.resetStyle(e.target);
       // }
 
-      var geoms = [];
-      axios.get('https://tiffanyhuynh.carto.com/api/v2/sql?q=SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final').then(function(response) {
-        console.log(response.data);
-      });
-      // axios.get('https://tiffanyhuynh.carto.com/api/v2/sql?api_key=default_public&q=SELECT ST_AsGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final').then(function(data){
-      //     console.log("geojson");
-      //     console.log(data.rows);
+      // var geoms;
+      // var polygon_selected = 1;
+      // const url = 'https://tiffanyhuynh.carto.com/api/v2/sql?q=SELECT cartodb_id, ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${polygon_selected}';
+      // axios.get('${url}').then(function(response) {
+      //     geoms = response.data;
+      //     console.log(geoms);
       // });
 
-      // function onEachFeature(feature, layer) {
-      //   layer.on({
+      // const apiKey = 'default_public';
+      // const username = 'tiffanyhuynh'
+      // const tableName = 'colorado_final';
+      //
+      // const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${polygon_selected}`;
+      // const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
+      //
+      // fetch(boundsUrl)
+      //   .then(response => {
+      //     return response.json();
+      //   })
+      //   .then(json => {
+      //     console.log(json.rows);
+      //   });
+
+      //
+      // function onEachFeature(feature, the_layer) {
+      //   the_layer.on({
       //     mouseover: highlightFeature,
       //     mouseout: resetHighlight
       //   });
       // }
       //
+      // function style_borders(feature) {
+      //   return {
+      //       weight: 2,
+      //       opacity: 1,
+      //       color: 'white',
+      //       dashArray: '3',
+      //       fillOpacity: 0.7
+      //   };
+      // }
+      //
+      // var geojson;
       // geojson = L.geoJson(JSON.parse(geoms), {
-      //   style: style,
+      //   style: style_borders,
       //   onEachFeature: onEachFeature
-      // }).addTo(map);
+      // });
+      //
+      // geojson.addTo(map);
+      //
+      var polygon;
+      function showFeature(featureEvent) {
+        if (polygon) {
+          map.removeLayer(polygon);
+        }
+        polygon_selected = featureEvent.data.cartodb_id;
+        console.log("polygon selected");
+        console.log(polygon_selected);
+        const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${polygon_selected}`;
+        const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
+
+        fetch(boundsUrl)
+          .then(response => {
+              return response.json();
+            })
+            .then(json => {
+              console.log(json.rows);
+              console.log(json.rows[0].geom);
+              polygon = L.geoJson(JSON.parse(json.rows[0].geom), {
+                style: {
+                  color: "#fff",
+                  fillColor: "#fff",
+                  weight: 2,
+                  opacity: 0.65
+                }
+              }).addTo(map);
+            });
+      };
+
+      //   axios.get('https://tiffanyhuynh.carto.com/api/v2/sql?q=SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${polygon_selected}').then(function(response) {
+      //
+      //     polygon = L.geoJson(response, {
+      //       style: {
+      //         color: "#000",
+      //         fillColor: "#fff",
+      //         weight: 2,
+      //         opacity: 0.65
+      //       }
+      //     }).addTo(map);
+      //   });
+      // };
+
+      layer.on('featureClicked', showFeature);
+
 
       client.addLayer(layer);
       client.getLeafletLayer().addTo(map);
