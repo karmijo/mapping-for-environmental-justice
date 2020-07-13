@@ -181,148 +181,6 @@
          'finalscore']
       });
 
-      // var boundary;
-      // layer.on('mouseover', function(featureEvent) {
-      //   let polygon_selected = featureEvent.data.cartodb_id;
-      //   console.log('did mouse over');
-      //   console.log(polygon_selected);
-      //
-      //   //PostGIS w/axios
-      //   axios.get('https:tiffanyhuynh.carto.com/api/v2/sql?q=SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${polygon_selected}')
-      //     .then(function (response) {
-      //       //save into geom the geometry area from Carto
-      //       let geom = response.data.rows[0].geom;
-      //       //style
-      //       boundary = L.geoJson(JSON.parse(geom), {
-      //           style: {
-      //             color: "#fff",
-      //             weight: 5
-      //           }
-      //       });
-      //       //add Leaflet layer to the map
-      //       map.addLayer(boundary);
-      //     })
-      //     .catch(() => {
-      //     console.error('Error adding boundaries');
-      //     });
-      // });
-      // layer.on('mouseout', function(featureEvent) {
-      //   map.removeLayer(boundary);
-      // }
-
-      // function highlightFeature(e) {
-      //   console.log("highlighting");
-      //   var highlight_layer = e.target;
-      //
-      //   highlight_layer.setStyle({
-      //     weight: 5,
-      //     color: 'fff',
-      //   });
-      //
-      //   if(!L.Browser.ie && !L.Brower.opera && !L.Brower.edge) {
-      //     highlight_layer.bringToFront();
-      //   }
-      // }
-      //
-      // function resetHighlight(e) {
-      //   console.log('resetting highlight');
-      //   geojson.resetStyle(e.target);
-      // }
-
-      // var geoms;
-      // var polygon_selected = 1;
-      // const url = 'https://tiffanyhuynh.carto.com/api/v2/sql?q=SELECT cartodb_id, ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${polygon_selected}';
-      // axios.get('${url}').then(function(response) {
-      //     geoms = response.data;
-      //     console.log(geoms);
-      // });
-
-      // const apiKey = 'default_public';
-      // const username = 'tiffanyhuynh'
-      // const tableName = 'colorado_final';
-      //
-      // const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${polygon_selected}`;
-      // const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
-      //
-      // fetch(boundsUrl)
-      //   .then(response => {
-      //     return response.json();
-      //   })
-      //   .then(json => {
-      //     console.log(json.rows);
-      //   });
-
-      //
-      // function onEachFeature(feature, the_layer) {
-      //   the_layer.on({
-      //     mouseover: highlightFeature,
-      //     mouseout: resetHighlight
-      //   });
-      // }
-      //
-      // function style_borders(feature) {
-      //   return {
-      //       weight: 2,
-      //       opacity: 1,
-      //       color: 'white',
-      //       dashArray: '3',
-      //       fillOpacity: 0.7
-      //   };
-      // }
-      //
-      // var geojson;
-      // geojson = L.geoJson(JSON.parse(geoms), {
-      //   style: style_borders,
-      //   onEachFeature: onEachFeature
-      // });
-      //
-      // geojson.addTo(map);
-      //
-      var polygon;
-      function showFeature(featureEvent) {
-        if (polygon) {
-          map.removeLayer(polygon);
-        }
-        polygon_selected = featureEvent.data.cartodb_id;
-        console.log("polygon selected");
-        console.log(polygon_selected);
-        const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${polygon_selected}`;
-        const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
-
-        fetch(boundsUrl)
-          .then(response => {
-              return response.json();
-            })
-            .then(json => {
-              console.log(json.rows);
-              console.log(json.rows[0].geom);
-              polygon = L.geoJson(JSON.parse(json.rows[0].geom), {
-                style: {
-                  color: "#fff",
-                  fillColor: "#fff",
-                  weight: 2,
-                  opacity: 0.65
-                }
-              }).addTo(map);
-            });
-      };
-
-      //   axios.get('https://tiffanyhuynh.carto.com/api/v2/sql?q=SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${polygon_selected}').then(function(response) {
-      //
-      //     polygon = L.geoJson(response, {
-      //       style: {
-      //         color: "#000",
-      //         fillColor: "#fff",
-      //         weight: 2,
-      //         opacity: 0.65
-      //       }
-      //     }).addTo(map);
-      //   });
-      // };
-
-      layer.on('featureClicked', showFeature);
-
-
       client.addLayer(layer);
       client.getLeafletLayer().addTo(map);
 
@@ -363,6 +221,70 @@
       'asthma_sco': {"indicator_name" : "Asthma", "indicator_col" : "asthma_sco", "choropleth_colors":['#ffffb2', '#fed976', '#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c', '#b10026'], "num_quantiles": 7},
       'lb_score': {"indicator_name" : "Low Birth-Weight Infants", "indicator_col" : "lb_score", "choropleth_colors":['#d2fbd4', '#a5dbc2', '#7bbcb0', '#559c9e', '#3a7c89', '#235d72', '#123f5a'], "num_quantiles": 7},
       'hd_score': {"indicator_name" : "Cardiovascular Disease", "indicator_col" : "hd_score", "choropleth_colors":['#ffffd4', '#fee391', '#fec44f', '#fe9929', '#ec7014', '#cc4c02', '#8c2d04'], "num_quantiles": 7}};
+
+/////////////////////////// highlight tract borders when hover over/clicked ///////////////////////////////
+
+
+      var polygon;
+      function showFeature(featureEvent) {
+        polygon_selected = featureEvent.data.cartodb_id;
+        console.log("polygon selected");
+        console.log(polygon_selected);
+        const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${polygon_selected}`;
+        const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
+
+        fetch(boundsUrl)
+          .then(response => {
+              return response.json();
+            })
+            .then(json => {
+              if (polygon) {
+                console.log('remove polygon');
+                console.log(polygon);
+                map.removeLayer(polygon);
+              }
+              polygon = L.geoJson(JSON.parse(json.rows[0].geom), {
+                style: {
+                  color: "#fff",
+                  fillColor: "#fff",
+                  weight: 2,
+                  opacity: 0.65
+                }
+              })
+            // .addTo(map);
+            map.addLayer(polygon);
+            });
+      };
+
+      function resetHighlight(featureEvent) {
+        console.log("did reset?");
+        // map.removeLayer(polygon);
+        client.removeLayer(polygon)
+        .then(() => {
+         console.log('Layer removed');
+        })
+        .catch(cartoError => {
+         console.error(cartoError.message);
+        });
+      }
+
+      // layer.on('mouseover', showFeature);
+      // layer.on('mouseout', function (e) {
+      //     this.closePopup();
+      // });
+      //next: code to remove clicked polygon highlight when popup closes and go back to hover highlight
+      //next: code to keep clicked polygon highlight and stop hover highlight when click
+      //maybe a second parameter?
+
+      // layer.on('featureClicked', showFeature);
+
+      layer.on('featureOut', resetHighlight);
+      layer.on('featureOver', showFeature);
+
+      //on featureClick, layer.off('featureOver')
+
+      //this method seems to be too glitchy: featureOver is slow...
+
 
 /////////////////////////// populate dropdown using JSON data ///////////////////////////////
 
