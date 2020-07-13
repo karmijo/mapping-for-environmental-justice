@@ -226,34 +226,49 @@
 
 
       var polygon;
+      var new_polygon;
+      var old_polygon_selected;
       function showFeature(featureEvent) {
-        polygon_selected = featureEvent.data.cartodb_id;
-        console.log("polygon selected");
-        console.log(polygon_selected);
-        const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${polygon_selected}`;
-        const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
+        new_polygon_selected = featureEvent.data.cartodb_id;
+        console.log("old polygon selected");
+        console.log(old_polygon_selected);
+        console.log("new polygon selected");
+        console.log(new_polygon_selected);
+        console.log("type of old_polygon_selected");
+        console.log(typeof old_polygon_selected);
+        if ((typeof old_polygon_selected === 'undefined') || (old_polygon_selected != new_polygon_selected)) {
+          console.log('diff polygon selected???');
+          const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${new_polygon_selected}`;
+          const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
 
-        fetch(boundsUrl)
-          .then(response => {
-              return response.json();
-            })
-            .then(json => {
-              if (polygon) {
-                console.log('remove polygon');
-                console.log(polygon);
-                map.removeLayer(polygon);
-              }
-              polygon = L.geoJson(JSON.parse(json.rows[0].geom), {
-                style: {
-                  color: "#fff",
-                  fillColor: "#fff",
-                  weight: 2,
-                  opacity: 0.65
-                }
+          fetch(boundsUrl)
+            .then(response => {
+                return response.json();
               })
-            // .addTo(map);
-            map.addLayer(polygon);
-            });
+              .then(json => {
+                new_polygon = L.geoJson(JSON.parse(json.rows[0].geom), {
+                  style: {
+                    color: "#fff",
+                    fillColor: "#fff",
+                    weight: 2,
+                    opacity: 0.65
+                  }
+                })
+              // if polygon has stayed the same, don't update add/remove
+              if (typeof polygon === 'undefined') {
+                console.log('old polygon undefined');
+                map.addLayer(new_polygon);
+              } else if (polygon != new_polygon){
+                console.log("diff polygon");
+                map.removeLayer(polygon);
+                map.addLayer(new_polygon);
+              }
+              polygon = new_polygon;
+              // .addTo(map);
+              // map.addLayer(polygon);
+              });
+        };
+        old_polygon_selected = new_polygon_selected;
       };
 
       function resetHighlight(featureEvent) {
