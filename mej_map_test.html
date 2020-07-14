@@ -193,7 +193,7 @@
       //form: dictionary = key as column title, value as JSON object with the categories: official display name, column title, choropleth colors, and number of quantiles for ramp
       //later can also add to the JSON objects text explanations of each indicator, links to reference more info, icons/images to display with the indicator, etc.
       ind_dict = {'finalscore': {"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392", "#39b185", "#9ccb86", "#e9e29c", "#eeb479", "#e88471", "#cf597e"], "num_quantiles": 7},
-      'total_pop': {"indicator_name" : "Total population", "indicator_col" : "total_pop", "choropleth_colors":[['#c4e6c3','#96d2a4','#6dbc90','#4da284','#36877a','#266b6e','#1d4f60']], "num_quantiles": 7},
+      'pop_densit': {"indicator_name" : "Population Density", "indicator_col" : "pop_densit", "choropleth_colors":[['#c4e6c3','#96d2a4','#6dbc90','#4da284','#36877a','#266b6e','#1d4f60']], "num_quantiles": 7},
       'pop_char': {"indicator_name" : "Population Characteristics", "indicator_col" : "pop_char", "choropleth_colors":['#f2f0f7', '#dadaeb', '#bcbddc', '#9e9ac8', '#807dba', '#6a51a3', '#4a1486'], "num_quantiles": 7},
       'pollution_': {"indicator_name" : "Pollution Score", "indicator_col" : "pollution_", "choropleth_colors":['#3288bd', '#99d594', '#e6f598', '#ffffbf', '#fee08b', '#fc8d59', '#d53e4f'], "num_quantiles": 7},
       'demographi': {"indicator_name" : "Demographics Score", "indicator_col" : "demographi", "choropleth_colors":['#eff3ff', '#c6dbef', '#9ecae1', '#6baed6', '#4292c6', '#2171b5', '#084594'], "num_quantiles": 7},
@@ -236,6 +236,8 @@
         console.log(new_polygon_selected);
         console.log("type of old_polygon_selected");
         console.log(typeof old_polygon_selected);
+        //only get data if no old polygon or new polygon is different
+        //don't get data if same polygon
         if ((typeof old_polygon_selected === 'undefined') || (old_polygon_selected != new_polygon_selected)) {
           console.log('diff polygon selected???');
           const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${new_polygon_selected}`;
@@ -250,7 +252,7 @@
                   style: {
                     color: "#fff",
                     fillColor: "#fff",
-                    weight: 2,
+                    weight: 3,
                     opacity: 0.65
                   }
                 })
@@ -293,13 +295,13 @@
 
       // layer.on('featureClicked', showFeature);
 
-      layer.on('featureOut', resetHighlight);
       layer.on('featureOver', showFeature);
+      layer.off('featureOut', showFeature);
+
+
+      //remove the layer on featureOut...
 
       //on featureClick, layer.off('featureOver')
-
-      //this method seems to be too glitchy: featureOver is slow...
-
 
 /////////////////////////// populate dropdown using JSON data ///////////////////////////////
 
