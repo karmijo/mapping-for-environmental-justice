@@ -152,6 +152,7 @@
          'fips_tract',
          'lead_score',
          'total_pop',
+         'pop_densit',
          'poverty_sc',
          'edu_score',
          'lin_score',
@@ -250,8 +251,8 @@
               .then(json => {
                 new_polygon = L.geoJson(JSON.parse(json.rows[0].geom), {
                   style: {
-                    color: "#fff",
-                    fillColor: "#fff",
+                    color: "#15F4EE",
+                    fillColor: "#15F4EE",
                     weight: 3,
                     opacity: 0.65
                   }
@@ -273,17 +274,17 @@
         old_polygon_selected = new_polygon_selected;
       };
 
-      function resetHighlight(featureEvent) {
-        console.log("did reset?");
-        // map.removeLayer(polygon);
-        client.removeLayer(polygon)
-        .then(() => {
-         console.log('Layer removed');
-        })
-        .catch(cartoError => {
-         console.error(cartoError.message);
-        });
-      }
+      // function resetHighlight(featureEvent) {
+      //   console.log("did reset?");
+      //   // map.removeLayer(polygon);
+      //   client.removeLayer(polygon)
+      //   .then(() => {
+      //    console.log('Layer removed');
+      //   })
+      //   .catch(cartoError => {
+      //    console.error(cartoError.message);
+      //   });
+      // }
 
       // layer.on('mouseover', showFeature);
       // layer.on('mouseout', function (e) {
@@ -295,9 +296,12 @@
 
       // layer.on('featureClicked', showFeature);
 
-      layer.on('featureOver', showFeature);
-      layer.off('featureOut', showFeature);
+      //on hover
+      // layer.on('featureOver', showFeature);
+      // layer.off('featureOut', showFeature);
 
+      //on click
+      layer.on('featureClicked', showFeature);
 
       //remove the layer on featureOut...
 
@@ -396,6 +400,13 @@
     layer.off('featureOut');
     layer.on('featureClicked', openPopup);
 
+    console.log("is popup open");
+    console.log(popup.isOpen());
+    if (!popup.isOpen() && !(typeof polygon === 'undefined')) {
+      console.log('removing highlight');
+      map.removeLayer(polygon);
+    }
+
 
 ///////////////////////////// add/change legend ///////////////////////////////
 
@@ -416,15 +427,15 @@
           var div = L.DomUtil.create('div', 'info legend');
           var column = event.styles[0]._column;
           if ((column == 'oil_densit') || (column == 'oil_score')) {
-            div.innerHTML +=
-                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[0].value}"></i> <span>0 - ${parseFloat(buckets[0].max).toFixed(2)}</span></ul>`;
-            for (var i = 1; i < 7; i++) {
+            for (var i = 6; i > 0; i--) {
               div.innerHTML +=
                 `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</span></ul>`;
             }
+            div.innerHTML +=
+                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[0].value}"></i> <span>0 - ${parseFloat(buckets[0].max).toFixed(2)}</span></ul>`;
           } else {
             // wrote this for 7 quantiles, need to change if we vary quantiles for different indicators
-            for (var i = 0; i < 7; i++) {
+            for (var i = 6; i >= 0; i--) {
               div.innerHTML +=
                 `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</span></ul>`;
             }
