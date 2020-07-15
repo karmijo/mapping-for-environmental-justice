@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MEJ Colorado</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700|Open+Sans:300,400,600" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Include Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+    <link href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" rel="stylesheet">
+    <!-- Include CARTO.js -->
+    <script src="https://libs.cartocdn.com/carto.js/v4.0.8/carto.min.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css" rel="stylesheet">
+    <!--Geocoder-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <!-- Adding Axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        position: relative;
+      }
+      #map {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+      #wrapper-dropdown-selector {
+        position: absolute;
+        top: 15px;
+        right: 10px;
+        z-index: 999;
+      }
+      #js-dropdown-selector {
+        width: 160px;
+        font-size: 16px;
+        padding: 6px;
+        margin-bottom: 0;
+        color: #333;
+        background-color: #fff;
+        border: 0px;
+        /* border-color: #ccc; */
+        /* border: 1px solid rgb(127, 0, 0);
+        border: 1px solid rgba(255, 0, 0, .5);
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box; */
+        border-radius: 3px;
+        box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
+        white-space: nowrap;
+      }
+      #js-dropdown-selector:hover {
+        color: #333;
+        background-color: #e6e6e6;
+        /* border-color: #adadad; */
+      }
+      #js-dropdown-selector:active:focus {
+          outline: thin dotted;
+          outline: 5px auto -webkit-focus-ring-color;
+          outline-offset: -2px;
+      }
+      #js-dropdown-selector:focus {
+        color: #333;
+        background-color: #e6e6e6;
+      }
+      #js-dropdown-selector:active {
+        box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+        color: #333;
+        background-color: #e6e6e6;
+      }
+      .legend {
+        /* line-height: 18px; */
+        color: #555;
+      }
+      .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+      }
+      .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+      }
+      .info h4 {
+        margin: 0 0 5px;
+        color: #777;
+      }
+      .popup-list li:not(:last-child){
+        margin-bottom: -15px;
+      }
+      /* .switch {
+       position : relative ;
+       display : inline-block;
+       width : 40px;
+       height : 20px;
+       background-color: #ccc;
+       border-radius: 20px;
+     }
+     .switch::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: white;
+      top: 1px; // TO GIVE AN EFFECT OF CIRCLE INSIDE SWITCH.
+      left: 1px;
+      transition: all 0.3s;
+    }
+    .checkbox:checked + .switch::after {
+      left : 20px;
+    }
+    .checkbox:checked + .switch {
+      background-color: #7983ff;
+    }
+    .checkbox {
+      display : none;
+    } */
+    </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+
+    <!-- dropdown selector-->
+    <div id="wrapper-dropdown-selector">
+      <select id="js-dropdown-selector">
+      </select>
+    </div>
+
+    <script>
+      const map = L.map('map').setView([39.019715, -105.765333], 7); // set to focus on CO
+      // map.scrollWheelZoom.disable();
+
+      //basemap
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png', {
+        maxZoom: 18
+      }).addTo(map);
+
+      // Adding Voyager Labels
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        zIndex: 10
+      }).addTo(map);
+
+      const client = new carto.Client({
+        apiKey: 'default_public',
+        username: 'tiffanyhuynh'
+      });
+
+      // const query = 'SELECT * FROM colorado_sample';
+      // const source = new carto.source.SQL(query);
+      const source = new carto.source.Dataset('colorado_final');
+      const layerStyle = new carto.style.CartoCSS(`
+        #layer {
+          polygon-fill: ramp([finalscore], (#009392,#2ea78a,#62ba85,#9ccb86,#d0db95,#ebd390,#eeb479,#ea9474,#e07676,#cf597e), quantiles(10));
+            ::outline {
+              line-width: 0.5;
+              line-color: #FFFFFF;
+              line-opacity: 0.5;
+            }
+        }
+      `);
+
+      const layer = new carto.layer.Layer(source, layerStyle, {
+        featureOverColumns: ['cartodb_id', 'name',
+         'fips_tract',
+         'lead_score',
+         'total_pop',
+         'pop_densit',
+         'poverty_sc',
+         'edu_score',
+         'lin_score',
+         'unemploy_s',
+         'nonwhitepe',
+         'houseburde',
+         'ozone_scor',
+         'diesel_sco',
+         'oil_score',
+         'oil_densit',
+         'toxics_sco',
+         'pm25_score',
+         'avg_ptraf',
+         'avg_ptsdf',
+         'avg_prmp',
+         'avg_pwdis',
+         'avg_pnpl',
+         'asthma_sco',
+         'lb_score',
+         'hd_score',
+         'demographi',
+         'exposure_s',
+         'effects_sc',
+         'sensitive_',
+         'pollution_',
+         'pop_char',
+         'finalscore']
+      });
+
+      client.addLayer(layer);
+      client.getLeafletLayer().addTo(map);
+
+      // Geocoder
+      // var geocoder = L.Control.geocoder({
+      //   defaultMarkGeocode: false,
+      //   position: 'topleft'
+      // })
+      //   .on('markgeocode', function(e) {
+      //     var bbox = e.geocode.bbox;
+      //     var poly = L.polygon([
+      //       bbox.getSouthEast(),
+      //       bbox.getNorthEast(),
+      //       bbox.getNorthWest(),
+      //       bbox.getSouthWest()
+      //     ]);
+      //     map.fitBounds(poly.getBounds());
+      //   })
+      //   .addTo(map);
+
+/////////////////////////// dictionary + JSON objects for indicators data ///////////////////////////////
+
+      //also: Carto automatically truncates column names to 10 letters or less...
+      //form: dictionary = key as column title, value as JSON object with the categories: official display name, column title, choropleth colors, and number of quantiles for ramp
+      //later can also add to the JSON objects text explanations of each indicator, links to reference more info, icons/images to display with the indicator, etc.
+      ind_dict = {'finalscore': {"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392","#2ea78a","#62ba85","#9ccb86","#d0db95","#ebd390","#eeb479","#ea9474","#e07676","#cf597e"], "num_quantiles": 10},
+      'pop_densit': {"indicator_name" : "Population Density", "indicator_col" : "pop_densit", "choropleth_colors":["#245668","#1a6973","#107c7c","#0d8f81","#2fa27f","#4eb47b","#6ec574","#97d46c","#c0e264","#edef5d"], "num_quantiles": 10},
+      'pop_char': {"indicator_name" : "Population Characteristics", "indicator_col" : "pop_char", "choropleth_colors":["#ffffcc","#daf0bc","#b1e0b7","#7fcdbb","#5abec1","#38a9c3","#1d91c0","#236fb0","#1d4d9c","#0c2c84"], "num_quantiles": 10},
+      'pollution_': {"indicator_name" : "Pollution Score", "indicator_col" : "pollution_", "choropleth_colors":["#3288bd","#81baa3","#b4e095","#e6f598","#f7fcb2","#fff5ae","#fee08b","#feaa69","#ef7556","#d53e4f"], "num_quantiles": 10},
+      'demographi': {"indicator_name" : "Demographics Score", "indicator_col" : "demographi", "choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
+      'sensitive_': {"indicator_name" : "Sensitive Score", "indicator_col" : "sensitive_", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'exposure_s': {"indicator_name" : "Exposure Score", "indicator_col" : "exposure_s", "choropleth_colors":["#1b7837","#60a764","#9dcf98","#d9f0d3","#edf5eb","#f2ebf2","#e7d4e8","#c2a4cf","#9d6dad","#762a83"], "num_quantiles": 10},
+      'effects_sc': {"indicator_name" : "Effects Score", "indicator_col" : "effects_sc", "choropleth_colors":["#c4e6c3","#a6d9ae","#89cb9d","#6dbc90","#58ab88","#469981","#36877a","#2c7472","#236269","#1d4f60"], "num_quantiles": 10},
+      'lead_score': {"indicator_name" : "Lead Exposure", "indicator_col" : "lead_score", "choropleth_colors":["#fcde9c","#fcb882","#f79473","#f0746e","#e75c6f","#e14872","#dc3977","#c52c79","#a52276","#7c1d6f"], "num_quantiles": 10},
+      'poverty_sc': {"indicator_name" : "Poverty", "indicator_col" : "poverty_sc", "choropleth_colors":["#fde0c5","#fbd2b0","#fac49d","#f8b58b","#f6a67a","#f4966b","#f2855d","#f07352","#ee6048","#eb4a40"], "num_quantiles": 10},
+      'edu_score': {"indicator_name" : "Educational Attainment", "indicator_col" : "edu_score", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'lin_score': {"indicator_name" : "Linguistic Isolation", "indicator_col" : "lin_score", "choropleth_colors":["#f3cbd3","#edb4c4","#e69eb7","#dd88ac","#d073a2","#c26098","#b14d8e","#9c3d83","#852e76","#6c2167"], "num_quantiles": 10},
+      'unemploy_s': {"indicator_name" : "Unemployment", "indicator_col" : "unemploy_s", "choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
+      'nonwhitepe': {"indicator_name" : "People of Color", "indicator_col" : "nonwhitepe", "choropleth_colors":["#edf8fb","#cedfed","#b4cbe2","#9ebcda","#92a3cd","#8d88bf","#8c6bb1","#8a50a4","#80308c","#6e016b"], "num_quantiles": 10},
+      'houseburde': {"indicator_name" : "Housing Burden", "indicator_col" : "houseburde", "choropleth_colors":["#008080","#57988d","#87b09b","#b4c8a8","#e0e1b6","#f4dcac","#edbb8a","#e49a6a","#d8794a","#ca562c"], "num_quantiles": 10},
+      'ozone_scor': {"indicator_name" : "Ozone", "indicator_col" : "ozone_scor", "choropleth_colors":["#009b9e","#33aeb0","#6ac0c2","#a7d3d4","#d9e7e7","#ede1e9","#e4c1d9","#dba1c9","#d180ba","#c75dab"], "num_quantiles": 10},
+      'diesel_sco': {"indicator_name" : "DieselPM", "indicator_col" : "diesel_sco", "choropleth_colors":["#798234","#959e53","#b2ba77","#d0d3a2","#eeeece","#f9e9d9","#f0c6c3","#e5a3ae","#dc8397","#d46780"], "num_quantiles": 10},
+      'oil_score': {"indicator_name" : "Oil Counts", "indicator_col" : "oil_score", "choropleth_colors":["#798234","#959e53","#b2ba77","#d0d3a2","#eeeece","#f9e9d9","#f0c6c3","#e5a3ae","#dc8397","#d46780"], "num_quantiles": 10},
+      'oil_densit': {"indicator_name" : "Oil Density", "indicator_col" : "oil_densit", "choropleth_colors":["#798234","#959e53","#b2ba77","#d0d3a2","#eeeece","#f9e9d9","#f0c6c3","#e5a3ae","#dc8397","#d46780"], "num_quantiles": 10},
+      'toxics_sco': {"indicator_name" : "Toxic Releases", "indicator_col" : "toxics_sco", "choropleth_colors":["#ffffb2","#ffe68a","#ffcc68","#feb24c","#fe9a41","#fd7a36","#fc4e2a","#eb3021","#d21220","#b10026"], "num_quantiles": 10},
+      'pm25_score': {"indicator_name" : "PM2.5", "indicator_col" : "pm25_score", "choropleth_colors":["#3d5941","#63785b","#8b9875","#b5b991","#e0dbae","#f4dcac","#edbb8a","#e49a6a","#d8794a","#ca562c"], "num_quantiles": 10},
+      'avg_ptraf': {"indicator_name" : "Traffic Exposure", "indicator_col" : "avg_ptraf", "choropleth_colors":["#2166ac","#5392c3","#8dbdda","#d1e5f0","#eaf1f5","#faeee7","#fddbc7","#f6a583","#db694f","#b2182b"], "num_quantiles": 10},
+      'avg_ptsdf': {"indicator_name" : "Hazardous Waste Facilities", "indicator_col" : "avg_ptsdf", "choropleth_colors":["#4d4d4d","#7f7f7f","#b0b0b0","#e0e0e0","#f5f5f5","#fff3ec","#fddbc7","#f6a583","#db694f","#b2182b"], "num_quantiles": 10},
+      'avg_prmp': {"indicator_name" : "High-Risk Chemical Facilities", "indicator_col" : "avg_prmp", "choropleth_colors":["#ecda9a","#eecb87","#f1bc77","#f3ad6a","#f69d61","#f88c5b","#f97b57","#f76b56","#f35c57","#ee4d5a"], "num_quantiles": 10},
+      'avg_pwdis': {"indicator_name" : "Wastewater Discharges", "indicator_col" : "avg_pwdis", "choropleth_colors":["#2887a1","#639ca8","#8eb2b0","#b5c8b8","#dadfbf","#e6dbb0","#d6bd8d","#c6a06b","#b48449","#a16928"], "num_quantiles": 10},
+      'avg_pnpl': {"indicator_name" : "Superfund Sites", "indicator_col" : "avg_pnpl", "choropleth_colors":["#ffffd4","#ffeca7","#ffd97c","#fec44f","#ffa836","#f88c22","#ec7014","#d75807","#b64103","#8c2d04"], "num_quantiles": 10},
+      'asthma_sco': {"indicator_name" : "Asthma", "indicator_col" : "asthma_sco", "choropleth_colors":["#4575b4","#79a6ce","#acd0e5","#e0f3f8","#f6fbd2","#fff5af","#fee090","#feaa6b","#f07148","#d73027"], "num_quantiles": 10},
+      'lb_score': {"indicator_name" : "Low Birth-Weight Infants", "indicator_col" : "lb_score", "choropleth_colors":["#b0f2bc","#96ebb1","#7ee4aa","#67dba5","#56cea4","#46c1a3","#38b2a3","#31a1a1","#2a8f9d","#257d98"], "num_quantiles": 10},
+      'hd_score': {"indicator_name" : "Cardiovascular Disease", "indicator_col" : "hd_score", "choropleth_colors":["#f6d2a9","#f6c097","#f4ae88","#f19c7c","#ec8a75","#e6796f","#dd686c","#d05969","#c24c67","#b13f64"], "num_quantiles": 10}};
+
+/////////////////////////// highlight tract borders when hover over/clicked ///////////////////////////////
+
+
+      var polygon;
+      var new_polygon;
+      var old_polygon_selected;
+      function showFeature(featureEvent) {
+        new_polygon_selected = featureEvent.data.cartodb_id;
+        console.log("old polygon selected");
+        console.log(old_polygon_selected);
+        console.log("new polygon selected");
+        console.log(new_polygon_selected);
+        console.log("type of old_polygon_selected");
+        console.log(typeof old_polygon_selected);
+        //only get data if no old polygon or new polygon is different
+        //don't get data if same polygon
+        if ((typeof old_polygon_selected === 'undefined') || (old_polygon_selected != new_polygon_selected)) {
+          console.log('diff polygon selected???');
+          const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${new_polygon_selected}`;
+          const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
+
+          fetch(boundsUrl)
+            .then(response => {
+                return response.json();
+              })
+              .then(json => {
+                new_polygon = L.geoJson(JSON.parse(json.rows[0].geom), {
+                  style: {
+                    color: "#15F4EE",
+                    fillColor: "#15F4EE",
+                    weight: 3,
+                    opacity: 0.65
+                  }
+                })
+              // if polygon has stayed the same, don't update add/remove
+              if (typeof polygon === 'undefined') {
+                console.log('old polygon undefined');
+                map.addLayer(new_polygon);
+              } else if (polygon != new_polygon){
+                console.log("diff polygon");
+                map.removeLayer(polygon);
+                map.addLayer(new_polygon);
+              }
+              polygon = new_polygon;
+              // .addTo(map);
+              // map.addLayer(polygon);
+              });
+        };
+        old_polygon_selected = new_polygon_selected;
+      };
+
+      // function resetHighlight(featureEvent) {
+      //   console.log("did reset?");
+      //   // map.removeLayer(polygon);
+      //   client.removeLayer(polygon)
+      //   .then(() => {
+      //    console.log('Layer removed');
+      //   })
+      //   .catch(cartoError => {
+      //    console.error(cartoError.message);
+      //   });
+      // }
+
+      // layer.on('mouseover', showFeature);
+      // layer.on('mouseout', function (e) {
+      //     this.closePopup();
+      // });
+      //next: code to remove clicked polygon highlight when popup closes and go back to hover highlight
+      //next: code to keep clicked polygon highlight and stop hover highlight when click
+      //maybe a second parameter?
+
+      // layer.on('featureClicked', showFeature);
+
+      //on hover
+      // layer.on('featureOver', showFeature);
+      // layer.off('featureOut', showFeature);
+
+      //on click
+      layer.on('featureClicked', showFeature);
+
+      //remove the layer on featureOut...
+
+      //on featureClick, layer.off('featureOver')
+
+/////////////////////////// populate dropdown using JSON data ///////////////////////////////
+
+
+      window.onload = function() {
+        replace_dropdown();
+      }
+
+      function replace_dropdown() {
+        var dropdown_html = `<option value="finalscore" selected>Final score</option>`; //code apart from others because want this to be default selected
+        for (var key in ind_dict) {
+          var get_value = ind_dict[key];
+          if (key != 'finalscore') {
+            dropdown_html += `<option value="${key}">${get_value.indicator_name}</option>`;
+          }
+        }
+        document.getElementById("js-dropdown-selector").innerHTML = dropdown_html;
+        console.log(document.getElementById("wrapper-dropdown-selector").innerHTML);
+      }
+
+/////////////////////////// change layers on dropdown select using JSON data ////////////////////////
+
+      //change content styling with dropdown values
+      $("#js-dropdown-selector").on('change', function(e) {
+        console.log('hi');
+        let value = e.target.value;
+        console.log(value);
+        var returned_value = ind_dict[value];
+        //don't need to fix for null values because in turbo-carto, null gets the low value from the ramp.
+        //which means the oil and gas nulls which are really 0 values get rendered as so--thank you Carto <3
+        layerStyle.setContent(`
+          #layer {
+            polygon-fill: ramp([${returned_value.indicator_col}], (${returned_value.choropleth_colors}), quantiles(${returned_value.num_quantiles}));
+              ::outline {
+                line-width: 0.5;
+                line-color: #FFFFFF;
+                line-opacity: 0.5;
+              }
+          }`)
+         .then(() => {
+           console.log('cartoCSS was updated');
+         })
+         .catch(() => {
+           console.error('Error updating the cartoCSS for the layer');
+         });
+      });
+
+/////////////////////////// popups using indicator JSON ///////////////////////////////
+
+    // create popups
+    const popup = L.popup({closeButton: true, maxHeight: 200});
+
+    function openPopup(featureEvent) {
+      let content = '<div class="widget">';
+      console.log('hello');
+      console.log(featureEvent);
+      console.log(featureEvent.data);
+      console.log('try dis');
+      console.log(featureEvent.data.avg_pnpl);
+
+      //need to write FIPS tract id first
+      content += `<h4 class="open-sans">Census tract: ${featureEvent.data.fips_tract}</h4>`;
+
+      content += '<ul class="popup-list" style="list-style-type:none; padding-left:0">';
+      //iterate through all in featureEvent.data
+      for (var key in ind_dict) {
+        //need way to exclude ranks?? or include them later with formatting
+        if ((key != 'cartodb_id') && (!key.includes("rank")) && (key != 'fips_tract') && (key !='name')) {
+            var actual_name = ind_dict[key];
+            console.log(key);
+            console.log(actual_name);
+            if (featureEvent.data[key] == null) {
+              if ((key == 'oil_score')||(key == 'oil_densit')) {
+                content += `<li><p><b>${actual_name.indicator_name}:</b> 0</p></li>`;
+              } else {
+                content += `<li><p><b>${actual_name.indicator_name}:</b> N/A</p></li>`;
+              }
+            } else {
+              content += `<li><p><b>${actual_name.indicator_name}:</b> ${featureEvent.data[key].toFixed(2)}</p></li>`;
+            }
+        }
+      }
+      content += '</ul>';
+      popup.setContent(content);
+      popup.setLatLng(featureEvent.latLng);
+      if (!popup.isOpen()) {
+        popup.openOn(map);
+      }
+    }
+
+    //click-on popup (can change to hover too)
+    layer.off('featureOut');
+    layer.on('featureClicked', openPopup);
+
+    console.log("is popup open");
+    console.log(popup.isOpen());
+    if (!popup.isOpen() && !(typeof polygon === 'undefined')) {
+      console.log('removing highlight');
+      map.removeLayer(polygon);
+    }
+
+
+///////////////////////////// add/change legend ///////////////////////////////
+
+      var legend  = L.control({position: 'bottomright'})
+
+      layer.on('metadataChanged', function(event){
+
+        // console.log(event.styles[0]._buckets); //print array of buckets
+
+        console.log('checkingg');
+        console.log(event.styles[0]._column);
+
+        // get buckets
+        var buckets = event.styles[0]._buckets;
+        //each Bucket has props: min, max, and value (which here is the color string code)
+
+        legend.onAdd = function (map) {
+          var div = L.DomUtil.create('div', 'info legend');
+          var column = event.styles[0]._column;
+          var max_buckets = buckets.length - 1;
+          // div.innerHTML += '<input type="checkbox" id="toggle" class="checkbox"/><label for="toggle" class="switch"></label>';
+          div.innerHTML += '<h4 class="open-sans">Highest</br>Percentiles</h4>';
+          if ((column == 'oil_densit') || (column == 'oil_score')) {
+            for (var i = max_buckets; i > 0; i--) {
+              div.innerHTML +=
+                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[i].value}"></i>${i*10} - ${(i+1)*10}</ul>`;
+              // div.innerHTML +=
+              //   `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[i].value}"></i>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</ul>`;
+            }
+            div.innerHTML +=
+                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[0].value}"></i>0 - 10</ul>`;
+          }
+          else {
+            for (var i = max_buckets; i >= 0; i--) {
+              div.innerHTML +=
+                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${i*10} - ${(i+1)*10}</span></ul>`;
+            }
+          }
+          div.innerHTML += '<h4 class="open-sans">Lowest</br>Percentiles</h4>';
+          return div;
+        };
+        legend.addTo(map);
+      });
+  </script>
+  </body>
+</html>
