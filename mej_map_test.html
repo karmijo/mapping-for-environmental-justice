@@ -76,7 +76,7 @@
         background-color: #e6e6e6;
       }
       .legend {
-        line-height: 18px;
+        /* line-height: 18px; */
         color: #555;
       }
       .legend i {
@@ -95,7 +95,7 @@
         border-radius: 5px;
       }
       .info h4 {
-        /* margin: 0 0 5px; */
+        margin: 0 0 5px;
         color: #777;
       }
       .popup-list li:not(:last-child){
@@ -138,7 +138,7 @@
       const source = new carto.source.Dataset('colorado_final');
       const layerStyle = new carto.style.CartoCSS(`
         #layer {
-          polygon-fill: ramp([finalscore], (#009392, #39b185, #9ccb86, #e9e29c, #eeb479, #e88471, #cf597e), quantiles(7));
+          polygon-fill: ramp([finalscore], (#009392,#2ea78a,#62ba85,#9ccb86,#d0db95,#ebd390,#eeb479,#ea9474,#e07676,#cf597e), quantiles(10));
             ::outline {
               line-width: 0.5;
               line-color: #FFFFFF;
@@ -193,35 +193,35 @@
       //also: Carto automatically truncates column names to 10 letters or less...
       //form: dictionary = key as column title, value as JSON object with the categories: official display name, column title, choropleth colors, and number of quantiles for ramp
       //later can also add to the JSON objects text explanations of each indicator, links to reference more info, icons/images to display with the indicator, etc.
-      ind_dict = {'finalscore': {"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392", "#39b185", "#9ccb86", "#e9e29c", "#eeb479", "#e88471", "#cf597e"], "num_quantiles": 7},
-      'pop_densit': {"indicator_name" : "Population Density", "indicator_col" : "pop_densit", "choropleth_colors":[['#c4e6c3','#96d2a4','#6dbc90','#4da284','#36877a','#266b6e','#1d4f60']], "num_quantiles": 7},
-      'pop_char': {"indicator_name" : "Population Characteristics", "indicator_col" : "pop_char", "choropleth_colors":['#f2f0f7', '#dadaeb', '#bcbddc', '#9e9ac8', '#807dba', '#6a51a3', '#4a1486'], "num_quantiles": 7},
-      'pollution_': {"indicator_name" : "Pollution Score", "indicator_col" : "pollution_", "choropleth_colors":['#3288bd', '#99d594', '#e6f598', '#ffffbf', '#fee08b', '#fc8d59', '#d53e4f'], "num_quantiles": 7},
-      'demographi': {"indicator_name" : "Demographics Score", "indicator_col" : "demographi", "choropleth_colors":['#eff3ff', '#c6dbef', '#9ecae1', '#6baed6', '#4292c6', '#2171b5', '#084594'], "num_quantiles": 7},
-      'sensitive_': {"indicator_name" : "Sensitive Score", "indicator_col" : "sensitive_", "choropleth_colors":['#b0f2bc', '#89e8ac', '#67dba5', '#4cc8a3', '#38b2a3', '#2c98a0', '#257d98'], "num_quantiles": 7},
-      'exposure_s': {"indicator_name" : "Exposure Score", "indicator_col" : "exposure_s", "choropleth_colors":['#894f94', '#af8dc3', '#e7d4e8', '#f7f7f7', '#d9f0d3', '#7fbf7b', '#1b7837'], "num_quantiles": 7},
-      'effects_sc': {"indicator_name" : "Effects Score", "indicator_col" : "effects_sc", "choropleth_colors":['#1a9850', '#91cf60', '#d9ef8b', '#ffffbf', '#fee08b', '#fc8d59', '#d73027'], "num_quantiles": 7},
-      'lead_score': {"indicator_name" : "Lead Exposure", "indicator_col" : "lead_score", "choropleth_colors":["#fef6b5","#ffdd9a","#ffc285","#ffa679","#fa8a76","#f16d7a","#e15383"], "num_quantiles": 7},
-      'poverty_sc': {"indicator_name" : "Poverty", "indicator_col" : "poverty_sc", "choropleth_colors":['#fde0c5','#facba6','#f8b58b','#f59e72','#f2855d','#ef6a4c','#eb4a40'], "num_quantiles": 7},
-      'edu_score': {"indicator_name" : "Educational Attainment", "indicator_col" : "edu_score", "choropleth_colors":['#e4f1e1','#b4d9cc','#89c0b6','#63a6a0','#448c8a','#287274','#0d585f'], "num_quantiles": 7},
-      'lin_score': {"indicator_name" : "Linguistic Isolation", "indicator_col" : "lin_score", "choropleth_colors":['#f3cbd3','#eaa9bd','#dd88ac','#ca699d','#b14d8e','#91357d','#6c2167'], "num_quantiles": 7},
-      'unemploy_s': {"indicator_name" : "Unemployment", "indicator_col" : "unemploy_s", "choropleth_colors":['#ede5cf','#e0c2a2','#d39c83','#c1766f','#a65461','#813753','#541f3f'], "num_quantiles": 7},
-      'nonwhitepe': {"indicator_name" : "Race", "indicator_col" : "nonwhitepe", "choropleth_colors":["#f3e0f7", "#e4c7f1", "#d1afe8", "#b998dd", "#9f82ce", "#826dba", "#63589f"], "num_quantiles": 7},
-      'houseburde': {"indicator_name" : "Housing Burden", "indicator_col" : "houseburde", "choropleth_colors":['#008080','#70a494','#b4c8a8','#f6edbd','#edbb8a','#de8a5a','#ca562c'], "num_quantiles": 7},
-      'ozone_scor': {"indicator_name" : "Ozone", "indicator_col" : "ozone_scor", "choropleth_colors":['#009B9E','#42B7B9','#A7D3D4','#F1F1F1','#E4C1D9','#D691C1','#C75DAB'], "num_quantiles": 7},
-      'diesel_sco': {"indicator_name" : "DieselPM", "indicator_col" : "diesel_sco", "choropleth_colors":['#798234','#a3ad62','#d0d3a2','#fdfbe4','#f0c6c3','#df91a3','#d46780'], "num_quantiles": 7},
-      'oil_score': {"indicator_name" : "Oil Counts", "indicator_col" : "oil_score", "choropleth_colors":['#798234','#a3ad62','#d0d3a2','#fdfbe4','#f0c6c3','#df91a3','#d46780'], "num_quantiles": 7},
-      'oil_densit': {"indicator_name" : "Oil Density", "indicator_col" : "oil_densit", "choropleth_colors":['#798234','#a3ad62','#d0d3a2','#fdfbe4','#f0c6c3','#df91a3','#d46780'], "num_quantiles": 7},
-      'toxics_sco': {"indicator_name" : "Toxic Releases", "indicator_col" : "toxics_sco", "choropleth_colors":['#fbe6c5','#f5ba98','#ee8a82','#dc7176','#c8586c','#9c3f5d','#70284a'], "num_quantiles": 7},
-      'pm25_score': {"indicator_name" : "PM2.5", "indicator_col" : "pm25_score", "choropleth_colors":['#3d5941','#778868','#b5b991','#f6edbd','#edbb8a','#de8a5a','#ca562c'], "num_quantiles": 7},
-      'avg_ptraf': {"indicator_name" : "Traffic Exposure", "indicator_col" : "avg_ptraf", "choropleth_colors":['#009392','#72aaa1','#b1c7b3','#f1eac8','#e5b9ad','#d98994','#d0587e'], "num_quantiles": 7},
-      'avg_ptsdf': {"indicator_name" : "Hazardous Waste Facilities", "indicator_col" : "avg_ptsdf", "choropleth_colors":['#f6d2a9','#f5b78e','#f19c7c','#ea8171','#dd686c','#ca5268','#b13f64'], "num_quantiles": 7},
-      'avg_prmp': {"indicator_name" : "High-Risk Chemical Facilities", "indicator_col" : "avg_prmp", "choropleth_colors":['#ecda9a','#efc47e','#f3ad6a','#f7945d','#f97b57','#f66356','#ee4d5a'], "num_quantiles": 7},
-      'avg_pwdis': {"indicator_name" : "Wastewater Discharges", "indicator_col" : "avg_pwdis", "choropleth_colors":['#d1eeea','#a8dbd9','#85c4c9','#68abb8','#4f90a6','#3b738f','#2a5674'], "num_quantiles": 7},
-      'avg_pnpl': {"indicator_name" : "Superfund Sites", "indicator_col" : "avg_pnpl", "choropleth_colors":['#fcde9c','#faa476','#f0746e','#e34f6f','#dc3977','#b9257a','#7c1d6f'], "num_quantiles": 7},
-      'asthma_sco': {"indicator_name" : "Asthma", "indicator_col" : "asthma_sco", "choropleth_colors":['#ffffb2', '#fed976', '#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c', '#b10026'], "num_quantiles": 7},
-      'lb_score': {"indicator_name" : "Low Birth-Weight Infants", "indicator_col" : "lb_score", "choropleth_colors":['#d2fbd4', '#a5dbc2', '#7bbcb0', '#559c9e', '#3a7c89', '#235d72', '#123f5a'], "num_quantiles": 7},
-      'hd_score': {"indicator_name" : "Cardiovascular Disease", "indicator_col" : "hd_score", "choropleth_colors":['#ffffd4', '#fee391', '#fec44f', '#fe9929', '#ec7014', '#cc4c02', '#8c2d04'], "num_quantiles": 7}};
+      ind_dict = {'finalscore': {"indicator_name" : "Final score", "indicator_col" : "finalscore", "choropleth_colors":["#009392","#2ea78a","#62ba85","#9ccb86","#d0db95","#ebd390","#eeb479","#ea9474","#e07676","#cf597e"], "num_quantiles": 10},
+      'pop_densit': {"indicator_name" : "Population Density", "indicator_col" : "pop_densit", "choropleth_colors":["#245668","#1a6973","#107c7c","#0d8f81","#2fa27f","#4eb47b","#6ec574","#97d46c","#c0e264","#edef5d"], "num_quantiles": 10},
+      'pop_char': {"indicator_name" : "Population Characteristics", "indicator_col" : "pop_char", "choropleth_colors":["#ffffcc","#daf0bc","#b1e0b7","#7fcdbb","#5abec1","#38a9c3","#1d91c0","#236fb0","#1d4d9c","#0c2c84"], "num_quantiles": 10},
+      'pollution_': {"indicator_name" : "Pollution Score", "indicator_col" : "pollution_", "choropleth_colors":["#3288bd","#81baa3","#b4e095","#e6f598","#f7fcb2","#fff5ae","#fee08b","#feaa69","#ef7556","#d53e4f"], "num_quantiles": 10},
+      'demographi': {"indicator_name" : "Demographics Score", "indicator_col" : "demographi", "choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
+      'sensitive_': {"indicator_name" : "Sensitive Score", "indicator_col" : "sensitive_", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'exposure_s': {"indicator_name" : "Exposure Score", "indicator_col" : "exposure_s", "choropleth_colors":["#1b7837","#60a764","#9dcf98","#d9f0d3","#edf5eb","#f2ebf2","#e7d4e8","#c2a4cf","#9d6dad","#762a83"], "num_quantiles": 10},
+      'effects_sc': {"indicator_name" : "Effects Score", "indicator_col" : "effects_sc", "choropleth_colors":["#1a9850","#70bd5b","#a9da6e","#d9ef8b","#f2faae","#fff5ae","#fee08b","#feaa69","#f07148","#d73027"], "num_quantiles": 10},
+      'lead_score': {"indicator_name" : "Lead Exposure", "indicator_col" : "lead_score", "choropleth_colors":["#fcde9c","#fcb882","#f79473","#f0746e","#e75c6f","#e14872","#dc3977","#c52c79","#a52276","#7c1d6f"], "num_quantiles": 10},
+      'poverty_sc': {"indicator_name" : "Poverty", "indicator_col" : "poverty_sc", "choropleth_colors":["#fde0c5","#fbd2b0","#fac49d","#f8b58b","#f6a67a","#f4966b","#f2855d","#f07352","#ee6048","#eb4a40"], "num_quantiles": 10},
+      'edu_score': {"indicator_name" : "Educational Attainment", "indicator_col" : "edu_score", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'lin_score': {"indicator_name" : "Linguistic Isolation", "indicator_col" : "lin_score", "choropleth_colors":["#f3cbd3","#edb4c4","#e69eb7","#dd88ac","#d073a2","#c26098","#b14d8e","#9c3d83","#852e76","#6c2167"], "num_quantiles": 10},
+      'unemploy_s': {"indicator_name" : "Unemployment", "indicator_col" : "unemploy_s", "choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
+      'nonwhitepe': {"indicator_name" : "Race", "indicator_col" : "nonwhitepe", "choropleth_colors":["#edf8fb","#cedfed","#b4cbe2","#9ebcda","#92a3cd","#8d88bf","#8c6bb1","#8a50a4","#80308c","#6e016b"], "num_quantiles": 10},
+      'houseburde': {"indicator_name" : "Housing Burden", "indicator_col" : "houseburde", "choropleth_colors":["#008080","#57988d","#87b09b","#b4c8a8","#e0e1b6","#f4dcac","#edbb8a","#e49a6a","#d8794a","#ca562c"], "num_quantiles": 10},
+      'ozone_scor': {"indicator_name" : "Ozone", "indicator_col" : "ozone_scor", "choropleth_colors":["#009b9e","#33aeb0","#6ac0c2","#a7d3d4","#d9e7e7","#ede1e9","#e4c1d9","#dba1c9","#d180ba","#c75dab"], "num_quantiles": 10},
+      'diesel_sco': {"indicator_name" : "DieselPM", "indicator_col" : "diesel_sco", "choropleth_colors":["#798234","#959e53","#b2ba77","#d0d3a2","#eeeece","#f9e9d9","#f0c6c3","#e5a3ae","#dc8397","#d46780"], "num_quantiles": 10},
+      'oil_score': {"indicator_name" : "Oil Counts", "indicator_col" : "oil_score", "choropleth_colors":["#798234","#959e53","#b2ba77","#d0d3a2","#eeeece","#f9e9d9","#f0c6c3","#e5a3ae","#dc8397","#d46780"], "num_quantiles": 10},
+      'oil_densit': {"indicator_name" : "Oil Density", "indicator_col" : "oil_densit", "choropleth_colors":["#798234","#959e53","#b2ba77","#d0d3a2","#eeeece","#f9e9d9","#f0c6c3","#e5a3ae","#dc8397","#d46780"], "num_quantiles": 10},
+      'toxics_sco': {"indicator_name" : "Toxic Releases", "indicator_col" : "toxics_sco", "choropleth_colors":["#ffffb2","#ffe68a","#ffcc68","#feb24c","#fe9a41","#fd7a36","#fc4e2a","#eb3021","#d21220","#b10026"], "num_quantiles": 10},
+      'pm25_score': {"indicator_name" : "PM2.5", "indicator_col" : "pm25_score", "choropleth_colors":["#3d5941","#63785b","#8b9875","#b5b991","#e0dbae","#f4dcac","#edbb8a","#e49a6a","#d8794a","#ca562c"], "num_quantiles": 10},
+      'avg_ptraf': {"indicator_name" : "Traffic Exposure", "indicator_col" : "avg_ptraf", "choropleth_colors":["#2166ac","#5392c3","#8dbdda","#d1e5f0","#eaf1f5","#faeee7","#fddbc7","#f6a583","#db694f","#b2182b"], "num_quantiles": 10},
+      'avg_ptsdf': {"indicator_name" : "Hazardous Waste Facilities", "indicator_col" : "avg_ptsdf", "choropleth_colors":["#4d4d4d","#7f7f7f","#b0b0b0","#e0e0e0","#f5f5f5","#fff3ec","#fddbc7","#f6a583","#db694f","#b2182b"], "num_quantiles": 10},
+      'avg_prmp': {"indicator_name" : "High-Risk Chemical Facilities", "indicator_col" : "avg_prmp", "choropleth_colors":["#ecda9a","#eecb87","#f1bc77","#f3ad6a","#f69d61","#f88c5b","#f97b57","#f76b56","#f35c57","#ee4d5a"], "num_quantiles": 10},
+      'avg_pwdis': {"indicator_name" : "Wastewater Discharges", "indicator_col" : "avg_pwdis", "choropleth_colors":["#2887a1","#639ca8","#8eb2b0","#b5c8b8","#dadfbf","#e6dbb0","#d6bd8d","#c6a06b","#b48449","#a16928"], "num_quantiles": 10},
+      'avg_pnpl': {"indicator_name" : "Superfund Sites", "indicator_col" : "avg_pnpl", "choropleth_colors":["#ffffd4","#ffeca7","#ffd97c","#fec44f","#ffa836","#f88c22","#ec7014","#d75807","#b64103","#8c2d04"], "num_quantiles": 10},
+      'asthma_sco': {"indicator_name" : "Asthma", "indicator_col" : "asthma_sco", "choropleth_colors":["#4575b4","#79a6ce","#acd0e5","#e0f3f8","#f6fbd2","#fff5af","#fee090","#feaa6b","#f07148","#d73027"], "num_quantiles": 10},
+      'lb_score': {"indicator_name" : "Low Birth-Weight Infants", "indicator_col" : "lb_score", "choropleth_colors":["#b0f2bc","#96ebb1","#7ee4aa","#67dba5","#56cea4","#46c1a3","#38b2a3","#31a1a1","#2a8f9d","#257d98"], "num_quantiles": 10},
+      'hd_score': {"indicator_name" : "Cardiovascular Disease", "indicator_col" : "hd_score", "choropleth_colors":["#f6d2a9","#f6c097","#f4ae88","#f19c7c","#ec8a75","#e6796f","#dd686c","#d05969","#c24c67","#b13f64"], "num_quantiles": 10}};
 
 /////////////////////////// highlight tract borders when hover over/clicked ///////////////////////////////
 
@@ -426,16 +426,17 @@
         legend.onAdd = function (map) {
           var div = L.DomUtil.create('div', 'info legend');
           var column = event.styles[0]._column;
+          var max_buckets = buckets.length - 1;
           if ((column == 'oil_densit') || (column == 'oil_score')) {
-            for (var i = 6; i > 0; i--) {
+            for (var i = max_buckets; i > 0; i--) {
               div.innerHTML +=
-                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</span></ul>`;
+                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[i].value}"></i>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</ul>`;
             }
             div.innerHTML +=
-                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[0].value}"></i> <span>0 - ${parseFloat(buckets[0].max).toFixed(2)}</span></ul>`;
-          } else {
-            // wrote this for 7 quantiles, need to change if we vary quantiles for different indicators
-            for (var i = 6; i >= 0; i--) {
+                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[0].value}"></i>0 - ${parseFloat(buckets[0].max).toFixed(2)}</ul>`;
+          }
+          else {
+            for (var i = max_buckets; i >= 0; i--) {
               div.innerHTML +=
                 `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</span></ul>`;
             }
