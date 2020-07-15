@@ -214,22 +214,21 @@
       client.getLeafletLayer().addTo(map);
 
       // Geocoder
-      // L.Control.geocoder({position: 'topleft'}).addTo(map);
-      var geocoder = L.Control.geocoder({
-        defaultMarkGeocode: false,
-        position: 'topleft'
-      })
-        .on('markgeocode', function(e) {
-          var bbox = e.geocode.bbox;
-          var poly = L.polygon([
-            bbox.getSouthEast(),
-            bbox.getNorthEast(),
-            bbox.getNorthWest(),
-            bbox.getSouthWest()
-          ]);
-          map.fitBounds(poly.getBounds());
-        })
-        .addTo(map);
+      // var geocoder = L.Control.geocoder({
+      //   defaultMarkGeocode: false,
+      //   position: 'topleft'
+      // })
+      //   .on('markgeocode', function(e) {
+      //     var bbox = e.geocode.bbox;
+      //     var poly = L.polygon([
+      //       bbox.getSouthEast(),
+      //       bbox.getNorthEast(),
+      //       bbox.getNorthWest(),
+      //       bbox.getSouthWest()
+      //     ]);
+      //     map.fitBounds(poly.getBounds());
+      //   })
+      //   .addTo(map);
 
 /////////////////////////// dictionary + JSON objects for indicators data ///////////////////////////////
 
@@ -243,13 +242,13 @@
       'demographi': {"indicator_name" : "Demographics Score", "indicator_col" : "demographi", "choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
       'sensitive_': {"indicator_name" : "Sensitive Score", "indicator_col" : "sensitive_", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
       'exposure_s': {"indicator_name" : "Exposure Score", "indicator_col" : "exposure_s", "choropleth_colors":["#1b7837","#60a764","#9dcf98","#d9f0d3","#edf5eb","#f2ebf2","#e7d4e8","#c2a4cf","#9d6dad","#762a83"], "num_quantiles": 10},
-      'effects_sc': {"indicator_name" : "Effects Score", "indicator_col" : "effects_sc", "choropleth_colors":["#1a9850","#70bd5b","#a9da6e","#d9ef8b","#f2faae","#fff5ae","#fee08b","#feaa69","#f07148","#d73027"], "num_quantiles": 10},
+      'effects_sc': {"indicator_name" : "Effects Score", "indicator_col" : "effects_sc", "choropleth_colors":["#c4e6c3","#a6d9ae","#89cb9d","#6dbc90","#58ab88","#469981","#36877a","#2c7472","#236269","#1d4f60"], "num_quantiles": 10},
       'lead_score': {"indicator_name" : "Lead Exposure", "indicator_col" : "lead_score", "choropleth_colors":["#fcde9c","#fcb882","#f79473","#f0746e","#e75c6f","#e14872","#dc3977","#c52c79","#a52276","#7c1d6f"], "num_quantiles": 10},
       'poverty_sc': {"indicator_name" : "Poverty", "indicator_col" : "poverty_sc", "choropleth_colors":["#fde0c5","#fbd2b0","#fac49d","#f8b58b","#f6a67a","#f4966b","#f2855d","#f07352","#ee6048","#eb4a40"], "num_quantiles": 10},
       'edu_score': {"indicator_name" : "Educational Attainment", "indicator_col" : "edu_score", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
       'lin_score': {"indicator_name" : "Linguistic Isolation", "indicator_col" : "lin_score", "choropleth_colors":["#f3cbd3","#edb4c4","#e69eb7","#dd88ac","#d073a2","#c26098","#b14d8e","#9c3d83","#852e76","#6c2167"], "num_quantiles": 10},
       'unemploy_s': {"indicator_name" : "Unemployment", "indicator_col" : "unemploy_s", "choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
-      'nonwhitepe': {"indicator_name" : "Race", "indicator_col" : "nonwhitepe", "choropleth_colors":["#edf8fb","#cedfed","#b4cbe2","#9ebcda","#92a3cd","#8d88bf","#8c6bb1","#8a50a4","#80308c","#6e016b"], "num_quantiles": 10},
+      'nonwhitepe': {"indicator_name" : "People of Color", "indicator_col" : "nonwhitepe", "choropleth_colors":["#edf8fb","#cedfed","#b4cbe2","#9ebcda","#92a3cd","#8d88bf","#8c6bb1","#8a50a4","#80308c","#6e016b"], "num_quantiles": 10},
       'houseburde': {"indicator_name" : "Housing Burden", "indicator_col" : "houseburde", "choropleth_colors":["#008080","#57988d","#87b09b","#b4c8a8","#e0e1b6","#f4dcac","#edbb8a","#e49a6a","#d8794a","#ca562c"], "num_quantiles": 10},
       'ozone_scor': {"indicator_name" : "Ozone", "indicator_col" : "ozone_scor", "choropleth_colors":["#009b9e","#33aeb0","#6ac0c2","#a7d3d4","#d9e7e7","#ede1e9","#e4c1d9","#dba1c9","#d180ba","#c75dab"], "num_quantiles": 10},
       'diesel_sco': {"indicator_name" : "DieselPM", "indicator_col" : "diesel_sco", "choropleth_colors":["#798234","#959e53","#b2ba77","#d0d3a2","#eeeece","#f9e9d9","#f0c6c3","#e5a3ae","#dc8397","#d46780"], "num_quantiles": 10},
