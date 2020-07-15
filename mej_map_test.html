@@ -215,6 +215,21 @@
 
       // Geocoder
       // L.Control.geocoder({position: 'topleft'}).addTo(map);
+      var geocoder = L.Control.geocoder({
+        defaultMarkGeocode: false,
+        position: 'topleft'
+      })
+        .on('markgeocode', function(e) {
+          var bbox = e.geocode.bbox;
+          var poly = L.polygon([
+            bbox.getSouthEast(),
+            bbox.getNorthEast(),
+            bbox.getNorthWest(),
+            bbox.getSouthWest()
+          ]);
+          map.fitBounds(poly.getBounds());
+        })
+        .addTo(map);
 
 /////////////////////////// dictionary + JSON objects for indicators data ///////////////////////////////
 
