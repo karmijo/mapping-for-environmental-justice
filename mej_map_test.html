@@ -101,6 +101,34 @@
       .popup-list li:not(:last-child){
         margin-bottom: -15px;
       }
+      /* .switch {
+       position : relative ;
+       display : inline-block;
+       width : 40px;
+       height : 20px;
+       background-color: #ccc;
+       border-radius: 20px;
+     }
+     .switch::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: white;
+      top: 1px; // TO GIVE AN EFFECT OF CIRCLE INSIDE SWITCH.
+      left: 1px;
+      transition: all 0.3s;
+    }
+    .checkbox:checked + .switch::after {
+      left : 20px;
+    }
+    .checkbox:checked + .switch {
+      background-color: #7983ff;
+    }
+    .checkbox {
+      display : none;
+    } */
     </style>
   </head>
 
@@ -427,20 +455,25 @@
           var div = L.DomUtil.create('div', 'info legend');
           var column = event.styles[0]._column;
           var max_buckets = buckets.length - 1;
+          // div.innerHTML += '<input type="checkbox" id="toggle" class="checkbox"/><label for="toggle" class="switch"></label>';
+          div.innerHTML += '<h4 class="open-sans">Highest</br>Percentiles</h4>';
           if ((column == 'oil_densit') || (column == 'oil_score')) {
             for (var i = max_buckets; i > 0; i--) {
               div.innerHTML +=
-                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[i].value}"></i>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</ul>`;
+                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[i].value}"></i>${i*10} - ${(i+1)*10}</ul>`;
+              // div.innerHTML +=
+              //   `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[i].value}"></i>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</ul>`;
             }
             div.innerHTML +=
-                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[0].value}"></i>0 - ${parseFloat(buckets[0].max).toFixed(2)}</ul>`;
+                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[0].value}"></i>0 - 10</ul>`;
           }
           else {
             for (var i = max_buckets; i >= 0; i--) {
               div.innerHTML +=
-                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</span></ul>`;
+                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${i*10} - ${(i+1)*10}</span></ul>`;
             }
           }
+          div.innerHTML += '<h4 class="open-sans">Lowest</br>Percentiles</h4>';
           return div;
         };
         legend.addTo(map);
