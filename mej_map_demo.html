@@ -214,21 +214,22 @@
       client.getLeafletLayer().addTo(map);
 
       // Geocoder
-      // var geocoder = L.Control.geocoder({
-      //   defaultMarkGeocode: false,
-      //   position: 'topleft'
-      // })
-      //   .on('markgeocode', function(e) {
-      //     var bbox = e.geocode.bbox;
-      //     var poly = L.polygon([
-      //       bbox.getSouthEast(),
-      //       bbox.getNorthEast(),
-      //       bbox.getNorthWest(),
-      //       bbox.getSouthWest()
-      //     ]);
-      //     map.fitBounds(poly.getBounds());
-      //   })
-      //   .addTo(map);
+      var geocoder = L.Control.geocoder({
+        defaultMarkGeocode: false,
+        expand: "hover",
+        position: 'topleft'
+      })
+        .on('markgeocode', function(e) {
+          var bbox = e.geocode.bbox;
+          var poly = L.polygon([
+            bbox.getSouthEast(),
+            bbox.getNorthEast(),
+            bbox.getNorthWest(),
+            bbox.getSouthWest()
+          ]);
+          map.fitBounds(poly.getBounds());
+        })
+        .addTo(map);
 
 /////////////////////////// dictionary + JSON objects for indicators data ///////////////////////////////
 
@@ -425,6 +426,13 @@
               } else {
                 content += `<li><p><b>${actual_name.indicator_name}:</b> N/A</p></li>`;
               }
+            } else if (key == 'pop_densit') {
+              console.log('pop_densit to counts');
+              console.log('pop_densit');
+              console.log(featureEvent.data['pop_densit']);
+              console.log('couunts');
+              console.log(featureEvent.data['total_pop']);
+              content += `<li><p><b>Total Population:</b> ${featureEvent.data['total_pop'].toFixed(2)}</p></li>`;
             } else {
               content += `<li><p><b>${actual_name.indicator_name}:</b> ${featureEvent.data[key].toFixed(2)}</p></li>`;
             }
