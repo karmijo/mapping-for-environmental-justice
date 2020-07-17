@@ -185,7 +185,7 @@
       const source = new carto.source.Dataset('colorado_final');
       const layerStyle = new carto.style.CartoCSS(`
         #layer {
-          polygon-fill: ramp([final_rank], (#009392,#2ea78a,#62ba85,#9ccb86,#d0db95,#ebd390,#eeb479,#ea9474,#e07676,#cf597e), quantiles(10));
+          polygon-fill: ramp([finalscore], (#009392,#2ea78a,#62ba85,#9ccb86,#d0db95,#ebd390,#eeb479,#ea9474,#e07676,#cf597e), quantiles(10));
             ::outline {
               line-width: 0.5;
               line-color: #FFFFFF;
