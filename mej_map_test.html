@@ -478,11 +478,13 @@
       }
 
       function replace_dropdown() {
-        var dropdown_html = `<option value="final_rank" selected>Final Rank</option>`; //code apart from others because want this to be default selected
+        var dropdown_html = `<option value="final_rank" class="optionGroup" selected>Final Rank</option>`; //code apart from others because want this to be default selected
         for (var key in ind_dict) {
           var get_value = ind_dict[key];
-          if (key != 'final_rank') {
-            dropdown_html += `<option value="${key}">${get_value.indicator_name}</option>`;
+          if ((key == 'pop_densit') || (key == 'demographi') || (key == 'sensitive_') || (key == 'exposure_s') || (key == 'effects_sc')) {
+            dropdown_html += `<option value="${key}" class="optionGroup">${get_value.indicator_name}</option>`;
+          } else if (key != 'final_rank') {
+              dropdown_html += `<option value="${key}" class="optionChild">&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
           }
         }
         document.getElementById("js-dropdown-selector").innerHTML = dropdown_html;
@@ -530,7 +532,7 @@
       console.log(featureEvent.data.avg_pnpl);
 
       //need to write FIPS tract id first
-      content += `<h4 class="open-sans">Census tract: ${featureEvent.data.fips_tract}</h4>`;
+      content += `<h4 class="open-sans">${featureEvent.data.name}</h4>`;
 
       content += '<ul class="popup-list" style="list-style-type:none; padding-left:0">';
       //iterate through all in featureEvent.data
