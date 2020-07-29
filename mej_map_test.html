@@ -496,11 +496,11 @@
       }
 
       function replace_dropdown() {
-        var dropdown_html = `<option value="final_rank" selected>Final Rank</option>`; //code apart from others because want this to be default selected
+        var dropdown_html = `<option value="final_rank" style="font-weight:bold !important;" selected>Final Rank</option>`; //code apart from others because want this to be default selected
         for (var key in ind_dict) {
           var get_value = ind_dict[key];
           if ((key == 'pop_densit') || (key == 'demographi') || (key == 'sensitive_') || (key == 'exposure_s') || (key == 'effects_sc')) {
-            dropdown_html += `<option value="${key}">${get_value.indicator_name}</option>`;
+            dropdown_html += `<option value="${key}" style="font-weight:bold !important;">${get_value.indicator_name}</option>`;
           } else if (key != 'final_rank') {
               dropdown_html += `<option value="${key}">&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
           }
