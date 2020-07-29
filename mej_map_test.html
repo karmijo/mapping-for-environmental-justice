@@ -7,12 +7,21 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700|Open+Sans:300,400,600" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" type="text/css">
-    <!-- Include jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <!-- (Optional) Latest compiled and minified JavaScript translation files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-en_US.js"></script>
     <!-- Include Leaflet -->
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
     <link href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" rel="stylesheet">
-
     <!-- Include CARTO.js -->
     <script src="https://libs.cartocdn.com/carto.js/v4.0.8/carto.min.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css" rel="stylesheet">
@@ -47,13 +56,19 @@
         text-decoration: none;
         font: bold 18px 'Lucida Console', Monaco, monospace;
       }
+      #collapse-legend {
+        position: absolute;
+        bottom: 50px;
+        right: 10px;
+        z-index: 998;
+      }
       #wrapper-dropdown-selector {
         position: absolute;
         top: 15px;
         right: 10px;
-        z-index: 999;
+        z-index: 100000;
       }
-      #js-dropdown-selector {
+      .btn-new {
         width: 160px;
         font-size: 16px;
         padding: 6px;
@@ -69,22 +84,23 @@
         border-radius: 3px;
         box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
         white-space: nowrap;
+        z-index: 100000;
       }
-      #js-dropdown-selector:hover {
+      .btn-new:hover {
         color: #333;
         background-color: #e6e6e6;
         /* border-color: #adadad; */
       }
-      #js-dropdown-selector:active:focus {
+      .btn-new:active:focus {
           outline: thin dotted;
           outline: 5px auto -webkit-focus-ring-color;
           outline-offset: -2px;
       }
-      #js-dropdown-selector:focus {
+      .btn-new:focus {
         color: #333;
         background-color: #e6e6e6;
       }
-      #js-dropdown-selector:active {
+      .btn-new:active {
         box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
         color: #333;
         background-color: #e6e6e6;
@@ -111,6 +127,7 @@
       .legend {
         /* line-height: 18px; */
         color: #555;
+        z-index: 900;
       }
       .legend i {
         width: 18px;
@@ -126,6 +143,7 @@
         background: rgba(255,255,255,0.8);
         box-shadow: 0 0 15px rgba(0,0,0,0.2);
         border-radius: 5px;
+        z-index: 900;
       }
       .info h4 {
         margin: 0 0 5px;
@@ -170,7 +188,7 @@
 
     <!-- dropdown selector-->
     <div id="wrapper-dropdown-selector">
-      <select id="js-dropdown-selector">
+      <select id="js-dropdown-selector" class="selectpicker" data-style="btn-new" data-width="250px" style="z-index: 999999 !important;">
       </select>
     </div>
 
@@ -478,17 +496,19 @@
       }
 
       function replace_dropdown() {
-        var dropdown_html = `<option value="final_rank" class="optionGroup" selected>Final Rank</option>`; //code apart from others because want this to be default selected
+        var dropdown_html = `<option value="final_rank" selected>Final Rank</option>`; //code apart from others because want this to be default selected
         for (var key in ind_dict) {
           var get_value = ind_dict[key];
           if ((key == 'pop_densit') || (key == 'demographi') || (key == 'sensitive_') || (key == 'exposure_s') || (key == 'effects_sc')) {
-            dropdown_html += `<option value="${key}" class="optionGroup">${get_value.indicator_name}</option>`;
+            dropdown_html += `<option value="${key}">${get_value.indicator_name}</option>`;
           } else if (key != 'final_rank') {
-              dropdown_html += `<option value="${key}" class="optionChild">&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
+              dropdown_html += `<option value="${key}">&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
           }
         }
         document.getElementById("js-dropdown-selector").innerHTML = dropdown_html;
+        // $('#wrapper-dropdown-selector').selectpicker('render');
         console.log(document.getElementById("wrapper-dropdown-selector").innerHTML);
+        $('.selectpicker').selectpicker('refresh');
       }
 
 /////////////////////////// change layers on dropdown select using JSON data ////////////////////////
@@ -532,7 +552,7 @@
       console.log(featureEvent.data.avg_pnpl);
 
       //need to write FIPS tract id first
-      content += `<h4 class="open-sans">${featureEvent.data.name}</h4>`;
+      content += `<h5 class="open-sans">Census tract: ${featureEvent.data.fips_tract}</h5>`;
 
       content += '<ul class="popup-list" style="list-style-type:none; padding-left:0">';
       //iterate through all in featureEvent.data
@@ -596,10 +616,11 @@
 
         legend.onAdd = function (map) {
           var div = L.DomUtil.create('div', 'info legend');
+
           var column = event.styles[0]._column;
           var max_buckets = buckets.length - 1;
           // div.innerHTML += '<input type="checkbox" id="toggle" class="checkbox"/><label for="toggle" class="switch"></label>';
-          div.innerHTML += '<h4 class="open-sans">Highest</br>Percentiles</h4>';
+          div.innerHTML += '<h5 class="open-sans">Highest</br>Percentiles</h5>';
           if ((column == 'oil_densit') || (column == 'oil_score')) {
             for (var i = max_buckets; i > 0; i--) {
               div.innerHTML +=
@@ -616,7 +637,7 @@
                 `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${i*10} - ${(i+1)*10}</span></ul>`;
             }
           }
-          div.innerHTML += '<h4 class="open-sans">Lowest</br>Percentiles</h4>';
+          div.innerHTML += '<h5 class="open-sans">Lowest</br>Percentiles</h5>';
           return div;
         };
         legend.addTo(map);
