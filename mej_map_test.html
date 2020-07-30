@@ -184,6 +184,7 @@
   </head>
 
   <body>
+
     <div id="map"></div>
 
     <!-- dropdown selector-->
@@ -191,6 +192,8 @@
       <select id="js-dropdown-selector" class="selectpicker" data-style="btn-new" data-width="250px" style="z-index: 999999 !important;">
       </select>
     </div>
+
+
 
     <script>
 
@@ -274,29 +277,28 @@
       //form: dictionary = key as column title, value as JSON object with the categories: official display name, column rank, column score, choropleth colors, and number of quantiles for ramp
       //later can also add to the JSON objects text explanations of each indicator, links to reference more info, icons/images to display with the indicator, etc.
       //order of entries = order of content in popup for now
-      //for exposure, effect, sensitive, pollution, put the same thing for scores and ranks
       ind_dict = {'final_rank': {"indicator_name" : "Final Rank", "indicator_rank" : "final_rank", "indicator_score" : "finalscore", "choropleth_colors":['#409493','#68a7ad','#8bb9c3','#aacad6','#c7dbe4','#f0d6c6','#ebc4ab','#e4b08d','#db996b','#cf8146'], "num_quantiles": 10},
-      'pop_densit': {"indicator_name" : "Population Density", "indicator_rank" : "pop_densit", "indicator_score" : "pop_densit", "choropleth_colors":["#edf8fb","#cedfed","#b4cbe2","#9ebcda","#92a3cd","#8d88bf","#8c6bb1","#8a50a4","#80308c","#6e016b"], "num_quantiles": 10},
-      'pop_char': {"indicator_name" : "Population Characteristics", "indicator_rank" : "pop_char", "indicator_score" : "pop_char", "choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
+      'pop_densit': {"indicator_name" : "Population Density", "indicator_rank" : "pop_densit", "indicator_score" : "pop_densit", "choropleth_colors":["#edf8e9","#d4eece","#bae4b4","#a1d99b","#83cb82","#64bc6e","#41ab5d","#2e964d","#187a3f","#005a32"], "num_quantiles": 10},
+      'pop_char': {"indicator_name" : "Population Characteristics", "indicator_rank" : "pop_char", "indicator_score" : "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
       // 'demographi': {"indicator_name" : "Socioeconomic Factors", "indicator_rank" : "demographi", "indicator_score" : "demographi", "choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
-      'nonwhite_r': {"indicator_name" : "People of Color", "indicator_rank" : "nonwhite_r", "indicator_score" : "nonwhitepe","choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
-      'poverty_ra': {"indicator_name" : "Poverty", "indicator_rank" : "poverty_ra", "indicator_score" : "poverty_sc","choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
-      'edu_rank': {"indicator_name" : "No HS Degree", "indicator_rank" : "edu_rank", "indicator_score" : "edu_score","choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
-      'lin_rank': {"indicator_name" : "Linguistic Isolation", "indicator_rank" : "lin_rank", "indicator_score" : "lin_score","choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
-      'unemploy_r': {"indicator_name" : "Unemployment", "indicator_rank" : "unemploy_r", "indicator_score" : "unemploy_s","choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
-      'housebur_1': {"indicator_name" : "Extreme Housing Burden", "indicator_rank" : "housebur_1", "indicator_score" : "houseburde","choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
+      'nonwhite_r': {"indicator_name" : "People of Color", "indicator_rank" : "nonwhite_r", "indicator_score" : "nonwhitepe","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'poverty_ra': {"indicator_name" : "Poverty", "indicator_rank" : "poverty_ra", "indicator_score" : "poverty_sc","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'edu_rank': {"indicator_name" : "No HS Degree", "indicator_rank" : "edu_rank", "indicator_score" : "edu_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'lin_rank': {"indicator_name" : "Linguistic Isolation", "indicator_rank" : "lin_rank", "indicator_score" : "lin_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'unemploy_r': {"indicator_name" : "Unemployment", "indicator_rank" : "unemploy_r", "indicator_score" : "unemploy_s","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'housebur_1': {"indicator_name" : "Extreme Housing Burden", "indicator_rank" : "housebur_1", "indicator_score" : "houseburde","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
       // 'sensitive_': {"indicator_name" : "Sensitive Populations", "indicator_rank" : "sensitive_", "indicator_score" : "sensitive_","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
       'asthma_ran': {"indicator_name" : "Asthma", "indicator_rank" : "asthma_ran", "indicator_score" : "asthma_sco", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
       'lb_rank': {"indicator_name" : "Low Birthweight Infants", "indicator_rank" : "lb_rank", "indicator_score" : "lb_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
       'hd_rank': {"indicator_name" : "Heart Disease", "indicator_rank" : "hd_rank", "indicator_score" : "hd_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
-      'pollution_': {"indicator_name" : "Pollution Burden", "indicator_rank" : "pollution_", "indicator_score" : "pollution_", "choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
+      'pollution_': {"indicator_name" : "Pollution Burden", "indicator_rank" : "pollution_", "indicator_score" : "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
       // 'exposure_s': {"indicator_name" : "Exposures", "indicator_rank" : "exposure_s", "indicator_score" : "exposure_s","choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
-      'ozone_rank': {"indicator_name" : "Ozone", "indicator_rank" : "ozone_rank", "indicator_score" : "ozone_scor","choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
-      'diesel_ran': {"indicator_name" : "Diesel PM", "indicator_rank" : "diesel_ran","indicator_score" : "diesel_sco", "choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
-      'lead_rank': {"indicator_name" : "Lead Paint", "indicator_rank" : "lead_rank", "indicator_score" : "lead_score","choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
-      'toxics_ran': {"indicator_name" : "Air Toxics", "indicator_rank" : "toxics_ran", "indicator_score" : "toxics_sco","choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
-      'pm25_rank': {"indicator_name" : "PM2.5", "indicator_rank" : "pm25_rank", "indicator_score" : "pm25_score","choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
-      'ptraf_rank': {"indicator_name" : "Traffic", "indicator_rank" : "ptraf_rank","indicator_score" : "avg_ptraf", "choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
+      'ozone_rank': {"indicator_name" : "Ozone", "indicator_rank" : "ozone_rank", "indicator_score" : "ozone_scor","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'diesel_ran': {"indicator_name" : "Diesel PM", "indicator_rank" : "diesel_ran","indicator_score" : "diesel_sco", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'lead_rank': {"indicator_name" : "Lead Paint", "indicator_rank" : "lead_rank", "indicator_score" : "lead_score","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'toxics_ran': {"indicator_name" : "Air Toxics", "indicator_rank" : "toxics_ran", "indicator_score" : "toxics_sco","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'pm25_rank': {"indicator_name" : "PM2.5", "indicator_rank" : "pm25_rank", "indicator_score" : "pm25_score","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'ptraf_rank': {"indicator_name" : "Traffic", "indicator_rank" : "ptraf_rank","indicator_score" : "avg_ptraf", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
       // 'effects_sc': {"indicator_name" : "Environmental Effects", "indicator_rank" : "effects_sc", "indicator_score" : "effects_sc","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
       'oil_score': {"indicator_name" : "Oil and Gas", "indicator_rank" : "oil_score", "indicator_score" : "oil_score","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
       'oil_densit': {"indicator_name" : "Oil Density", "indicator_rank" : "oil_densit", "indicator_score" : "oil_densit","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
