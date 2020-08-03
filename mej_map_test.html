@@ -152,6 +152,41 @@
       .popup-list li:not(:last-child){
         margin-bottom: -15px;
       }
+      .fa-angle-down:hover {
+        color: #000000 !important;
+      }
+      #legend-button {
+        width: 120px;
+        font-size: 16px;
+        padding: 6px;
+        margin-bottom: 0;
+        color: #333;
+        background-color: #fff;
+        border: 0px;
+        border-radius: 3px;
+        box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
+        white-space: nowrap;
+        z-index: 100000;
+      }
+      #legend-button:hover {
+        color: #333;
+        background-color: #e6e6e6;
+        /* border-color: #adadad; */
+      }
+      #legend-button:active:focus {
+          outline: thin dotted;
+          outline: 5px auto -webkit-focus-ring-color;
+          outline-offset: -2px;
+      }
+      #legend-button:focus {
+        color: #333;
+        background-color: #e6e6e6;
+      }
+      #legend-button:active {
+        box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+        color: #333;
+        background-color: #e6e6e6;
+      }
       /* .switch {
        position : relative ;
        display : inline-block;
@@ -193,7 +228,10 @@
       </select>
     </div>
 
+    <i class="fa fa-angle-down fa-2x" aria-hidden="true" style="color:#949494; position: absolute; right:18px; bottom:363px; z-index: 100000 !important;"></i>
+    <button id="legend-button" class="btn2" style="position: absolute; right:8px; bottom:20px; z-index: 100000 !important;">Show legend</button>
 
+    <!-- <div id="toggle">Toggle</div> -->
 
     <script>
 
@@ -600,7 +638,6 @@
       map.removeLayer(polygon);
     }
 
-
 ///////////////////////////// add/change legend ///////////////////////////////
 
       var legend  = L.control({position: 'bottomright'})
@@ -621,7 +658,7 @@
 
           var column = event.styles[0]._column;
           var max_buckets = buckets.length - 1;
-          // div.innerHTML += '<input type="checkbox" id="toggle" class="checkbox"/><label for="toggle" class="switch"></label>';
+
           div.innerHTML += '<h5 class="open-sans">Highest</br>Percentiles</h5>';
           if ((column == 'oil_densit') || (column == 'oil_score')) {
             for (var i = max_buckets; i > 0; i--) {
@@ -644,6 +681,23 @@
         };
         legend.addTo(map);
       });
+
+///////////////////////////// animate legend to collapse and expand ///////////////////////////////
+
+      $(document).ready(function(){
+        $(".btn2").hide();
+        $(".fa-angle-down").click(function(){
+          $(".legend").fadeOut();
+          $(".fa-angle-down").hide();
+          $(".btn2").show();
+        });
+        $(".btn2").click(function(){
+          $(".legend").fadeIn();
+          $(".btn2").hide();
+          $(".fa-angle-down").show();
+        });
+      });
+
   </script>
   </body>
 </html>
