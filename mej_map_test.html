@@ -684,6 +684,12 @@
 
 ///////////////////////////// animate legend to collapse and expand ///////////////////////////////
 
+      layer.on('metadataChanged', function(event){
+          $(".legend").fadeIn();
+          $(".btn2").hide();
+          $(".fa-angle-down").show();
+      });
+
       $(document).ready(function(){
         $(".btn2").hide();
         $(".fa-angle-down").click(function(){
