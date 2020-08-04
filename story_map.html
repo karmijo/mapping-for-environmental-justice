@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CO Story Map</title>
+<meta name="viewport" content="initial-scale=1.0">
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700|Open+Sans:300,400,600" rel="stylesheet">
+<!-- Include Leaflet -->
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+<link href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" rel="stylesheet">
+<!-- Include CARTO.js -->
+<script src="https://libs.cartocdn.com/carto.js/v4.2.0/carto.min.js"></script>
+<!--jquery-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!--boostrap-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--leaflet.ajax for asynchronously adding geojson data-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
+<!--story map plugin-->
+<script src="https://cdn.rawgit.com/jakobzhao/storymap/master/dist/storymap.2.3.js"></script>
+
+<link href="https://carto.com/developers/carto-js/examples/maps/public/style.css" rel="stylesheet">
+<!--add required stylesheets-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<!--animation-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+<!--Google Font-->
+<link href="https://fonts.googleapis.com/css?family=Cairo" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jakobzhao/storymap/master/dist/storymap.2.3.css">
+
+<!--Geocoder-->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<!-- Adding Axios -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+
+<style type="text/css">
+  html,
+  body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    position: relative;
+  }
+  #map {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  #wrapper-dropdown-selector {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    z-index: 999;
+  }
+  #js-dropdown-selector {
+    width: 160px;
+    font-size: 16px;
+    padding: 6px;
+    margin-bottom: 0;
+    color: #333;
+    background-color: #fff;
+    border: 0px;
+    /* border-color: #ccc; */
+    /* border: 1px solid rgb(127, 0, 0);
+    border: 1px solid rgba(255, 0, 0, .5);
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box; */
+    border-radius: 3px;
+    box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
+    white-space: nowrap;
+  }
+  #js-dropdown-selector:hover {
+    color: #333;
+    background-color: #e6e6e6;
+    /* border-color: #adadad; */
+  }
+  #js-dropdown-selector:active:focus {
+      outline: thin dotted;
+      outline: 5px auto -webkit-focus-ring-color;
+      outline-offset: -2px;
+  }
+  #js-dropdown-selector:focus {
+    color: #333;
+    background-color: #e6e6e6;
+  }
+  #js-dropdown-selector:active {
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+    color: #333;
+    background-color: #e6e6e6;
+  }
+  div#searchbox {
+        background-color: #d2eaef;
+        opacity: 0.8;
+        position: absolute;
+        top: 10px;
+        left: 50px;
+        width: auto;
+        height: auto;
+        padding: 10px;
+        display: block;
+        z-index: 9000;
+    }
+
+  div#searchbox input {
+      width: 200px;
+  }
+  div#results {
+      background: #FFF;
+  }
+  .legend {
+    /* line-height: 18px; */
+    color: #555;
+  }
+  .legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+  }
+  .info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+  }
+  .info h4 {
+    margin: 0 0 5px;
+    color: #777;
+  }
+  .popup-list li:not(:last-child){
+    margin-bottom: -15px;
+  }
+  /* .switch {
+   position : relative ;
+   display : inline-block;
+   width : 40px;
+   height : 20px;
+   background-color: #ccc;
+   border-radius: 20px;
+ }
+ .switch::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: white;
+  top: 1px; // TO GIVE AN EFFECT OF CIRCLE INSIDE SWITCH.
+  left: 1px;
+  transition: all 0.3s;
+}
+.checkbox:checked + .switch::after {
+  left : 20px;
+}
+.checkbox:checked + .switch {
+  background-color: #7983ff;
+}
+.checkbox {
+  display : none;
+} */
+</style>
+
+</head>
+<body>
+<div id="map"></div>
+<div id="storymap" class="container-fluid">
+  <div class="row">
+      <div class="col-sm-6 col-md-8 storymap-map"></div>
+      <div class="col-sm-6 col-md-4 storymap-story">
+          <section data-scene="scene1">
+              <h1>Colorado Stories</h1>
+              <p>
+                  Welcome to the MEJ Colorado story map. As you scroll through this map you will be guided
+                  through the stories of Colorado citizens experiencing Environmental Injustices. The story map paired with our
+                  indicator map help to provide a holisitc view of the disparity involved with environmental burdens.  As as you
+                  read through the story map, be sure to check out the relevant data involve with the affected communities.
+
+                  Scroll over the text boxes on the left side of the map to progress through CO stories.  Alternatively, you can
+                  click the arrow on the bottom left of the screen to go through the stories as well.
+
+
+              </p>
+
+          </section>
+          <section data-scene="scene2">
+              <h1> Battlement Mesa </h1>
+              <img src="https://i0.wp.com/livingwithoilandgas.com/wp-content/uploads/2020/06/IMG_3369.jpg?w=760&ssl=1" align = "right" width = "200" height="120" alt="Bonnie Smeltzer">
+              <p>
+                  <a href="https://livingwithoilandgas.com/2020/06/26/colorado-community-members-use-their-voices-to-protect-their-health-and-call-for-stronger-setbacks/"> Source LWOG</a>
+                  <br>Indicators: Oil and Gas
+              </p>
+              <p>
+                “When Antero started preparing their [drilling] pad, which is about a half a mile from where I live as the crow flies,
+                there was dust, noise from the trucks and traffic, and all that stuff, just from forming the pad. Then when they started
+                drilling, there were lights, truck traffic, noise, and I began smelling really bad odors during that summer of 2009. I know
+                during July and August, it was extremely bad,” recounted Bonnie. She has kept a log book of odors and her observations of
+                the gas wells near her since 2009.
+
+                She began to experience changes in her health, including a nosebleed, the first one of her life, that was so severe she ended
+                up in the emergency room. Similar changes were reflected within other members of her community as well. “I know that people
+                that live in this area have complained of the same things: headache, lightheadedness, eyes burning, eyes are always affected,
+                and respiratory problems. A number of people have had to move away because it has impacted their health,” said Bonnie.
+
+                “I know that there are many people who are impacted, that don’t take the time, or they don’t know what number they can call,
+                they don’t know a website they can go to, they don’t have a complaint form to fill out, or they’re too busy making a living.
+                They leave, go to work and they come back. And they’re too tired to do anything. All they can do is fix dinner and go to bed
+                and be ready for the next day of work,” said Bonnie.
+
+              </p>
+          </section>
+          <section data-scene="scene3">
+              <h1>Bella Romero Academy, Greeley</h1>
+              <img src="https://images1.westword.com/imager/u/745xauto/11733635/bellaromero.jpg" align = "right" width = "200" height="120" alt="playground fracking">
+              <p>
+                  <a href="https://www.motherjones.com/environment/2018/04/an-oil-company-faced-pushback-about-fracking-near-a-charter-so-it-moved-next-to-a-low-income-public-school/">Source Mother Jones</a>
+                  <br>Indicators: Oil and Gas, Demographics, Communities of Color
+              </p>
+              <p>
+                Back in 2013, the company Mineral Resources was granted a permit to drill a few hundred feet from Frontier Academy, a majority white charter
+                school in Greeley, Colorado. But after parents and neighborhood residents strongly resisted, the project was delayed. The following year, the
+                Denver-based energy company Extraction Oil and Gas acquired Mineral Resources and abandoned the plans to frack near Frontier Academy. The site,
+                Extraction explained in an internal analysis, was “not preferable” for oil and gas development because of its proximity to the school and its
+                playground.
+
+                Instead, Extraction began scouting other locations in Greeley, a small city about 50 miles northeast of Denver. In May 2016, Extraction Oil and
+                Gas filed a new application. This time, Extraction selected a site even closer to another school: Bella Romero Academy. The student population
+                at Bella Romero is more than 87 percent Latino or Hispanic, African American, or other people of color. More than 90 percent of students at Bella
+                Romero qualify for free or reduced-price lunch. (At Frontier, 77 percent of students are white, and about 20 percent qualify for free or
+                reduced-price lunch.)
+
+                “When they were looking for another site away from Frontier, where does it wind up? In the Hispanic community, by the Hispanic school,” says Eric Huber,
+                an attorney with the Sierra Club’s Environmental Law Program, one of the groups behind the lawsuit. “We think that decision was made, unfortunately,
+                because that particular community doesn’t have the resources to fight it.”
+
+              </p>
+          </section>
+          <section data-scene="scene4">
+              <h1>Suncor Refinery</h1>
+              <img src="https://images1.westword.com/imager/u/745xauto/11615155/feature_lucy.jpg" align = "right" width = "200" height="120" alt="Lucy Molina">
+              <p>
+                  <a href="https://www.westword.com/news/colorado-eyes-suncor-crackdown-11615148">Source Westword</a>
+                  <br>Indicators: Air Toxics, Demographics
+              </p>
+              <p>
+                The Suncor Refinery is the second-largest source of toxic emissions in the state of Colorado, and a nearby zip code has been identified as the most
+                polluted in the United States. The refinery has a long record of permit violations and negligent chemical releases, including a December incident
+                that coated the neighborhood in toxic yellow ash. A recent inspection by the Colorado Department of Public Health and Environment found 114 violations
+                of state and federal law.
+
+                Lucy Molina has been living nearby for five years: “My kids were ten and eight when we got to this house, so they were still little; they were always
+                playing outside,” Molina says. Then the symptoms started. “We started getting migraines, headaches. My son started getting bloody noses.”
+
+                “We want accountability and transparency,” Molina says. “It’s time that they prioritize the community. We’re the ones who make this community.
+                We’re the ones who are left here, breathing this air.”
+
+              </p>
+          </section>
+          <section data-scene="scene5">
+              <h1> Platte Farm Open Space </h1>
+              <img src="https://groundworkusa.org/wp-content/uploads/2016/05/Site-Plan-Platte-Farms-Open-Space-poster-281x420.png" align = "right" width = "120" height="200" alt="Platte Farm Open Space">
+              <p>
+                  <a href="https://groundworkcolorado.org/programs/land/platte-farm-open-space/"> Source Groundwork Denver</a>
+                  <br>Indicators: Superfund Sites, Demographics
+
+              </p>
+              <p>
+                Platte Farm Open Space is a resident-led, brownfield to open-space project in Globeville, Denver.  Upon completion, Platte Farm Open Space
+                will be a unique and important example of how to re-purpose formerly contaminated land for community benefit. The 5.5-acre brownfields site
+                will feature restored short-grass prairie, crusher fines trails, and play space.
+
+                The impetus for creating Platte Farm Open Space was persistent and illegal dumping, drug dealing, and general neglect of the site. In the
+                eyes of residents, they could either work to activate the site or it would continue to be a dumping ground.
+
+                PFOS will provide an opportunity for Globeville residents to recreate and reconnect with nature in a neighborhood that is surrounded by
+                industry.
+
+                “It was not a priority for the city. Globeville was not a priority. There was no ‘corridor of opportunity,'” said Tangier Barnes Wright,
+                director of community planning for Groundwork Denver, a nonprofit that aims to improve physical spaces to impel better health. Groundwork,
+                which helped raise funds for the project, enlisted City Councilwoman Robin Kniech to corral the right players, bring them to the table, and
+                get this park done. Some of the most valuable players were Globeville locals. “It’s an idea that came from the residents,” Kniech said.
+                “It was their vision in their backyard.”
+
+              </p>
+          </section>
+          <section data-scene="scene6">
+              <h1> Elsyia-Swansea and Globeville, Denver </h1>
+              <p>
+                  <a href="https://conservationco.org/2020/01/28/blog-fighting-unhealthy-air-pollution-in-denver/"> Source Convservation Colorado</a>
+              </p>
+
+              <p>
+                Unchecked pollution and environmental health hazards from industrial activities are big contributors to Denver’s air quality problems. But
+                unhealthy air quality is not equally distributed to all residents. Extreme polluters drive housing prices down and, combined with housing
+                discrimination, this causes a trend of more low-income families and people of color living in heavily polluted neighborhoods. Gentrification
+                has worsened the situation, leaving families with no option but to move to polluted neighborhoods.
+
+                In North Denver, the Globeville, Elyria-Swansea area has been an industrial area since its foundation, beginning with smelting operations,
+                oil refineries, and meatpacking industries. As a result of the industrial activity in the area, Globeville and Elyria-Swansea sit in two
+                active Superfund sites.
+
+                To this day, it continues to be a heavy industrial area surrounded by facilities for concrete, recycling and trash that practices burning,
+                bone melting, sheep breeding, and cannabis growing — just to name a few. Construction to expand I-70 means that heavy trucks are active
+                in the community through the night, disrupting sleep and making air quality even worse.
+
+
+              </p>
+          </section>
+      </div>
+  </div>
+</div>
+
+
+
+<!-- Description -->
+<aside class="toolbox">
+<div class="box">
+  <header>
+    <h1>Storytelling map</h1>
+    <button class="github-logo js-source-link"></button>
+  </header>
+  <div>
+    <p class="description open-sans">Storytelling map using Storymap.js and CARTO.js.</p>
+  </div>
+  <footer class="js-footer"></footer>
+</div>
+</aside>
+<script>
+  // set map with initial zoom and coodinates view
+  const map = L.map('map').setView([39.019715, -105.765333], 7); // set to focus on CO
+  // define scenes
+  let scenes = {
+      scene1: { lat: 39.019715, lng: -105.765333, zoom: 7, layers: ['basemap'], name: "1" },
+      scene2: { lat: 39.4414, lng: -108.0251, zoom: 10, layers: ['basemap','cartoLayer'], name: "2" },
+      scene3: { lat: 40.4045941, lng: -104.6669457, zoom: 10, layers: ['basemap','cartoLayer'], name: "3" },
+      scene4: { lat: 39.8064666, lng: -104.9577287, zoom: 10, layers: ['basemap','cartoLayer'], name: "4" },
+      scene5: { lat: 39.7841, lng: -104.9876, zoom: 7, layers: ['basemap','cartoLayer'], name: "5" },
+      scene6: { lat: 39.7841, lng: -104.9876, zoom: 7, layers: ['basemap','cartoLayer'], name: "6" }
+  };
+  // disable scroll wheel zoom
+  map.scrollWheelZoom.disable();
+
+
+  //basemap
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png', {
+    maxZoom: 18
+  }).addTo(map);
+
+  // Adding Voyager Labels
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    zIndex: 10
+  }).addTo(map);
+
+  // set CARTO client
+  const client = new carto.Client({
+        apiKey: 'default_public',
+        username: 'tiffanyhuynh'
+      });
+
+
+  const source = new carto.source.Dataset('colorado_final');
+  const layerStyle = new carto.style.CartoCSS(`
+      #layer {
+        polygon-fill: ramp([finalscore], (#009392,#2ea78a,#62ba85,#9ccb86,#d0db95,#ebd390,#eeb479,#ea9474,#e07676,#cf597e), quantiles(10));
+          ::outline {
+          line-width: 0.5;
+          line-color: #FFFFFF;
+          line-opacity: 0.5;
+          }
+      }
+  `);
+  // define CartoCSS code to style data on map
+  const style = new carto.style.CartoCSS(`
+      #layer[adm0name = "Spain"]{
+          marker-fill: #fbb4ae;
+          marker-allow-overlap: true;
+      }
+      #layer[adm0name = "Portugal"]{
+          marker-fill: #ccebc5;
+          marker-allow-overlap: true;
+      }
+      #layer[adm0name = "France"]{
+          marker-fill: #b3cde3;
+          marker-allow-overlap: true;
+      }
+
+  `);
+  // create CARTO layer from source and style variables
+  const Cartolayer = new carto.layer.Layer(source, layerStyle);
+
+  // add CARTO layer to the client
+  client.addLayer(Cartolayer);
+
+  // define layers that will be used on the map
+  var layers = {
+      cartoLayer: {
+          layer: client.getLeafletLayer()
+      },
+      basemap: {
+          layer: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png')
+      }
+  };
+
+  // initializaze storymap
+  $('#storymap').storymap({
+      scenes: scenes,
+      layers: layers,
+      baselayer: layers.basemap,
+      legend: true,
+      loader: true,
+      flyto: false,
+      scalebar: true,
+      scrolldown: true,
+      progressline: true,
+      navwidget: true,
+      createMap: function () {
+          let map = L.map($(".storymap-map")[0], { zoomControl: false }).setView([39.019715, -105.765333], 7);
+          // add basemap
+          this.baselayer.layer.addTo(map);
+          // add carto layer
+          layers.cartoLayer.layer.addTo(map)
+          return map;
+      }
+  });
+
+</script>
+</body>
+</html>
