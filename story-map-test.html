@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MEJ Colorado</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700|Open+Sans:300,400,600" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" type="text/css">
+
+    <!-- Include Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+    <link href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" rel="stylesheet">
+    <!-- Include CARTO.js -->
+    <script src="https://libs.cartocdn.com/carto.js/v4.2.0/carto.min.js"></script>
+    <!--jquery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!--boostrap-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <!--leaflet.ajax for asynchronously adding geojson data-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
+    <!--story map plugin-->
+    <script src="https://cdn.rawgit.com/jakobzhao/storymap/master/dist/storymap.2.3.js"></script>
+
+    <!-- <link href="https://carto.com/developers/carto-js/examples/maps/public/style.css" rel="stylesheet"> -->
+    <!--add required stylesheets-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--animation-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css?family=Cairo" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jakobzhao/storymap/master/dist/storymap.2.3.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        position: relative;
+      }
+      #map {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+      .leaflet-bar a {
+        background-color: #fff;
+        border-bottom: 1px solid #ccc;
+        color: #444;
+        display: block;
+        height: 26px;
+        width: 26px;
+        line-height: 1.45 !important;
+        text-align: center;
+        text-decoration: none;
+        font: bold 18px 'Lucida Console', Monaco, monospace;
+      }
+      #collapse-legend {
+        position: absolute;
+        bottom: 50px;
+        right: 10px;
+        z-index: 998;
+      }
+      #wrapper-dropdown-selector {
+        position: fixed;
+        top: 15px;
+        right: 10px;
+        z-index: 10000000;
+      }
+      .btn-new {
+        width: 160px;
+        font-size: 16px;
+        padding: 6px;
+        margin-bottom: 0;
+        color: #333;
+        background-color: #fff;
+        border: 0px;
+        /* border-color: #ccc; */
+        /* border: 1px solid rgb(127, 0, 0);
+        border: 1px solid rgba(255, 0, 0, .5);
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box; */
+        border-radius: 3px;
+        box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
+        white-space: nowrap;
+        z-index: 100000;
+      }
+      .btn-new:hover {
+        color: #333;
+        background-color: #e6e6e6;
+        /* border-color: #adadad; */
+      }
+      .btn-new:active:focus {
+          outline: thin dotted;
+          outline: 5px auto -webkit-focus-ring-color;
+          outline-offset: -2px;
+      }
+      .btn-new:focus {
+        color: #333;
+        background-color: #e6e6e6;
+      }
+      .btn-new:active {
+        box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+        color: #333;
+        background-color: #e6e6e6;
+      }
+      div#searchbox {
+            background-color: #d2eaef;
+            opacity: 0.8;
+            position: absolute;
+            top: 10px;
+            left: 50px;
+            width: auto;
+            height: auto;
+            padding: 10px;
+            display: block;
+            z-index: 9000;
+        }
+
+      div#searchbox input {
+          width: 200px;
+      }
+      div#results {
+          background: #FFF;
+      }
+      .legend {
+        /* line-height: 18px; */
+        color: #555;
+        z-index: 900;
+        opacity: 1 !important;
+      }
+      .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 1 !important;
+      }
+      .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255,255,255,1);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        opacity: 1 !important;
+        z-index: 900;
+      }
+      .info h4 {
+        /* margin: 0 0 5px; */
+        color: #777;
+        opacity: 1 !important;
+      }
+      .popup-list li:not(:last-child){
+        margin-bottom: -15px;
+      }
+      .fa-angle-down:hover {
+        color: #000000 !important;
+      }
+      #legend-button {
+        width: 120px;
+        font-size: 16px;
+        padding: 6px;
+        margin-bottom: 0;
+        color: #333;
+        background-color: #fff;
+        border: 0px;
+        border-radius: 3px;
+        box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
+        white-space: nowrap;
+        z-index: 100000;
+      }
+      #legend-button:hover {
+        color: #333;
+        background-color: #e6e6e6;
+        /* border-color: #adadad; */
+      }
+      #legend-button:active:focus {
+          outline: thin dotted;
+          outline: 5px auto -webkit-focus-ring-color;
+          outline-offset: -2px;
+      }
+      #legend-button:focus {
+        color: #333;
+        background-color: #e6e6e6;
+      }
+      #legend-button:active {
+        box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+        color: #333;
+        background-color: #e6e6e6;
+      }
+      /* .switch {
+       position : relative ;
+       display : inline-block;
+       width : 40px;
+       height : 20px;
+       background-color: #ccc;
+       border-radius: 20px;
+     }
+     .switch::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: white;
+      top: 1px; // TO GIVE AN EFFECT OF CIRCLE INSIDE SWITCH.
+      left: 1px;
+      transition: all 0.3s;
+    }
+    .checkbox:checked + .switch::after {
+      left : 20px;
+    }
+    .checkbox:checked + .switch {
+      background-color: #7983ff;
+    }
+    .checkbox {
+      display : none;
+    } */
+    </style>
+  </head>
+
+  <body>
+
+    <div id="map"></div>
+
+    <div id="storymap" class="container-fluid">
+      <!-- dropdown selector-->
+      <div id="wrapper-dropdown-selector">
+        <select id="js-dropdown-selector" class="selectpicker" data-style="btn-new" data-width="250px" style="z-index: 999999 !important;">
+        </select>
+      </div>
+
+      <i class="fa fa-angle-down fa-2x" aria-hidden="true" style="color:#949494; position: fixed; right:18px; bottom:390px; z-index: 100000 !important;"></i>
+      <button id="legend-button" class="btn2" style="position: fixed; right:8px; bottom:20px; z-index: 100000 !important;">Show legend</button>
+      <div class="row">
+          <div class="col-sm-6 col-md-4 storymap-story">
+              <section data-scene="scene1">
+                  <h1>Colorado Stories</h1>
+                  <p>
+                      Welcome to the MEJ Colorado story map. As you scroll through this map you will be guided
+                      through the stories of Colorado citizens experiencing Environmental Injustices. The story map paired with our
+                      indicator map help to provide a holisitc view of the disparity involved with environmental burdens.  As as you
+                      read through the story map, be sure to check out the relevant data involve with the affected communities.
+
+                      Scroll over the text boxes on the left side of the map to progress through CO stories.  Alternatively, you can
+                      click the arrow on the bottom left of the screen to go through the stories as well.
+
+
+                  </p>
+
+              </section>
+              <section data-scene="scene2">
+                  <h1> Battlement Mesa </h1>
+                  <img src="https://i0.wp.com/livingwithoilandgas.com/wp-content/uploads/2020/06/IMG_3369.jpg?w=760&ssl=1" align = "right" width = "200" height="120" alt="Bonnie Smeltzer">
+                  <p>
+                      <a target="_blank" href="https://livingwithoilandgas.com/2020/06/26/colorado-community-members-use-their-voices-to-protect-their-health-and-call-for-stronger-setbacks/"> Source LWOG</a>
+                      <br>Indicators: Oil and Gas
+                  </p>
+                  <p>
+                    “When Antero started preparing their [drilling] pad, which is about a half a mile from where I live as the crow flies,
+                    there was dust, noise from the trucks and traffic, and all that stuff, just from forming the pad. Then when they started
+                    drilling, there were lights, truck traffic, noise, and I began smelling really bad odors during that summer of 2009. I know
+                    during July and August, it was extremely bad,” recounted Bonnie. She has kept a log book of odors and her observations of
+                    the gas wells near her since 2009.
+
+                    She began to experience changes in her health, including a nosebleed, the first one of her life, that was so severe she ended
+                    up in the emergency room. Similar changes were reflected within other members of her community as well. “I know that people
+                    that live in this area have complained of the same things: headache, lightheadedness, eyes burning, eyes are always affected,
+                    and respiratory problems. A number of people have had to move away because it has impacted their health,” said Bonnie.
+
+                    “I know that there are many people who are impacted, that don’t take the time, or they don’t know what number they can call,
+                    they don’t know a website they can go to, they don’t have a complaint form to fill out, or they’re too busy making a living.
+                    They leave, go to work and they come back. And they’re too tired to do anything. All they can do is fix dinner and go to bed
+                    and be ready for the next day of work,” said Bonnie.
+
+                  </p>
+              </section>
+              <section data-scene="scene3">
+                  <h1>Bella Romero Academy, Greeley</h1>
+                  <img src="https://images1.westword.com/imager/u/745xauto/11733635/bellaromero.jpg" align = "right" width = "200" height="120" alt="playground fracking">
+                  <p>
+                      <a target="_blank" href="https://www.motherjones.com/environment/2018/04/an-oil-company-faced-pushback-about-fracking-near-a-charter-so-it-moved-next-to-a-low-income-public-school/">Source Mother Jones</a>
+                      <br>Indicators: Oil and Gas, Demographics, Communities of Color
+                  </p>
+                  <p>
+                    Back in 2013, the company Mineral Resources was granted a permit to drill a few hundred feet from Frontier Academy, a majority white charter
+                    school in Greeley, Colorado. But after parents and neighborhood residents strongly resisted, the project was delayed. The following year, the
+                    Denver-based energy company Extraction Oil and Gas acquired Mineral Resources and abandoned the plans to frack near Frontier Academy. The site,
+                    Extraction explained in an internal analysis, was “not preferable” for oil and gas development because of its proximity to the school and its
+                    playground.
+
+                    Instead, Extraction began scouting other locations in Greeley, a small city about 50 miles northeast of Denver. In May 2016, Extraction Oil and
+                    Gas filed a new application. This time, Extraction selected a site even closer to another school: Bella Romero Academy. The student population
+                    at Bella Romero is more than 87 percent Latino or Hispanic, African American, or other people of color. More than 90 percent of students at Bella
+                    Romero qualify for free or reduced-price lunch. (At Frontier, 77 percent of students are white, and about 20 percent qualify for free or
+                    reduced-price lunch.)
+
+                    “When they were looking for another site away from Frontier, where does it wind up? In the Hispanic community, by the Hispanic school,” says Eric Huber,
+                    an attorney with the Sierra Club’s Environmental Law Program, one of the groups behind the lawsuit. “We think that decision was made, unfortunately,
+                    because that particular community doesn’t have the resources to fight it.”
+
+                  </p>
+              </section>
+              <section data-scene="scene4">
+                  <h1>Suncor Refinery</h1>
+                  <img src="https://images1.westword.com/imager/u/745xauto/11615155/feature_lucy.jpg" align = "right" width = "200" height="120" alt="Lucy Molina">
+                  <p>
+                      <a target="_blank" href="https://www.westword.com/news/colorado-eyes-suncor-crackdown-11615148">Source Westword</a>
+                      <br>Indicators: Air Toxics, Demographics
+                  </p>
+                  <p>
+                    The Suncor Refinery is the second-largest source of toxic emissions in the state of Colorado, and a nearby zip code has been identified as the most
+                    polluted in the United States. The refinery has a long record of permit violations and negligent chemical releases, including a December incident
+                    that coated the neighborhood in toxic yellow ash. A recent inspection by the Colorado Department of Public Health and Environment found 114 violations
+                    of state and federal law.
+
+                    Lucy Molina has been living nearby for five years: “My kids were ten and eight when we got to this house, so they were still little; they were always
+                    playing outside,” Molina says. Then the symptoms started. “We started getting migraines, headaches. My son started getting bloody noses.”
+
+                    “We want accountability and transparency,” Molina says. “It’s time that they prioritize the community. We’re the ones who make this community.
+                    We’re the ones who are left here, breathing this air.”
+
+                  </p>
+              </section>
+              <section data-scene="scene5">
+                  <h1> Platte Farm Open Space </h1>
+                  <img src="https://groundworkusa.org/wp-content/uploads/2016/05/Site-Plan-Platte-Farms-Open-Space-poster-281x420.png" align = "right" width = "120" height="200" alt="Platte Farm Open Space">
+                  <p>
+                      <a target="_blank" href="https://groundworkcolorado.org/programs/land/platte-farm-open-space/"> Source Groundwork Denver</a>
+                      <br>Indicators: Superfund Sites, Demographics
+
+                  </p>
+                  <p>
+                    Platte Farm Open Space is a resident-led, brownfield to open-space project in Globeville, Denver.  Upon completion, Platte Farm Open Space
+                    will be a unique and important example of how to re-purpose formerly contaminated land for community benefit. The 5.5-acre brownfields site
+                    will feature restored short-grass prairie, crusher fines trails, and play space.
+
+                    The impetus for creating Platte Farm Open Space was persistent and illegal dumping, drug dealing, and general neglect of the site. In the
+                    eyes of residents, they could either work to activate the site or it would continue to be a dumping ground.
+
+                    PFOS will provide an opportunity for Globeville residents to recreate and reconnect with nature in a neighborhood that is surrounded by
+                    industry.
+
+                    “It was not a priority for the city. Globeville was not a priority. There was no ‘corridor of opportunity,'” said Tangier Barnes Wright,
+                    director of community planning for Groundwork Denver, a nonprofit that aims to improve physical spaces to impel better health. Groundwork,
+                    which helped raise funds for the project, enlisted City Councilwoman Robin Kniech to corral the right players, bring them to the table, and
+                    get this park done. Some of the most valuable players were Globeville locals. “It’s an idea that came from the residents,” Kniech said.
+                    “It was their vision in their backyard.”
+
+                  </p>
+              </section>
+              <section data-scene="scene6">
+                  <h1> Elsyia-Swansea and Globeville, Denver </h1>
+                  <p>
+                      <a target="_blank" href="https://conservationco.org/2020/01/28/blog-fighting-unhealthy-air-pollution-in-denver/"> Source Convservation Colorado</a>
+                  </p>
+
+                  <p>
+                    Unchecked pollution and environmental health hazards from industrial activities are big contributors to Denver’s air quality problems. But
+                    unhealthy air quality is not equally distributed to all residents. Extreme polluters drive housing prices down and, combined with housing
+                    discrimination, this causes a trend of more low-income families and people of color living in heavily polluted neighborhoods. Gentrification
+                    has worsened the situation, leaving families with no option but to move to polluted neighborhoods.
+
+                    In North Denver, the Globeville, Elyria-Swansea area has been an industrial area since its foundation, beginning with smelting operations,
+                    oil refineries, and meatpacking industries. As a result of the industrial activity in the area, Globeville and Elyria-Swansea sit in two
+                    active Superfund sites.
+
+                    To this day, it continues to be a heavy industrial area surrounded by facilities for concrete, recycling and trash that practices burning,
+                    bone melting, sheep breeding, and cannabis growing — just to name a few. Construction to expand I-70 means that heavy trucks are active
+                    in the community through the night, disrupting sleep and making air quality even worse.
+
+
+                  </p>
+              </section>
+          </div>
+          <div class="col-sm-6 col-md-8 storymap-map"></div>
+      </div>
+    </div>
+
+    <script>
+
+      var lat = 39.019715;
+      var lng = -105.085529;
+      var zoom = 7;
+      const map = L.map('map', {zoomControl: false}).setView([lat, lng], zoom); // set to focus on CO
+      map.scrollWheelZoom.disable();
+
+      let scenes = {
+        scene1: { lat: 39.019715, lng: -105.765333, zoom: 7, layers: ['basemap', 'cartoLayer'], name: "1" },
+        scene2: { lat: 39.4414, lng: -108.0251, zoom: 10, layers: ['basemap','cartoLayer'], name: "2" },
+        scene3: { lat: 40.4045941, lng: -104.6669457, zoom: 10, layers: ['basemap','cartoLayer'], name: "3" },
+        scene4: { lat: 39.8064666, lng: -104.9577287, zoom: 10, layers: ['basemap','cartoLayer'], name: "4" },
+        scene5: { lat: 39.7841, lng: -104.9876, zoom: 7, layers: ['basemap','cartoLayer'], name: "5" },
+        scene6: { lat: 39.7841, lng: -104.9876, zoom: 7, layers: ['basemap','cartoLayer'], name: "6" }
+      };
+
+      //basemap
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png', {
+        maxZoom: 18
+      }).addTo(map);
+
+      // // Adding Voyager Labels
+      // L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png', {
+      //   maxZoom: 18,
+      //   zIndex: 10
+      // }).addTo(map);
+
+      //labels
+      L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-labels/{z}/{x}/{y}{r}.{ext}', {
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        subdomains: 'abcd',
+        // maxZoom: 18,
+        zIndex: 10,
+        ext: 'png'
+      }).addTo(map);
+
+      const client = new carto.Client({
+        apiKey: 'default_public',
+        username: 'tiffanyhuynh'
+      });
+
+      // const query = 'SELECT * FROM colorado_sample';
+      // const source = new carto.source.SQL(query);
+      const source = new carto.source.Dataset('colorado_final');
+      const layerStyle = new carto.style.CartoCSS(`
+        #layer {
+          polygon-fill: ramp([finalscore], (#409493,#68a7ad,#8bb9c3,#aacad6,#c7dbe4,#f0d6c6,#ebc4ab,#e4b08d,#db996b,#cf8146), quantiles(10));
+            ::outline {
+              line-width: 0.5;
+              line-color: #CCCCCC;
+              line-opacity: 0.5;
+            }
+        }
+      `);
+
+      const layer = new carto.layer.Layer(source, layerStyle, {
+        featureOverColumns: ['cartodb_id', 'name',
+         'fips_tract',
+         'lead_rank',
+         'total_pop',
+         'pop_densit',
+         'poverty_ra',
+         'edu_rank',
+         'lin_rank',
+         'unemploy_r',
+         'nonwhite_r',
+         'housebur_1',
+         'ozone_rank',
+         'diesel_ran',
+         'oil_score',
+         'oil_densit',
+         'toxics_ran',
+         'pm25_rank',
+         'ptraf_rank',
+         'ptsdf_rank',
+         'prmp_rank',
+         'pwdis_rank',
+         'pnpl_rank',
+         'asthma_ran',
+         'lb_rank',
+         'hd_rank',
+         'demographi',
+         'exposure_s',
+         'effects_sc',
+         'sensitive_',
+         'pollution_',
+         'pop_char',
+         'final_rank']
+      });
+
+      client.addLayer(layer);
+      // client.getLeafletLayer().addTo(map);
+
+      // define layers that will be used on the map
+      var layers = {
+          cartoLayer: {
+              layer: client.getLeafletLayer()
+          },
+          basemap: {
+              layer: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png')
+          }
+      };
+
+      $('#storymap').storymap({
+         scenes: scenes,
+         layers: layers,
+         baselayer: layers.basemap,
+         legend: true,
+         loader: true,
+         flyto: false,
+         scalebar: true,
+         scrolldown: true,
+         progressline: true,
+         navwidget: true,
+         createMap: function () {
+             let map = L.map($(".storymap-map")[0], { zoomControl: false }).setView([lat, lng], zoom);
+             // add basemap
+             this.baselayer.layer.addTo(map);
+             // add carto layer
+             layers.cartoLayer.layer.addTo(map)
+
+
+/////////////////////////// dictionary + JSON objects for indicators data ///////////////////////////////
+
+      //also: Carto automatically truncates column names to 10 letters or less...
+      //form: dictionary = key as column title, value as JSON object with the categories: official display name, column rank, column score, choropleth colors, and number of quantiles for ramp
+      //later can also add to the JSON objects text explanations of each indicator, links to reference more info, icons/images to display with the indicator, etc.
+      //order of entries = order of content in popup for now
+      ind_dict = {'final_rank': {"indicator_name" : "Final Rank", "indicator_rank" : "final_rank", "indicator_score" : "finalscore", "choropleth_colors":['#409493','#68a7ad','#8bb9c3','#aacad6','#c7dbe4','#f0d6c6','#ebc4ab','#e4b08d','#db996b','#cf8146'], "num_quantiles": 10},
+      'pop_densit': {"indicator_name" : "Population Density", "indicator_rank" : "pop_densit", "indicator_score" : "pop_densit", "choropleth_colors":["#edf8e9","#d4eece","#bae4b4","#a1d99b","#83cb82","#64bc6e","#41ab5d","#2e964d","#187a3f","#005a32"], "num_quantiles": 10},
+      'pop_char': {"indicator_name" : "Population Characteristics", "indicator_rank" : "pop_char", "indicator_score" : "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      // 'demographi': {"indicator_name" : "Socioeconomic Factors", "indicator_rank" : "demographi", "indicator_score" : "demographi", "choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
+      'nonwhite_r': {"indicator_name" : "People of Color", "indicator_rank" : "nonwhite_r", "indicator_score" : "nonwhitepe","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'poverty_ra': {"indicator_name" : "Poverty", "indicator_rank" : "poverty_ra", "indicator_score" : "poverty_sc","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'edu_rank': {"indicator_name" : "No HS Degree", "indicator_rank" : "edu_rank", "indicator_score" : "edu_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'lin_rank': {"indicator_name" : "Linguistic Isolation", "indicator_rank" : "lin_rank", "indicator_score" : "lin_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'unemploy_r': {"indicator_name" : "Unemployment", "indicator_rank" : "unemploy_r", "indicator_score" : "unemploy_s","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'housebur_1': {"indicator_name" : "Extreme Housing Burden", "indicator_rank" : "housebur_1", "indicator_score" : "houseburde","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      // 'sensitive_': {"indicator_name" : "Sensitive Populations", "indicator_rank" : "sensitive_", "indicator_score" : "sensitive_","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'asthma_ran': {"indicator_name" : "Asthma", "indicator_rank" : "asthma_ran", "indicator_score" : "asthma_sco", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'lb_rank': {"indicator_name" : "Low Birthweight Infants", "indicator_rank" : "lb_rank", "indicator_score" : "lb_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'hd_rank': {"indicator_name" : "Heart Disease", "indicator_rank" : "hd_rank", "indicator_score" : "hd_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
+      'pollution_': {"indicator_name" : "Pollution Burden", "indicator_rank" : "pollution_", "indicator_score" : "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      // 'exposure_s': {"indicator_name" : "Exposures", "indicator_rank" : "exposure_s", "indicator_score" : "exposure_s","choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
+      'ozone_rank': {"indicator_name" : "Ozone", "indicator_rank" : "ozone_rank", "indicator_score" : "ozone_scor","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'diesel_ran': {"indicator_name" : "Diesel PM", "indicator_rank" : "diesel_ran","indicator_score" : "diesel_sco", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'lead_rank': {"indicator_name" : "Lead Paint", "indicator_rank" : "lead_rank", "indicator_score" : "lead_score","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'toxics_ran': {"indicator_name" : "Air Toxics", "indicator_rank" : "toxics_ran", "indicator_score" : "toxics_sco","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'pm25_rank': {"indicator_name" : "PM2.5", "indicator_rank" : "pm25_rank", "indicator_score" : "pm25_score","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'ptraf_rank': {"indicator_name" : "Traffic", "indicator_rank" : "ptraf_rank","indicator_score" : "avg_ptraf", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      // 'effects_sc': {"indicator_name" : "Environmental Effects", "indicator_rank" : "effects_sc", "indicator_score" : "effects_sc","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'oil_score': {"indicator_name" : "Oil and Gas", "indicator_rank" : "oil_score", "indicator_score" : "oil_score","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'oil_densit': {"indicator_name" : "Oil Density", "indicator_rank" : "oil_densit", "indicator_score" : "oil_densit","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'ptsdf_rank': {"indicator_name" : "Hazardous Waste Facilities", "indicator_rank" : "ptsdf_rank","indicator_score" : "avg_ptsdf", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'prmp_rank': {"indicator_name" : "High-Risk Chemical Facilities", "indicator_rank" : "prmp_rank","indicator_score" : "avg_prmp", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'pwdis_rank': {"indicator_name" : "Wastewater Releases", "indicator_rank" : "pwdis_rank","indicator_score" : "avg_pwdis", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
+      'pnpl_rank': {"indicator_name" : "Federal Cleanup Sites", "indicator_rank" : "pnpl_rank","indicator_score" : "avg_pnpl", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10}};
+
+///////////////////////////// custom zoom bar control that includes a Zoom Home function///////////////////////////
+
+      // L.Control.zoomHome = L.Control.extend({
+      //     options: {
+      //         position: 'topleft',
+      //         zoomInText: '+',
+      //         zoomInTitle: 'Zoom in',
+      //         zoomOutText: '-',
+      //         zoomOutTitle: 'Zoom out',
+      //         zoomHomeText: '<i class="fa fa-home" style="line-height:1.65;"></i>',
+      //         zoomHomeTitle: 'Zoom home'
+      //     },
+      //
+      //     onAdd: function (map) {
+      //         var controlName = 'gin-control-zoom',
+      //             container = L.DomUtil.create('div', controlName + ' leaflet-bar'),
+      //             options = this.options;
+      //
+      //         this._zoomInButton = this._createButton(options.zoomInText, options.zoomInTitle,
+      //         controlName + '-in', container, this._zoomIn);
+      //         this._zoomHomeButton = this._createButton(options.zoomHomeText, options.zoomHomeTitle,
+      //         controlName + '-home', container, this._zoomHome);
+      //         this._zoomOutButton = this._createButton(options.zoomOutText, options.zoomOutTitle,
+      //         controlName + '-out', container, this._zoomOut);
+      //
+      //         this._updateDisabled();
+      //         map.on('zoomend zoomlevelschange', this._updateDisabled, this);
+      //
+      //         return container;
+      //     },
+      //
+      //     onRemove: function (map) {
+      //         map.off('zoomend zoomlevelschange', this._updateDisabled, this);
+      //     },
+      //
+      //     _zoomIn: function (e) {
+      //         this._map.zoomIn(e.shiftKey ? 3 : 1);
+      //     },
+      //
+      //     _zoomOut: function (e) {
+      //         this._map.zoomOut(e.shiftKey ? 3 : 1);
+      //     },
+      //
+      //     _zoomHome: function (e) {
+      //         map.setView([lat, lng], zoom);
+      //     },
+      //
+      //     _createButton: function (html, title, className, container, fn) {
+      //         var link = L.DomUtil.create('a', className, container);
+      //         link.innerHTML = html;
+      //         link.href = '#';
+      //         link.title = title;
+      //
+      //         L.DomEvent.on(link, 'mousedown dblclick', L.DomEvent.stopPropagation)
+      //             .on(link, 'click', L.DomEvent.stop)
+      //             .on(link, 'click', fn, this)
+      //             .on(link, 'click', this._refocusOnMap, this);
+      //
+      //         return link;
+      //     },
+      //
+      //     _updateDisabled: function () {
+      //         var map = this._map,
+      //             className = 'leaflet-disabled';
+      //
+      //         L.DomUtil.removeClass(this._zoomInButton, className);
+      //         L.DomUtil.removeClass(this._zoomOutButton, className);
+      //
+      //         if (map._zoom === map.getMinZoom()) {
+      //             L.DomUtil.addClass(this._zoomOutButton, className);
+      //         }
+      //         if (map._zoom === map.getMaxZoom()) {
+      //             L.DomUtil.addClass(this._zoomInButton, className);
+      //         }
+      //     }
+      // });
+      // // add the new control to the map
+      // var zoomHome = new L.Control.zoomHome();
+      // zoomHome.addTo(map);
+
+////////////////////////////////////////// Geocoder //////////////////////////////////////////////
+
+      // Geocoder
+      // var geocoder = L.Control.geocoder({
+      //   defaultMarkGeocode: false,
+      //   position: 'topleft'
+      // })
+      //   .on('markgeocode', function(e) {
+      //     var bbox = e.geocode.bbox;
+      //     var poly = L.polygon([
+      //       bbox.getSouthEast(),
+      //       bbox.getNorthEast(),
+      //       bbox.getNorthWest(),
+      //       bbox.getSouthWest()
+      //     ]);
+      //     map.fitBounds(poly.getBounds());
+      //   })
+      //   .addTo(map);
+
+/////////////////////////// highlight tract borders when hover over/clicked ///////////////////////////////
+
+
+      var polygon;
+      var new_polygon;
+      var old_polygon_selected;
+      function showFeature(featureEvent) {
+        new_polygon_selected = featureEvent.data.cartodb_id;
+        console.log("old polygon selected");
+        console.log(old_polygon_selected);
+        console.log("new polygon selected");
+        console.log(new_polygon_selected);
+        console.log("type of old_polygon_selected");
+        console.log(typeof old_polygon_selected);
+        //only get data if no old polygon or new polygon is different
+        //don't get data if same polygon
+        if ((typeof old_polygon_selected === 'undefined') || (old_polygon_selected != new_polygon_selected)) {
+          console.log('diff polygon selected???');
+          const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${new_polygon_selected}`;
+          const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
+
+          fetch(boundsUrl)
+            .then(response => {
+                return response.json();
+              })
+              .then(json => {
+                new_polygon = L.geoJson(JSON.parse(json.rows[0].geom), {
+                  style: {
+                    color: "#15F4EE",
+                    fillColor: "#15F4EE",
+                    weight: 3,
+                    opacity: 0.65
+                  }
+                })
+              // if polygon has stayed the same, don't update add/remove
+              if (typeof polygon === 'undefined') {
+                console.log('old polygon undefined');
+                map.addLayer(new_polygon);
+              } else if (polygon != new_polygon){
+                console.log("diff polygon");
+                map.removeLayer(polygon);
+                map.addLayer(new_polygon);
+              }
+              polygon = new_polygon;
+              // .addTo(map);
+              // map.addLayer(polygon);
+              });
+        };
+        old_polygon_selected = new_polygon_selected;
+      };
+
+      // function resetHighlight(featureEvent) {
+      //   console.log("did reset?");
+      //   // map.removeLayer(polygon);
+      //   client.removeLayer(polygon)
+      //   .then(() => {
+      //    console.log('Layer removed');
+      //   })
+      //   .catch(cartoError => {
+      //    console.error(cartoError.message);
+      //   });
+      // }
+
+      // layer.on('mouseover', showFeature);
+      // layer.on('mouseout', function (e) {
+      //     this.closePopup();
+      // });
+      //next: code to remove clicked polygon highlight when popup closes and go back to hover highlight
+      //next: code to keep clicked polygon highlight and stop hover highlight when click
+      //maybe a second parameter?
+
+      // layer.on('featureClicked', showFeature);
+
+      //on hover
+      // layer.on('featureOver', showFeature);
+      // layer.off('featureOut', showFeature);
+
+      //on click
+      layer.on('featureClicked', showFeature);
+
+      //remove the layer on featureOut...
+
+      //on featureClick, layer.off('featureOver')
+
+/////////////////////////// populate dropdown using JSON data ///////////////////////////////
+
+
+      window.onload = function() {
+        replace_dropdown();
+      }
+
+      function replace_dropdown() {
+        var dropdown_html = `<option value="final_rank" style="font-weight:bold !important;" selected>Final Rank</option>`; //code apart from others because want this to be default selected
+        for (var key in ind_dict) {
+          var get_value = ind_dict[key];
+          if ((key == 'pop_char') || (key == 'pollution_') || (key == 'pop_densit')) {
+            dropdown_html += `<option value="${key}" style="font-weight:bold !important;">${get_value.indicator_name}</option>`;
+          } else if (key != 'final_rank') {
+              dropdown_html += `<option value="${key}">&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
+          }
+        }
+        document.getElementById("js-dropdown-selector").innerHTML = dropdown_html;
+        // $('#wrapper-dropdown-selector').selectpicker('render');
+        console.log(document.getElementById("wrapper-dropdown-selector").innerHTML);
+        $('.selectpicker').selectpicker('refresh');
+      }
+
+/////////////////////////// change layers on dropdown select using JSON data ////////////////////////
+
+      //change content styling with dropdown values
+      $("#js-dropdown-selector").on('change', function(e) {
+        console.log('hi');
+        let value = e.target.value;
+        console.log(value);
+        var returned_value = ind_dict[value];
+        //don't need to fix for null values because in turbo-carto, null gets the low value from the ramp.
+        //which means the oil and gas nulls which are really 0 values get rendered as so--thank you Carto <3
+        layerStyle.setContent(`
+          #layer {
+            polygon-fill: ramp([${returned_value.indicator_score}], (${returned_value.choropleth_colors}), quantiles(${returned_value.num_quantiles}));
+              ::outline {
+                line-width: 0.5;
+                line-color: #CCCCCC;
+                line-opacity: 0.5;
+              }
+          }`)
+         .then(() => {
+           console.log('cartoCSS was updated');
+         })
+         .catch(() => {
+           console.error('Error updating the cartoCSS for the layer');
+         });
+      });
+
+/////////////////////////// popups using indicator JSON ///////////////////////////////
+
+    // create popups
+    const popup = L.popup({closeButton: true, maxHeight: 200});
+
+    function openPopup(featureEvent) {
+      let content = '<div class="widget">';
+      console.log('hello');
+      console.log(featureEvent);
+      console.log(featureEvent.data);
+      console.log('try dis');
+      console.log(featureEvent.data.avg_pnpl);
+
+      //need to write FIPS tract id first
+      content += `<h5 class="open-sans">Census tract: ${featureEvent.data.fips_tract}</h5>`;
+
+      content += '<ul class="popup-list" style="list-style-type:none; padding-left:0">';
+      //iterate through all in featureEvent.data
+      for (var key in ind_dict) {
+        if ((key != 'cartodb_id') && (key != 'fips_tract') && (key !='name')) {
+            var actual_name = ind_dict[key];
+            console.log(key);
+            console.log(actual_name);
+            if (featureEvent.data[key] == null) {
+              if ((key == 'oil_score')||(key == 'oil_densit')) {
+                content += `<li><p><b>${actual_name.indicator_name}:</b> 0</p></li>`;
+              } else {
+                content += `<li><p><b>${actual_name.indicator_name}:</b> N/A</p></li>`;
+              }
+            } else if (key == 'pop_densit') {
+              console.log('pop_densit to counts');
+              console.log('pop_densit');
+              console.log(featureEvent.data['pop_densit']);
+              console.log('couunts');
+              console.log(featureEvent.data['total_pop']);
+              content += `<li><p><b>Total Population:</b> ${featureEvent.data['total_pop'].toFixed(2)}</p></li>`;
+            } else {
+              content += `<li><p><b>${actual_name.indicator_name}:</b> ${featureEvent.data[key].toFixed(2)}</p></li>`;
+            }
+        }
+      }
+      content += '</ul>';
+      popup.setContent(content);
+      popup.setLatLng(featureEvent.latLng);
+      if (!popup.isOpen()) {
+        popup.openOn(map);
+      }
+    }
+
+    //click-on popup (can change to hover too)
+    layer.off('featureOut');
+    layer.on('featureClicked', openPopup);
+
+    console.log("is popup open");
+    console.log(popup.isOpen());
+    if (!popup.isOpen() && !(typeof polygon === 'undefined')) {
+      console.log('removing highlight');
+      map.removeLayer(polygon);
+    }
+
+///////////////////////////// add/change legend ///////////////////////////////
+
+      var legend  = L.control({position: 'bottomright'})
+
+      layer.on('metadataChanged', function(event){
+
+        // console.log(event.styles[0]._buckets); //print array of buckets
+
+        console.log('checkingg');
+        console.log(event.styles[0]._column);
+
+        // get buckets
+        var buckets = event.styles[0]._buckets;
+        //each Bucket has props: min, max, and value (which here is the color string code)
+
+        legend.onAdd = function (map) {
+          var div = L.DomUtil.create('div', 'info legend');
+
+          var column = event.styles[0]._column;
+          var max_buckets = buckets.length - 1;
+
+          div.innerHTML += '<h5 class="open-sans">Highest</br>Percentiles</h5>';
+          if ((column == 'oil_densit') || (column == 'oil_score')) {
+            for (var i = max_buckets; i > 0; i--) {
+              div.innerHTML +=
+                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[i].value}"></i>${i*10} - ${(i+1)*10}</ul>`;
+              // div.innerHTML +=
+              //   `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[i].value}"></i>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</ul>`;
+            }
+            div.innerHTML +=
+                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[0].value}"></i>0 - 10</ul>`;
+          }
+          else {
+            for (var i = max_buckets; i >= 0; i--) {
+              div.innerHTML +=
+                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${i*10} - ${(i+1)*10}</span></ul>`;
+            }
+          }
+          div.innerHTML += '<h5 class="open-sans">Lowest</br>Percentiles</h5>';
+          return div;
+        };
+        legend.addTo(map);
+      });
+
+///////////////////////////// animate legend to collapse and expand ///////////////////////////////
+
+      //legend always shows when different indicator selected from dropdown
+      //even if the different indicator has the same map colors
+      layer.on('metadataChanged', function(event){
+          $(".legend").fadeIn();
+          $(".btn2").hide();
+          $(".fa-angle-down").show();
+      });
+
+      $(document).ready(function(){
+        $(".btn2").hide();
+        $(".fa-angle-down").click(function(){
+          $(".legend").hide();
+          $(".fa-angle-down").hide();
+          $(".btn2").show();
+        });
+        $(".btn2").click(function(){
+          $(".legend").show();
+          $(".btn2").hide();
+          $(".fa-angle-down").show();
+        });
+      });
+
+
+             return map;
+       }
+   });
+
+  </script>
+  </body>
+</html>
