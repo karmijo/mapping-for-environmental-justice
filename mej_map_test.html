@@ -268,6 +268,12 @@
         font-weight: bold;
         color: #009879;
       }
+      #popup-table tbody tr[aria-expanded=true] .fa-plus {
+         display: none;
+      }
+      #popup-table tbody tr[aria-expanded=false] .fa-minus {
+         display: none;
+      }
       /* .switch {
        position : relative ;
        display : inline-block;
@@ -677,20 +683,20 @@
       console.log(featureEvent.data);
 
       //FIPS tract id title
-      content += `<h5 class="open-sans" style="line-height: 200%;">Census tract: ${featureEvent.data.fips_tract}</h5>`;
+      content += `<h4 class="open-sans" style="line-height: 200%; color:#015ba0;">Census tract: ${featureEvent.data.fips_tract}</h4>`;
 
       //final rank
       if (featureEvent.data['final_rank'] == null) {
-        content += `<h6 class="open-sans">Final Rank: N/A</h6>`;
+        content += `<h5 class="open-sans">Final Rank: N/A</h5>`;
       } else {
-        content += `<h6 class="open-sans">Final Rank: ${featureEvent.data.final_rank.toFixed(2)}</h6>`;
+        content += `<h5 class="open-sans">Final Rank: ${featureEvent.data.final_rank.toFixed(2)}</h5>`;
       }
 
       //total pop
       if (featureEvent.data['total_pop'] == null) {
-        content += `<h6 class="open-sans">Total Population: N/A</h6>`;
+        content += `<h5 class="open-sans">Total Population: N/A</h5></br>`;
       } else {
-        content += `<h6 class="open-sans">Total Population: ${featureEvent.data.total_pop.toFixed(0)}</h6>`;
+        content += `<h5 class="open-sans">Total Population: ${featureEvent.data.total_pop.toFixed(0)}</h5></br>`;
       }
 
       //start table
@@ -701,7 +707,7 @@
 
       //table parent entry: population characteristics
       content += '<tbody><tr class="clickable" data-toggle="collapse" data-target="#group-of-rows-1" aria-expanded="false" aria-controls="group-of-rows-1">';
-      content += '<td><i class="fa fa-plus" aria-hidden="true"></i>  <b>Population Characteristics</b></td>';
+      content += '<td style="padding-left:-5px;"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<b>Population Characteristics</b></td>';
       if (featureEvent.data['pop_char'] == null) {
         content += '<td><b>N/A</b></td>';
       } else {
@@ -728,7 +734,7 @@
 
       //table parent entry: pollution burden
       content += '<tbody><tr class="clickable" data-toggle="collapse" data-target="#group-of-rows-2" aria-expanded="false" aria-controls="group-of-rows-2">';
-      content += '<td><i class="fa fa-plus" aria-hidden="true"></i>  <b>Pollution Burden</b></td>';
+      content += '<td style="padding-left:-5px;"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<b>Pollution Burden</b></td>';
       if (featureEvent.data['pollution_'] == null) {
         content += '<td><b>N/A</b></td>';
       } else {
