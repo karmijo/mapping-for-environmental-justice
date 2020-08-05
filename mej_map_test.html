@@ -190,6 +190,13 @@
         color: #333;
         background-color: #e6e6e6;
       }
+      @media screen and (max-width: 900px) {
+        .down-arrow {
+          position: absolute;
+          right:18px;
+          bottom:380px !important;
+        }
+      }
       /* .switch {
        position : relative ;
        display : inline-block;
@@ -231,7 +238,7 @@
       </select>
     </div>
 
-    <i class="fa fa-angle-down fa-2x" aria-hidden="true" style="color:#949494; position: absolute; right:18px; bottom:363px; z-index: 100000 !important;"></i>
+    <i class="fa fa-angle-down fa-2x down-arrow" aria-hidden="true" style="color:#949494; position: absolute; right:18px; bottom:363px; z-index: 100000 !important;"></i>
     <button id="legend-button" class="btn2" style="position: absolute; right:8px; bottom:20px; z-index: 100000 !important;">Show legend</button>
 
     <script>
