@@ -9,9 +9,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" type="text/css">
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <!-- Bootstrap -->
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
@@ -196,6 +199,74 @@
           right:18px;
           bottom:380px !important;
         }
+      }
+      /* #popup-table th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #4CAF50;
+        color: white;
+      }
+      #popup-table tr:nth-child(even){
+        background-color: #f2f2f2;
+      }
+      #popup-table td, #popup-table th {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      #popup-table {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      } */
+      #popup-table {
+        font: sans-serif;
+        border-collapse: collapse;
+        /* margin: 25px 0; */
+        font-size: 12px;
+        /* min-width: 400px; */
+        border-radius: 5px 5px 0 0;
+        max-height: 200px;
+        overflow-y: scroll;
+        display: block;
+        /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
+      }
+      /* #popup-table tbody {
+        max-height:200px;
+        overflow-y: scroll;
+        display: block;
+      }
+      #popup-table thead {
+        display: block;
+      } */
+      #popup-table thead tr {
+        background-color: #ffffff;
+        color: #015ba0;
+        font-size: 13px;
+        text-align: left;
+        font-weight: bold;
+      }
+
+      #popup-table th,
+      #popup-table td {
+        padding: 12px 15px;
+      }
+
+      #popup-table tbody tr {
+        border-top: 1px solid #dddddd;
+      }
+
+      /* #popup-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+      } */
+
+      /* #popup-table tbody tr:last-of-type {
+        border-bottom: 2px solid #015ba0;
+      } */
+
+      #popup-table tbody tr.active-row {
+        font-weight: bold;
+        color: #009879;
       }
       /* .switch {
        position : relative ;
@@ -598,45 +669,93 @@
 /////////////////////////// popups using indicator JSON ///////////////////////////////
 
     // create popups
-    const popup = L.popup({closeButton: true, maxHeight: 200});
+    const popup = L.popup({closeButton: true, maxHeight: 250});
 
     function openPopup(featureEvent) {
       let content = '<div class="widget">';
-      console.log('hello');
       console.log(featureEvent);
       console.log(featureEvent.data);
-      console.log('try dis');
-      console.log(featureEvent.data.avg_pnpl);
 
-      //need to write FIPS tract id first
-      content += `<h5 class="open-sans">Census tract: ${featureEvent.data.fips_tract}</h5>`;
+      //FIPS tract id title
+      content += `<h5 class="open-sans" style="line-height: 200%;">Census tract: ${featureEvent.data.fips_tract}</h5>`;
 
-      content += '<ul class="popup-list" style="list-style-type:none; padding-left:0">';
-      //iterate through all in featureEvent.data
-      for (var key in ind_dict) {
-        if ((key != 'cartodb_id') && (key != 'fips_tract') && (key !='name')) {
-            var actual_name = ind_dict[key];
-            console.log(key);
-            console.log(actual_name);
-            if (featureEvent.data[key] == null) {
-              if ((key == 'oil_score')||(key == 'oil_densit')) {
-                content += `<li><p><b>${actual_name.indicator_name}:</b> 0</p></li>`;
-              } else {
-                content += `<li><p><b>${actual_name.indicator_name}:</b> N/A</p></li>`;
-              }
-            } else if (key == 'pop_densit') {
-              console.log('pop_densit to counts');
-              console.log('pop_densit');
-              console.log(featureEvent.data['pop_densit']);
-              console.log('couunts');
-              console.log(featureEvent.data['total_pop']);
-              content += `<li><p><b>Total Population:</b> ${featureEvent.data['total_pop'].toFixed(2)}</p></li>`;
-            } else {
-              content += `<li><p><b>${actual_name.indicator_name}:</b> ${featureEvent.data[key].toFixed(2)}</p></li>`;
-            }
-        }
+      //final rank
+      if (featureEvent.data['final_rank'] == null) {
+        content += `<h6 class="open-sans">Final Rank: N/A</h6>`;
+      } else {
+        content += `<h6 class="open-sans">Final Rank: ${featureEvent.data.final_rank.toFixed(2)}</h6>`;
       }
-      content += '</ul>';
+
+      //total pop
+      if (featureEvent.data['total_pop'] == null) {
+        content += `<h6 class="open-sans">Total Population: N/A</h6>`;
+      } else {
+        content += `<h6 class="open-sans">Total Population: ${featureEvent.data.total_pop.toFixed(0)}</h6>`;
+      }
+
+      //start table
+      content += '<table id="popup-table" class="table table-responsive table-hover">';
+
+      //table head
+      content += '<thead><tr><th>Indicators</th><th>Percentile</th></tr></thead>';
+
+      //table parent entry: population characteristics
+      content += '<tbody><tr class="clickable" data-toggle="collapse" data-target="#group-of-rows-1" aria-expanded="false" aria-controls="group-of-rows-1">';
+      content += '<td><i class="fa fa-plus" aria-hidden="true"></i>  <b>Population Characteristics</b></td>';
+      if (featureEvent.data['pop_char'] == null) {
+        content += '<td><b>N/A</b></td>';
+      } else {
+        content += `<td><b>${featureEvent.data.pop_char.toFixed(2)}</b></td>`;
+      }
+      content += '</tr></tbody>';
+
+      //table child entries: of population characteristics
+      content += '<tbody id="group-of-rows-1" class="collapse">';
+      for (var key in ind_dict) {
+        content += '<tr>';
+        if ((key== 'nonwhite_r') || (key== 'poverty_ra') || (key== 'edu_rank') || (key== 'lin_rank') || (key== 'unemploy_r') || (key== 'housebur_1') || (key== 'asthma_ra') || (key== 'lb_rank') || (key== 'hd_rank')) {
+          var actual_name = ind_dict[key];
+          content += `<td>&nbsp;&nbsp;&nbsp;${actual_name.indicator_name}</td>`;
+          if (featureEvent.data[key] == null) {
+            content += '<td>N/A</td>';
+          } else {
+            content += `<td>${featureEvent.data[key].toFixed(2)}</td>`;
+          }
+        }
+        content += '</tr>';
+      }
+      content += '</tbody>';
+
+      //table parent entry: pollution burden
+      content += '<tbody><tr class="clickable" data-toggle="collapse" data-target="#group-of-rows-2" aria-expanded="false" aria-controls="group-of-rows-2">';
+      content += '<td><i class="fa fa-plus" aria-hidden="true"></i>  <b>Pollution Burden</b></td>';
+      if (featureEvent.data['pollution_'] == null) {
+        content += '<td><b>N/A</b></td>';
+      } else {
+        content += `<td><b>${featureEvent.data.pollution_.toFixed(2)}</b></td>`;
+      }
+      content += '</tr></tbody>';
+
+      //table child entries: of population characteristics
+      content += '<tbody id="group-of-rows-2" class="collapse">';
+      for (var key in ind_dict) {
+        content += '<tr>';
+        if ((key== 'ozone_rank') || (key== 'diesel_ran') || (key== 'lead_rank') || (key== 'toxics_ran') || (key== 'pm25_rank') || (key== 'ptraf_rank') || (key== 'oil_score') || (key== 'oil_densit')
+              || (key== 'ptsdf_rank') || (key== 'prmp_rank') ||(key== 'pwdis_rank') || (key== 'pnpl_rank')) {
+          var actual_name = ind_dict[key];
+          content += `<td>&nbsp;&nbsp;&nbsp;${actual_name.indicator_name}</td>`;
+          if (featureEvent.data[key] == null) {
+            content += '<td>N/A</td>';
+          } else {
+            content += `<td>${featureEvent.data[key].toFixed(2)}</td>`;
+          }
+        }
+        content += '</tr>';
+      }
+      content += '</tbody>';
+
+      content += '</table>';
+
       popup.setContent(content);
       popup.setLatLng(featureEvent.latLng);
       if (!popup.isOpen()) {
@@ -704,7 +823,7 @@
       //legend always shows when different indicator selected from dropdown
       //even if the different indicator has the same map colors
       layer.on('metadataChanged', function(event){
-          $(".legend").fadeIn();
+          $(".legend").show();
           $(".btn2").hide();
           $(".fa-angle-down").show();
       });
