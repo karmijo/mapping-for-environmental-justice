@@ -735,7 +735,7 @@
       content += '<tbody id="group-of-rows-1" class="collapse">';
       for (var key in ind_dict) {
         content += '<tr>';
-        if ((key== 'nonwhite_r') || (key== 'poverty_ra') || (key== 'edu_rank') || (key== 'lin_rank') || (key== 'unemploy_r') || (key== 'housebur_1') || (key== 'asthma_ra') || (key== 'lb_rank') || (key== 'hd_rank')) {
+        if ((key== 'nonwhite_r') || (key== 'poverty_ra') || (key== 'edu_rank') || (key== 'lin_rank') || (key== 'unemploy_r') || (key== 'housebur_1') || (key== 'asthma_ran') || (key== 'lb_rank') || (key== 'hd_rank')) {
           var actual_name = ind_dict[key];
           content += `<td>&nbsp;&nbsp;&nbsp;${actual_name.indicator_name}</td>`;
           if (featureEvent.data[key] == null) {
