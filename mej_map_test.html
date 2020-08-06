@@ -573,7 +573,8 @@
         console.log(typeof old_polygon_selected);
         //only get data if no old polygon or new polygon is different
         //don't get data if same polygon
-        if ((typeof old_polygon_selected === 'undefined') || (old_polygon_selected != new_polygon_selected)) {
+        if (!map.hasLayer(polygon)) {
+        // if ((typeof old_polygon_selected === 'undefined') || (old_polygon_selected != new_polygon_selected)) {
           console.log('diff polygon selected???');
           const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${new_polygon_selected}`;
           const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
@@ -591,16 +592,22 @@
                     opacity: 0.65
                   }
                 })
-              // if polygon has stayed the same, don't update add/remove
-              if (typeof polygon === 'undefined') {
-                console.log('old polygon undefined');
-                map.addLayer(new_polygon);
-              } else if (polygon != new_polygon){
-                console.log("diff polygon");
-                map.removeLayer(polygon);
-                map.addLayer(new_polygon);
-              }
+              // if polygon has stayed the same, don't update add/remove: this is for the hover case bc will lag
+              // if (typeof polygon === 'undefined') {
+              //   console.log('old polygon undefined');
+              //   map.addLayer(new_polygon);
+              // } else if (polygon != new_polygon){
+              //   console.log("diff polygon");
+              //   map.removeLayer(polygon);
+              //   map.addLayer(new_polygon);
+              // }
               polygon = new_polygon;
+              // if (!map.hasLayer(polygon)) {
+              //   console.log('adding layer!!');
+              //   map.addLayer(polygon);
+              // }
+              map.addLayer(polygon);
+
               // .addTo(map);
               // map.addLayer(polygon);
               });
@@ -785,22 +792,38 @@
       content += '</table>';
 
       popup.setContent(content);
+      console.log('latlng');
+      console.log(featureEvent.latLng);
       popup.setLatLng(featureEvent.latLng);
       if (!popup.isOpen()) {
         popup.openOn(map);
       }
+      // const custom_marker = L.divIcon({
+      //   html: '<i class="fa fa-dot-circle-o fa-xs" aria-hidden="true"></i>',
+      //   iconSize: [1, 1],
+      //   className: 'myDivIcon'
+      // });
+      // var marker = L.marker(featureEvent.latLng, {opacity:0, icon:custom_marker}).addTo(map);
+      // if (!popup.isOpen()) {
+      //   marker.bindPopup(popup).openPopup();
+      // }
     }
 
     //click-on popup (can change to hover too)
     layer.off('featureOut');
     layer.on('featureClicked', openPopup);
 
-    console.log("is popup open");
-    console.log(popup.isOpen());
-    if (!popup.isOpen() && !(typeof polygon === 'undefined')) {
-      console.log('removing highlight');
+    map.on('popupclose', function(e) {
+      console.log('popup closed');
       map.removeLayer(polygon);
-    }
+    });
+
+    // console.log("is popup open");
+    // console.log(popup.isOpen());
+    // if (!popup.isOpen() && !(typeof polygon === 'undefined')) {
+    //   console.log('removing highlight');
+    //   map.removeLayer(polygon);
+    // }
 
 ///////////////////////////// add/change legend ///////////////////////////////
 
