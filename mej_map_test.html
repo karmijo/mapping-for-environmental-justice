@@ -197,7 +197,7 @@
         .down-arrow {
           position: absolute;
           right:18px;
-          bottom:380px !important;
+          bottom:425px !important;
         }
       }
       /* #popup-table th {
@@ -331,7 +331,7 @@
       </select>
     </div>
 
-    <i class="fa fa-angle-down fa-2x down-arrow" aria-hidden="true" style="color:#949494; position: absolute; right:18px; bottom:363px; z-index: 100000 !important;"></i>
+    <i class="fa fa-angle-down fa-2x down-arrow" aria-hidden="true" style="color:#949494; position: absolute; right:18px; bottom:410px; z-index: 100000 !important;"></i>
     <button id="legend-button" class="btn2" style="position: absolute; right:8px; bottom:20px; z-index: 100000 !important;">Show legend</button>
 
     <script>
@@ -378,6 +378,9 @@
               line-color: #CCCCCC;
               line-opacity: 0.5;
             }
+          [finalscore=null] {
+            polygon-fill: #d3d3d3;
+          }
         }
       `);
 
@@ -679,6 +682,9 @@
                 line-color: #CCCCCC;
                 line-opacity: 0.5;
               }
+            [${returned_value.indicator_score}=null] {
+              polygon-fill: #d3d3d3;
+            }
           }`)
          .then(() => {
            console.log('cartoCSS was updated');
@@ -834,7 +840,8 @@
                 `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${i*10} - ${(i+1)*10}</span></ul>`;
             }
           }
-          div.innerHTML += '<h5 class="open-sans">Lowest</br>Percentiles</h5>';
+          div.innerHTML += '<h5 class="open-sans" style="padding-bottom:5px;">Lowest</br>Percentiles</h5>';
+          div.innerHTML +=  `<ul style="list-style-type:none; padding-left:0"><i style="background: #d3d3d3"></i> <span style="display:block;">Missing</span><span style="display:block;">data</span></ul>`;
           return div;
         };
         legend.addTo(map);
