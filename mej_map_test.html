@@ -274,6 +274,21 @@
       #popup-table tbody tr[aria-expanded=false] .fa-minus {
          display: none;
       }
+      .fa-info-circle:hover:after {
+        content: "Every indicator is ranked as a percentile from 0 to 100, indicating the value below which a given percentage of observations fall. For example, if a census tract has a final rank of 75, that means 75% of census tracts are experiencing an equal or lesser amount of environmental injustice than the census tract at which you are looking.";
+        font-family: arial;
+        display: block;
+        position: absolute;
+        z-index: 100000000;
+        bottom: 50%;
+        background-color: #ffffff;
+        color: #000000;
+        width: 200px;
+        text-align: center;
+        border-radius: 6px;
+        box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
+        padding: 12px 15px;
+      }
       /* .switch {
        position : relative ;
        display : inline-block;
@@ -675,7 +690,7 @@
 /////////////////////////// popups using indicator JSON ///////////////////////////////
 
     // create popups
-    const popup = L.popup({closeButton: true, maxHeight: 250});
+    const popup = L.popup({closeButton: true, maxHeight: 250, maxWidth: 400});
 
     function openPopup(featureEvent) {
       let content = '<div class="widget">';
@@ -703,7 +718,7 @@
       content += '<table id="popup-table" class="table table-responsive table-hover">';
 
       //table head
-      content += '<thead><tr><th>Indicators</th><th>Percentile</th></tr></thead>';
+      content += '<thead><tr><th>Indicators</th><th>Percentile <i class="fa fa-info-circle fa-xs" aria-hidden="true"></i></th></tr></thead>';
 
       //table parent entry: population characteristics
       content += '<tbody><tr class="clickable" data-toggle="collapse" data-target="#group-of-rows-1" aria-expanded="false" aria-controls="group-of-rows-1">';
