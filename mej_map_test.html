@@ -704,10 +704,10 @@
 /////////////////////////// popups using indicator JSON ///////////////////////////////
 
     // create popups
-    const popup = L.popup({closeButton: true, maxHeight: 250, maxWidth: 400});
+    const popup = L.popup({closeButton: true, maxHeight: 280, maxWidth: 400});
 
     function openPopup(featureEvent) {
-      let content = '<div class="widget">';
+      let content = '<div class="widget" id="first_page_popup">';
       console.log(featureEvent);
       console.log(featureEvent.data);
 
@@ -747,7 +747,7 @@
       //table child entries: of population characteristics
       content += '<tbody id="group-of-rows-1" class="collapse">';
       for (var key in ind_dict) {
-        content += '<tr>';
+        content += '<tr data-href="https://www.google.com/">';
         if ((key== 'nonwhite_r') || (key== 'poverty_ra') || (key== 'edu_rank') || (key== 'lin_rank') || (key== 'unemploy_r') || (key== 'housebur_1') || (key== 'asthma_ran') || (key== 'lb_rank') || (key== 'hd_rank')) {
           var actual_name = ind_dict[key];
           content += `<td>&nbsp;&nbsp;&nbsp;${actual_name.indicator_name}</td>`;
@@ -774,7 +774,7 @@
       //table child entries: of population characteristics
       content += '<tbody id="group-of-rows-2" class="collapse">';
       for (var key in ind_dict) {
-        content += '<tr>';
+        content += '<tr data-href="https://www.google.com/">';
         if ((key== 'ozone_rank') || (key== 'diesel_ran') || (key== 'lead_rank') || (key== 'toxics_ran') || (key== 'pm25_rank') || (key== 'ptraf_rank') || (key== 'oil_score') || (key== 'oil_densit')
               || (key== 'ptsdf_rank') || (key== 'prmp_rank') ||(key== 'pwdis_rank') || (key== 'pnpl_rank')) {
           var actual_name = ind_dict[key];
@@ -790,6 +790,13 @@
       content += '</tbody>';
 
       content += '</table>';
+      content += '</div>';
+
+      //second page content
+      content += '<div class="widget" id="second_page_popup">';
+      content += `<h4 class="open-sans" id="go_back_button" style="line-height: 200%; color:#015ba0;"><i class="fa fa-angle-left" aria-hidden="true"></i> Back</h4>`;
+      content += '</div>';
+
 
       popup.setContent(content);
       console.log('latlng');
@@ -816,6 +823,23 @@
     map.on('popupclose', function(e) {
       console.log('popup closed');
       map.removeLayer(polygon);
+    });
+
+    map.on('popupopen', function(e) {
+      console.log('popup opened');
+      $("#second_page_popup").hide();
+    });
+
+    $(document).ready(function() {
+      $(document.body).on("click", "tr[data-href]", function () {
+        // window.open(this.dataset.href);
+        $("#first_page_popup").hide();
+        $("#second_page_popup").show();
+        $("#go_back_button").click(function(){
+          $("#second_page_popup").hide();
+          $("#first_page_popup").show();
+        });
+      });
     });
 
     // console.log("is popup open");
