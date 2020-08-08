@@ -779,7 +779,13 @@
       content += '<tbody id="group-of-rows-1" class="collapse">';
       for (var key in ind_dict) {
         var use_this_key = key;
-        content += `<tr data-key=${use_this_key}>`;
+        var percentile_display;
+        if (featureEvent.data[key] == null) {
+          percentile_display= "N/A";
+        } else {
+          percentile_display=featureEvent.data[key].toFixed(2);
+        }
+        content += `<tr data-key=${use_this_key} data-percentile=${percentile_display} style="cursor:pointer;">`;
         if ((key== 'nonwhite_r') || (key== 'poverty_ra') || (key== 'edu_rank') || (key== 'lin_rank') || (key== 'unemploy_r') || (key== 'housebur_1') || (key== 'asthma_ran') || (key== 'lb_rank') || (key== 'hd_rank')) {
           var actual_name = ind_dict[key];
           content += `<td>&nbsp;&nbsp;&nbsp;${actual_name.indicator_name}</td>`;
@@ -803,11 +809,17 @@
       }
       content += '</tr></tbody>';
 
-      //table child entries: of population characteristics
+      //table child entries: of pollution burden
       content += '<tbody id="group-of-rows-2" class="collapse">';
       for (var key in ind_dict) {
         var use_this_key = key;
-        content += `<tr data-key=${use_this_key}>`;
+        var percentile_display;
+        if (featureEvent.data[key] == null) {
+          percentile_display= "N/A";
+        } else {
+          percentile_display=featureEvent.data[key].toFixed(2);
+        }
+        content += `<tr data-key=${use_this_key} data-percentile=${percentile_display} style="cursor:pointer;">`;
         if ((key== 'ozone_rank') || (key== 'diesel_ran') || (key== 'lead_rank') || (key== 'toxics_ran') || (key== 'pm25_rank') || (key== 'ptraf_rank') || (key== 'oil_score') || (key== 'oil_densit')
               || (key== 'ptsdf_rank') || (key== 'prmp_rank') ||(key== 'pwdis_rank') || (key== 'pnpl_rank')) {
           var actual_name = ind_dict[key];
@@ -870,8 +882,23 @@
         $("#first_page_popup").hide();
         console.log('desc');
         console.log(this.dataset.description);
-        document.getElementById("indicator_specific_description").innerHTML =
-          `<span><h4 class="open-sans" style="line-height: 150%; color:#015ba0;">${ind_dict[this.dataset.key].indicator_name}</h4></span><span style="display:block;"><p>${ind_dict[this.dataset.key].description}</p></span>`;
+        if (this.dataset.percentile == "N/A") {
+          document.getElementById("indicator_specific_description").innerHTML =
+            `<span><h4 class="open-sans" style="line-height: 150%; color:#015ba0;">${ind_dict[this.dataset.key].indicator_name}</h4></span><span style="display:block;"><p>${ind_dict[this.dataset.key].description}</p>
+
+            <p>The indicator percentile for this census tract is not available due to missing data.</p>
+
+            <a target="_blank" href="https://mappingforej.berkeley.edu/about-our-map/">More info</a>
+            </span>`;
+        } else {
+            document.getElementById("indicator_specific_description").innerHTML =
+              `<span><h4 class="open-sans" style="line-height: 150%; color:#015ba0;">${ind_dict[this.dataset.key].indicator_name}</h4></span><span style="display:block;"><p>${ind_dict[this.dataset.key].description}</p>
+
+              <p>The percentile for this census tract is ${this.dataset.percentile}, meaning the percent of adults without a high school education is higher than ${this.dataset.percentile}% of the census tracts in Colorado.</p>
+
+              <a target="_blank" href="https://mappingforej.berkeley.edu/about-our-map/">More info</a>
+              </span>`;
+        }
         $("#second_page_popup").show();
         $("#go_back_button").click(function(){
           $("#second_page_popup").hide();
