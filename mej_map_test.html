@@ -763,9 +763,9 @@
 
       //final rank
       if (featureEvent.data['final_rank'] == null) {
-        content += `<h5 class="open-sans">Final Rank: N/A  <i class="fa fa-info-circle fa-xs" id="final_rank_null_info" aria-hidden="true"></i></h5>`;
+        content += `<h5 class="open-sans">Final Percentile: N/A  <i class="fa fa-info-circle fa-xs" id="final_rank_null_info" aria-hidden="true"></i></h5>`;
       } else {
-        content += `<h5 class="open-sans">Final Rank: ${featureEvent.data.final_rank.toFixed(2)}</h5>`;
+        content += `<h5 class="open-sans">Final Percentile: ${featureEvent.data.final_rank.toFixed(2)}</h5>`;
       }
 
       //total pop
@@ -910,7 +910,7 @@
             document.getElementById("indicator_specific_description").innerHTML =
               `<span><h4 class="open-sans" style="line-height: 150%; color:#015ba0;">${ind_dict[this.dataset.key].indicator_name}</h4></span><span style="display:block;"><p>${ind_dict[this.dataset.key].description}</p>
 
-              <p>The percentile for this census tract is ${this.dataset.percentile}, meaning the percent of adults without a high school education is higher than ${this.dataset.percentile}% of the census tracts in Colorado.</p>
+              <p>The ${ind_dict[this.dataset.key].indicator_name} indicator percentile for this census tract is ${this.dataset.percentile}, meaning it is higher than ${this.dataset.percentile}% of the census tracts in Colorado.</p>
 
               <a target="_blank" href="https://mappingforej.berkeley.edu/about-our-map/">More info</a>
               </span>`;
