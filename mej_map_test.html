@@ -281,7 +281,7 @@
          display: none;
       }
       .fa-info-circle:hover:after {
-        content: "Every indicator is ranked as a percentile from 0 to 100, indicating the value below which a given percentage of observations fall. For example, if a census tract has a final rank of 75, that means 75% of census tracts are experiencing an equal or lesser amount of environmental injustice than the census tract at which you are looking.";
+        content: "Every indicator is ranked as a percentile from 0 to 100, indicating the value below which a given percentage of observations fall. For example, if a census tract has a final percentile of 75, that means 75% of census tracts are experiencing an equal or lesser amount of environmental injustice than the census tract at which you are looking.";
         font-family: arial;
         display: block;
         z-index: 1;
@@ -297,7 +297,7 @@
         padding: 12px 15px;
       }
       #final_rank_null_info:hover:after {
-        content: "Final rank is not available due to missing data for 4 or more indicators.";
+        content: "Final percentile is not available due to missing data for 4 or more indicators.";
         font-family: arial;
         display: block;
         z-index: 1;
@@ -311,6 +311,20 @@
         border-radius: 6px;
         box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
         padding: 12px 15px;
+      }
+      #info_tag {
+        position: absolute;
+        top: 10px;
+        left: 60px;
+        z-index: 100000000;
+        background: #cde5ff;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        padding: 0.3em 0.5em;
+      }
+      .fa-close:hover {
+        color: #1a5493 !important;
+        cursor: pointer;
       }
       /* .switch {
        position : relative ;
@@ -353,6 +367,12 @@
       </select>
     </div>
 
+    <!-- info tag on load -->
+    <div id="info_tag">
+      <h5 style="color: #004086;"><i class="fa fa-info-circle fa-xs" aria-hidden="true"></i>  Click on a census tract for more information.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-close" style="color: #648cbd;"></i></h5>
+    </div>
+
+    <!-- toggle legend buttons-->
     <i class="fa fa-angle-down fa-2x down-arrow" aria-hidden="true" style="color:#949494; position: absolute; right:18px; bottom:410px; z-index: 100000 !important;"></i>
     <button id="legend-button" class="btn2" style="position: absolute; right:8px; bottom:20px; z-index: 100000 !important;">Show legend</button>
 
@@ -504,6 +524,13 @@
           "description": "Wastewater in streams and other water sources may come from industrial, commercial, or agricultural sources and contain pollutants that can cause water-borne illnesses and diseases."},
       'pnpl_rank': {"indicator_name" : "Federal Cleanup Sites", "indicator_rank" : "pnpl_rank","indicator_score" : "avg_pnpl", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Federal cleanup sites, or “Superfund sites,” are locations where extremely hazardous chemicals have been dumped or otherwise poorly managed and may reach humans through the air or water, threatening human health."}};
+
+///////////////////////////// closable info tag on load ///////////////////////////
+
+      // to close the info tag
+      $(".fa-close").click(function(){
+        $("#info_tag").hide();
+      });
 
 ///////////////////////////// custom zoom bar control that includes a Zoom Home function///////////////////////////
 
@@ -902,7 +929,7 @@
           document.getElementById("indicator_specific_description").innerHTML =
             `<span><h4 class="open-sans" style="line-height: 150%; color:#015ba0;">${ind_dict[this.dataset.key].indicator_name}</h4></span><span style="display:block;"><p>${ind_dict[this.dataset.key].description}</p>
 
-            <p>The indicator percentile for this census tract is not available due to missing data.</p>
+            <p>This indicator percentile for this census tract is not available due to missing data.</p>
 
             <a target="_blank" href="https://mappingforej.berkeley.edu/about-our-map/">More info</a>
             </span>`;
