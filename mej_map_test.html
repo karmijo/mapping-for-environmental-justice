@@ -783,7 +783,7 @@
 
       //table parent entry: population characteristics
       content += '<tbody><tr class="clickable" data-toggle="collapse" data-target="#group-of-rows-1" aria-expanded="false" aria-controls="group-of-rows-1">';
-      content += '<td style="padding-left:-5px;"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<b>Population Characteristics</b></td>';
+      content += '<td style="padding-left:-5px; cursor:pointer;"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<b>Population Characteristics</b></td>';
       if (featureEvent.data['pop_char'] == null) {
         content += '<td><b>N/A</b></td>';
       } else {
@@ -817,7 +817,7 @@
 
       //table parent entry: pollution burden
       content += '<tbody><tr class="clickable" data-toggle="collapse" data-target="#group-of-rows-2" aria-expanded="false" aria-controls="group-of-rows-2">';
-      content += '<td style="padding-left:-5px;"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<b>Pollution Burden</b></td>';
+      content += '<td style="padding-left:-5px; cursor:pointer;"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<b>Pollution Burden</b></td>';
       if (featureEvent.data['pollution_'] == null) {
         content += '<td><b>N/A</b></td>';
       } else {
