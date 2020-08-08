@@ -161,6 +161,12 @@
       .fa-angle-down:hover {
         color: #000000 !important;
       }
+      .fa-angle-left:hover {
+        color: #000000 !important;
+      }
+      #go_back_button:hover {
+        color: #000000 !important;
+      }
       #legend-button {
         width: 120px;
         font-size: 16px;
@@ -778,9 +784,9 @@
           var actual_name = ind_dict[key];
           content += `<td>&nbsp;&nbsp;&nbsp;${actual_name.indicator_name}</td>`;
           if (featureEvent.data[key] == null) {
-            content += '<td>N/A</td>';
+            content += '<td>N/A <i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>';
           } else {
-            content += `<td>${featureEvent.data[key].toFixed(2)}</td>`;
+            content += `<td>${featureEvent.data[key].toFixed(2)}<i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>`;
           }
         }
         content += '</tr>';
@@ -807,9 +813,9 @@
           var actual_name = ind_dict[key];
           content += `<td>&nbsp;&nbsp;&nbsp;${actual_name.indicator_name}</td>`;
           if (featureEvent.data[key] == null) {
-            content += '<td>N/A</td>';
+            content += '<td>N/A <i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>';
           } else {
-            content += `<td>${featureEvent.data[key].toFixed(2)}</td>`;
+            content += `<td>${featureEvent.data[key].toFixed(2)}<i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>`;
           }
         }
         content += '</tr>';
@@ -821,7 +827,7 @@
 
       //second page content
       content += '<div class="widget" id="second_page_popup">';
-      content += `<h4 class="open-sans" id="go_back_button" style="line-height: 200%; color:#015ba0;"><i class="fa fa-angle-left" aria-hidden="true"></i> Back</h4>`;
+      content += `<h5 class="open-sans" id="go_back_button" style="color: #949494; cursor: pointer;"><i class="fa fa-angle-left" aria-hidden="true"></i>  Back</h5>`;
       content += '<div id="indicator_specific_description"></div>';
       content += '</div>';
 
@@ -865,7 +871,7 @@
         console.log('desc');
         console.log(this.dataset.description);
         document.getElementById("indicator_specific_description").innerHTML =
-          `<span style="display:block;"><p>${ind_dict[this.dataset.key].description}</p></span>`;
+          `<span><h4 class="open-sans" style="line-height: 150%; color:#015ba0;">${ind_dict[this.dataset.key].indicator_name}</h4></span><span style="display:block;"><p>${ind_dict[this.dataset.key].description}</p></span>`;
         $("#second_page_popup").show();
         $("#go_back_button").click(function(){
           $("#second_page_popup").hide();
