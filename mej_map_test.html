@@ -4,6 +4,7 @@
     <title>MEJ Colorado</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700|Open+Sans:300,400,600" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" type="text/css">
@@ -12,7 +13,6 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <!-- Bootstrap -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
@@ -34,6 +34,7 @@
     <!-- Adding Axios -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 
+    <!-- css grouped by feature -->
     <style type="text/css">
       html,
       body {
@@ -47,6 +48,7 @@
         padding: 0;
         margin: 0;
       }
+      /* zoom bar */
       .leaflet-bar a {
         background-color: #fff;
         border-bottom: 1px solid #ccc;
@@ -59,19 +61,14 @@
         text-decoration: none;
         font: bold 18px 'Lucida Console', Monaco, monospace;
       }
-      #collapse-legend {
-        position: absolute;
-        bottom: 50px;
-        right: 10px;
-        z-index: 998;
-      }
+      /* dropdown */
       #wrapper-dropdown-selector {
         position: absolute;
         top: 15px;
         right: 10px;
         z-index: 10000000;
       }
-      .btn-new {
+      .btn-dropdown {
         width: 160px;
         font-size: 16px;
         padding: 6px;
@@ -79,56 +76,31 @@
         color: #333;
         background-color: #fff;
         border: 0px;
-        /* border-color: #ccc; */
-        /* border: 1px solid rgb(127, 0, 0);
-        border: 1px solid rgba(255, 0, 0, .5);
-        -webkit-background-clip: padding-box;
-        background-clip: padding-box; */
         border-radius: 3px;
         box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
         white-space: nowrap;
         z-index: 100000;
       }
-      .btn-new:hover {
+      .btn-dropdown:hover {
         color: #333;
         background-color: #e6e6e6;
-        /* border-color: #adadad; */
       }
-      .btn-new:active:focus {
+      .btn-dropdown:active:focus {
           outline: thin dotted;
           outline: 5px auto -webkit-focus-ring-color;
           outline-offset: -2px;
       }
-      .btn-new:focus {
+      .btn-dropdown:focus {
         color: #333;
         background-color: #e6e6e6;
       }
-      .btn-new:active {
+      .btn-dropdown:active {
         box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
         color: #333;
         background-color: #e6e6e6;
       }
-      div#searchbox {
-            background-color: #d2eaef;
-            opacity: 0.8;
-            position: absolute;
-            top: 10px;
-            left: 50px;
-            width: auto;
-            height: auto;
-            padding: 10px;
-            display: block;
-            z-index: 9000;
-        }
-
-      div#searchbox input {
-          width: 200px;
-      }
-      div#results {
-          background: #FFF;
-      }
+      /* legend */
       .legend {
-        /* line-height: 18px; */
         color: #555;
         z-index: 900;
         opacity: 1 !important;
@@ -155,16 +127,7 @@
         color: #777;
         opacity: 1 !important;
       }
-      .popup-list li:not(:last-child){
-        margin-bottom: -15px;
-      }
       .fa-angle-down:hover {
-        color: #000000 !important;
-      }
-      .fa-angle-left:hover {
-        color: #000000 !important;
-      }
-      #go_back_button:hover {
         color: #000000 !important;
       }
       #legend-button {
@@ -183,7 +146,6 @@
       #legend-button:hover {
         color: #333;
         background-color: #e6e6e6;
-        /* border-color: #adadad; */
       }
       #legend-button:active:focus {
           outline: thin dotted;
@@ -199,56 +161,16 @@
         color: #333;
         background-color: #e6e6e6;
       }
-      @media screen and (max-width: 681.2px) {
-        .down-arrow {
-          position: absolute;
-          right:18px;
-          bottom:425px !important;
-        }
-        #info_tag {
-          position: absolute;
-          left: 10px !important;
-        }
-      }
-      /* #popup-table th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #4CAF50;
-        color: white;
-      }
-      #popup-table tr:nth-child(even){
-        background-color: #f2f2f2;
-      }
-      #popup-table td, #popup-table th {
-        border: 1px solid #ddd;
-        padding: 8px;
-      }
-      #popup-table {
-        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-      } */
+      /* popup */
       #popup-table {
         font: sans-serif;
         border-collapse: collapse;
-        /* margin: 25px 0; */
         font-size: 12px;
-        /* min-width: 400px; */
         border-radius: 5px 5px 0 0;
         max-height: 200px;
         overflow-y: scroll;
         display: block;
-        /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
       }
-      /* #popup-table tbody {
-        max-height:200px;
-        overflow-y: scroll;
-        display: block;
-      }
-      #popup-table thead {
-        display: block;
-      } */
       #popup-table thead tr {
         background-color: #ffffff;
         color: #015ba0;
@@ -256,24 +178,13 @@
         text-align: left;
         font-weight: bold;
       }
-
       #popup-table th,
       #popup-table td {
         padding: 12px 15px;
       }
-
       #popup-table tbody tr {
         border-top: 1px solid #dddddd;
       }
-
-      /* #popup-table tbody tr:nth-of-type(even) {
-        background-color: #f3f3f3;
-      } */
-
-      /* #popup-table tbody tr:last-of-type {
-        border-bottom: 2px solid #015ba0;
-      } */
-
       #popup-table tbody tr.active-row {
         font-weight: bold;
         color: #009879;
@@ -284,7 +195,14 @@
       #popup-table tbody tr[aria-expanded=false] .fa-minus {
          display: none;
       }
-      .fa-info-circle:hover:after {
+      .fa-angle-left:hover {
+        color: #000000 !important;
+      }
+      #go_back_button:hover {
+        color: #000000 !important;
+      }
+      /* tooltip for "Percentile" in popup */
+      #percentile_info:hover:after {
         content: "Every indicator is ranked as a percentile from 0 to 100, indicating the value below which a given percentage of observations fall. For example, if a census tract has a final percentile of 75, that means 75% of census tracts are experiencing an equal or lesser amount of environmental injustice than the census tract at which you are looking.";
         font-family: arial;
         display: block;
@@ -300,6 +218,7 @@
         box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
         padding: 12px 15px;
       }
+      /* tooltip for null final percentiles in popup */
       #final_rank_null_info:hover:after {
         content: "Final percentile is not available due to missing data for 4 or more indicators.";
         font-family: arial;
@@ -316,6 +235,7 @@
         box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
         padding: 12px 15px;
       }
+      /* info tag */
       #info_tag {
         position: absolute;
         top: 10px;
@@ -330,34 +250,20 @@
         color: #1a5493 !important;
         cursor: pointer;
       }
-      /* .switch {
-       position : relative ;
-       display : inline-block;
-       width : 40px;
-       height : 20px;
-       background-color: #ccc;
-       border-radius: 20px;
-     }
-     .switch::after {
-      content: '';
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background-color: white;
-      top: 1px; // TO GIVE AN EFFECT OF CIRCLE INSIDE SWITCH.
-      left: 1px;
-      transition: all 0.3s;
-    }
-    .checkbox:checked + .switch::after {
-      left : 20px;
-    }
-    .checkbox:checked + .switch {
-      background-color: #7983ff;
-    }
-    .checkbox {
-      display : none;
-    } */
+      /* specific to tablet and mobile screens */
+      @media screen and (max-width: 681.2px) {
+        /* re-position legend collapse button */
+        .down-arrow {
+          position: absolute;
+          right:18px;
+          bottom:425px !important;
+        }
+        /* re-position info tag */
+        #info_tag {
+          position: absolute;
+          left: 10px !important;
+        }
+      }
     </style>
   </head>
 
@@ -367,7 +273,8 @@
 
     <!-- dropdown selector-->
     <div id="wrapper-dropdown-selector">
-      <select id="js-dropdown-selector" class="selectpicker" data-style="btn-new" data-width="250px" style="z-index: 999999 !important;">
+      <!-- using bootstrap select to style https://developer.snapappointments.com/bootstrap-select/examples/ -->
+      <select id="js-dropdown-selector" class="selectpicker" data-style="btn-dropdown" data-width="250px" style="z-index: 999999 !important;">
       </select>
     </div>
 
@@ -385,25 +292,16 @@
       var lat = 39.019715;
       var lng = -105.085529;
       var zoom = 7;
-      const map = L.map('map', {zoomControl: false}).setView([lat, lng], zoom); // set to focus on CO
-      // map.scrollWheelZoom.disable();
+      //setView to focus on CO, set maxZoom and minZoom to restrict zoom out beyond CO and zoom in to the point where all labels disappear
+      const map = L.map('map', {zoomControl: false, minZoom:6, maxZoom:15}).setView([lat, lng], zoom);
 
       //basemap
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png', {
-        maxZoom: 18
-      }).addTo(map);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png').addTo(map);
 
-      // // Adding Voyager Labels
-      // L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png', {
-      //   maxZoom: 18,
-      //   zIndex: 10
-      // }).addTo(map);
-
-      //labels
+      //add label layer
       L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-labels/{z}/{x}/{y}{r}.{ext}', {
         attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         subdomains: 'abcd',
-        // maxZoom: 18,
         zIndex: 10,
         ext: 'png'
       }).addTo(map);
@@ -413,9 +311,12 @@
         username: 'tiffanyhuynh'
       });
 
-      // const query = 'SELECT * FROM colorado_sample';
-      // const source = new carto.source.SQL(query);
+      // synced with dataset uploaded to Carto, "colorado_final" set to public view
       const source = new carto.source.Dataset('colorado_final');
+
+      // onload map coloring: finalscore
+      // color using Turbo-Carto CSS https://carto.com/developers/styling/turbocarto/
+      // set null value tracts to light gray
       const layerStyle = new carto.style.CartoCSS(`
         #layer {
           polygon-fill: ramp([finalscore], (#409493,#68a7ad,#8bb9c3,#aacad6,#c7dbe4,#f0d6c6,#ebc4ab,#e4b08d,#db996b,#cf8146), quantiles(10));
@@ -431,6 +332,7 @@
       `);
 
       const layer = new carto.layer.Layer(source, layerStyle, {
+        //columns needed in popup
         featureOverColumns: ['cartodb_id', 'name',
          'fips_tract',
          'lead_rank',
@@ -470,63 +372,64 @@
 
 /////////////////////////// dictionary + JSON objects for indicators data ///////////////////////////////
 
-      //also: Carto automatically truncates column names to 10 letters or less...
-      //form: dictionary = key as column title, value as JSON object with the categories: official display name, column rank, column score, choropleth colors, number of quantiles for ramp, and indicator descriptions for the popup
-      //later can also add to the JSON objects text explanations of each indicator, links to reference more info, icons/images to display with the indicator, etc.
+      //form: dictionary =
+        // key as rank column title,
+        // value as JSON object with the categories: official display name, column rank, column score, parent indicator (pop_char or pollution_), choropleth colors, number of quantiles for ramp, and indicator descriptions for the popup
       //order of entries = order of content in popup for now
-      ind_dict = {'final_rank': {"indicator_name" : "Final Rank", "indicator_rank" : "final_rank", "indicator_score" : "finalscore", "choropleth_colors":['#409493','#68a7ad','#8bb9c3','#aacad6','#c7dbe4','#f0d6c6','#ebc4ab','#e4b08d','#db996b','#cf8146'], "num_quantiles": 10,
+      //also: Carto automatically truncates column names to 10 letters or less...
+      ind_dict = {'final_rank': {"indicator_name" : "Final Percentile", "indicator_rank" : "final_rank", "indicator_score" : "finalscore", "parent": "", "choropleth_colors":['#409493','#68a7ad','#8bb9c3','#aacad6','#c7dbe4','#f0d6c6','#ebc4ab','#e4b08d','#db996b','#cf8146'], "num_quantiles": 10,
           "description": ""},
-      'pop_densit': {"indicator_name" : "Population Density", "indicator_rank" : "pop_densit", "indicator_score" : "pop_densit", "choropleth_colors":["#edf8e9","#d4eece","#bae4b4","#a1d99b","#83cb82","#64bc6e","#41ab5d","#2e964d","#187a3f","#005a32"], "num_quantiles": 10,
+      'pop_densit': {"indicator_name" : "Population Density", "indicator_rank" : "pop_densit", "indicator_score" : "pop_densit", "parent": "", "choropleth_colors":["#edf8e9","#d4eece","#bae4b4","#a1d99b","#83cb82","#64bc6e","#41ab5d","#2e964d","#187a3f","#005a32"], "num_quantiles": 10,
           "description": ""},
-      'pop_char': {"indicator_name" : "Population Characteristics", "indicator_rank" : "pop_char", "indicator_score" : "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'pop_char': {"indicator_name" : "Population Characteristics", "indicator_rank" : "pop_char", "indicator_score" : "pop_char", "parent": "", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": ""},
-      // 'demographi': {"indicator_name" : "Socioeconomic Factors", "indicator_rank" : "demographi", "indicator_score" : "demographi", "choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
-      'nonwhite_r': {"indicator_name" : "People of Color", "indicator_rank" : "nonwhite_r", "indicator_score" : "nonwhitepe","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      // 'demographi': {"indicator_name" : "Socioeconomic Factors", "indicator_rank" : "demographi", "indicator_score" : "demographi", "parent": "", "choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
+      'nonwhite_r': {"indicator_name" : "People of Color", "indicator_rank" : "nonwhite_r", "indicator_score" : "nonwhitepe", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The proportion of adults who identify as anything aside from “white only” on the census. People of color are drastically more affected by and exposed to pollution, have higher levels of stress, and are often systematically excluded from healthy housing, quality healthcare, and access to wealth."},
-      'poverty_ra': {"indicator_name" : "Poverty", "indicator_rank" : "poverty_ra", "indicator_score" : "poverty_sc","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'poverty_ra': {"indicator_name" : "Poverty", "indicator_rank" : "poverty_ra", "indicator_score" : "poverty_sc", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The proportion of households with an income below double the Federal poverty line: $52,400 for a family of four. These households have higher stress, less access to healthcare, and are often much more affected by pollution."},
-      'edu_rank': {"indicator_name" : "No HS Degree", "indicator_rank" : "edu_rank", "indicator_score" : "edu_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'edu_rank': {"indicator_name" : "No HS Degree", "indicator_rank" : "edu_rank", "indicator_score" : "edu_score", "parent": "pop_char","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The proportion of the population that is over 25 years old without a high school degree. There are strong links between higher levels of education and resistance to environmental toxic exposure."},
-      'lin_rank': {"indicator_name" : "Linguistic Isolation", "indicator_rank" : "lin_rank", "indicator_score" : "lin_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'lin_rank': {"indicator_name" : "Linguistic Isolation", "indicator_rank" : "lin_rank", "indicator_score" : "lin_score", "parent": "pop_char","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The percentage of households reporting that no-one over the age of 5 speaks English “very well.” These households tend to receive lower-quality medical care, and are often left out of decision-making by their local government."},
-      'unemploy_r': {"indicator_name" : "Unemployment", "indicator_rank" : "unemploy_r", "indicator_score" : "unemploy_s","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'unemploy_r': {"indicator_name" : "Unemployment", "indicator_rank" : "unemploy_r", "indicator_score" : "unemploy_s", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The proportion of adults who are unemployed. Unemployed people face high levels of stress, which is closely linked to health outcomes."},
-      'housebur_1': {"indicator_name" : "Extreme Housing Burden", "indicator_rank" : "housebur_1", "indicator_score" : "houseburde","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'housebur_1': {"indicator_name" : "Extreme Housing Burden", "indicator_rank" : "housebur_1", "indicator_score" : "houseburde", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The proportion of low-income households that have to spend more than half their income on rent. These households experience higher levels of stress, report lower health, and may delay medical treatment because of its high cost."},
       // 'sensitive_': {"indicator_name" : "Sensitive Populations", "indicator_rank" : "sensitive_", "indicator_score" : "sensitive_","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
-      'asthma_ran': {"indicator_name" : "Asthma", "indicator_rank" : "asthma_ran", "indicator_score" : "asthma_sco", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'asthma_ran': {"indicator_name" : "Asthma", "indicator_rank" : "asthma_ran", "indicator_score" : "asthma_sco", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "Asthma is a chronic lung disease that causes breathlessness, wheezing, coughing, and chest tightness, which may be caused or made worse by exposure to traffic and outdoor air pollutants. It also makes people much more vulnerable to some forms of pollution."},
-      'lb_rank': {"indicator_name" : "Low Birthweight Infants", "indicator_rank" : "lb_rank", "indicator_score" : "lb_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'lb_rank': {"indicator_name" : "Low Birthweight Infants", "indicator_rank" : "lb_rank", "indicator_score" : "lb_score", "parent": "pop_char","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "Low birthweight infants are infants born early or underweight, weighing 5 pounds and 8 ounces or less. They have a high risk of infant mortality or of having chronic health conditions later in life that may increase sensitivity to pollution."},
-      'hd_rank': {"indicator_name" : "Heart Disease", "indicator_rank" : "hd_rank", "indicator_score" : "hd_score","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'hd_rank': {"indicator_name" : "Heart Disease", "indicator_rank" : "hd_rank", "indicator_score" : "hd_score", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "Heart disease, specifically coronary heart disease, can partially or completely block blood flow in the large arteries of the heart, causing chest pain or a heart attack. There is strong evidence that air pollution contributes to coronary heart disease and death following a heart attack."},
-      'pollution_': {"indicator_name" : "Pollution Burden", "indicator_rank" : "pollution_", "indicator_score" : "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'pollution_': {"indicator_name" : "Pollution Burden", "indicator_rank" : "pollution_", "indicator_score" : "pollution_", "parent": "", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": ""},
       // 'exposure_s': {"indicator_name" : "Exposures", "indicator_rank" : "exposure_s", "indicator_score" : "exposure_s","choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
-      'ozone_rank': {"indicator_name" : "Ozone", "indicator_rank" : "ozone_rank", "indicator_score" : "ozone_scor","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'ozone_rank': {"indicator_name" : "Ozone", "indicator_rank" : "ozone_rank", "indicator_score" : "ozone_scor", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Ozone is a chemical that combines with other air pollutants to form smog and is a widespread and significant health threat."},
-      'diesel_ran': {"indicator_name" : "Diesel PM", "indicator_rank" : "diesel_ran","indicator_score" : "diesel_sco", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'diesel_ran': {"indicator_name" : "Diesel PM", "indicator_rank" : "diesel_ran","indicator_score" : "diesel_sco", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Diesel particulate matter (Diesel PM) is small particles made by burning diesel. Diesel PM is known to cause eye and throat irritation, along with heart and lung disease and lung cancer. "},
-      'lead_rank': {"indicator_name" : "Lead Paint", "indicator_rank" : "lead_rank", "indicator_score" : "lead_score","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'lead_rank': {"indicator_name" : "Lead Paint", "indicator_rank" : "lead_rank", "indicator_score" : "lead_score", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "The proportion of older residences that may have lead-based paint, which can cause developmental delays, seizures, miscarriages, and other serious health problems."},
-      'toxics_ran': {"indicator_name" : "Air Toxics", "indicator_rank" : "toxics_ran", "indicator_score" : "toxics_sco","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'toxics_ran': {"indicator_name" : "Air Toxics", "indicator_rank" : "toxics_ran", "indicator_score" : "toxics_sco", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Air toxics are hazardous air pollutants from many sources including cars, trucks, and industrial facilities, and may cause cancer or other serious health effects. These include reproductive problems and birth defects."},
-      'pm25_rank': {"indicator_name" : "PM2.5", "indicator_rank" : "pm25_rank", "indicator_score" : "pm25_score","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'pm25_rank': {"indicator_name" : "PM2.5", "indicator_rank" : "pm25_rank", "indicator_score" : "pm25_score", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Particulate Matter 2.5 (PM 2.5) is a mix of particles smaller than 2.5 micrometers in the air produced by cars, trucks, and industries. PM 2.5 is harmful to humans because it can move deep into our lungs and cause irritation, heart and lung disease, or cancer."},
-      'ptraf_rank': {"indicator_name" : "Traffic", "indicator_rank" : "ptraf_rank","indicator_score" : "avg_ptraf", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'ptraf_rank': {"indicator_name" : "Traffic", "indicator_rank" : "ptraf_rank","indicator_score" : "avg_ptraf", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Traffic is a significant source of air pollution, particularly in urban areas, and has a wide range of negative effects including noise, vibration, injuries, illnesses and diseases due to air pollution. "},
       // 'effects_sc': {"indicator_name" : "Environmental Effects", "indicator_rank" : "effects_sc", "indicator_score" : "effects_sc","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
-      'oil_score': {"indicator_name" : "Oil and Gas", "indicator_rank" : "oil_score", "indicator_score" : "oil_score","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'oil_score': {"indicator_name" : "Oil and Gas", "indicator_rank" : "oil_score", "indicator_score" : "oil_score", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Oil and gas facilities include wells, wastewater pits, and tanks of oil or other dangerous chemicals located near populated areas. Oil and gas operations have been linked to many health problems in nearby communities including headaches, nausea, cancer, asthma, and birth defects."},
-      'oil_densit': {"indicator_name" : "Oil Density", "indicator_rank" : "oil_densit", "indicator_score" : "oil_densit","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'oil_densit': {"indicator_name" : "Oil Density", "indicator_rank" : "oil_densit", "indicator_score" : "oil_densit", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": ""},
-      'ptsdf_rank': {"indicator_name" : "Hazardous Waste Facilities", "indicator_rank" : "ptsdf_rank","indicator_score" : "avg_ptsdf", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'ptsdf_rank': {"indicator_name" : "Hazardous Waste Facilities", "indicator_rank" : "ptsdf_rank","indicator_score" : "avg_ptsdf", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Hazardous waste facilities treat, store, or dispose of volatile substances that are dangerous to humans and may reach people through the air or water."},
-      'prmp_rank': {"indicator_name" : "High-Risk Chemical Facilities", "indicator_rank" : "prmp_rank","indicator_score" : "avg_prmp", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'prmp_rank': {"indicator_name" : "High-Risk Chemical Facilities", "indicator_rank" : "prmp_rank","indicator_score" : "avg_prmp", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "High-risk chemical facilities maintain highly toxic, flammable, or explosive substances that may release acutely toxic substances which can cause serious health effects or death."},
-      'pwdis_rank': {"indicator_name" : "Wastewater Releases", "indicator_rank" : "pwdis_rank","indicator_score" : "avg_pwdis", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'pwdis_rank': {"indicator_name" : "Wastewater Releases", "indicator_rank" : "pwdis_rank","indicator_score" : "avg_pwdis", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Wastewater in streams and other water sources may come from industrial, commercial, or agricultural sources and contain pollutants that can cause water-borne illnesses and diseases."},
-      'pnpl_rank': {"indicator_name" : "Federal Cleanup Sites", "indicator_rank" : "pnpl_rank","indicator_score" : "avg_pnpl", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'pnpl_rank': {"indicator_name" : "Federal Cleanup Sites", "indicator_rank" : "pnpl_rank","indicator_score" : "avg_pnpl", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Federal cleanup sites, or “Superfund sites,” are locations where extremely hazardous chemicals have been dumped or otherwise poorly managed and may reach humans through the air or water, threatening human health."}};
 
 ///////////////////////////// closable info tag on load ///////////////////////////
@@ -538,6 +441,7 @@
 
 ///////////////////////////// custom zoom bar control that includes a Zoom Home function///////////////////////////
 
+      // from this tutorial: http://jsfiddle.net/pqfche83/1/
       L.Control.zoomHome = L.Control.extend({
           options: {
               position: 'topleft',
@@ -618,7 +522,8 @@
 
 ////////////////////////////////////////// Geocoder //////////////////////////////////////////////
 
-      // Geocoder
+      // Geocoder: plugin from https://github.com/perliedman/leaflet-control-geocoder
+      // got rid of marker and instead just zooms to the returned bounding box
       var geocoder = L.Control.geocoder({
         defaultMarkGeocode: false,
         position: 'topleft'
@@ -639,30 +544,26 @@
 
 
       var polygon;
-      var new_polygon;
-      var old_polygon_selected;
       function showFeature(featureEvent) {
+
+        //get cartodb_id from clicking the map
         new_polygon_selected = featureEvent.data.cartodb_id;
-        console.log("old polygon selected");
-        console.log(old_polygon_selected);
-        console.log("new polygon selected");
-        console.log(new_polygon_selected);
-        console.log("type of old_polygon_selected");
-        console.log(typeof old_polygon_selected);
-        //only get data if no old polygon or new polygon is different
-        //don't get data if same polygon
+
         if (!map.hasLayer(polygon)) {
-        // if ((typeof old_polygon_selected === 'undefined') || (old_polygon_selected != new_polygon_selected)) {
-          console.log('diff polygon selected???');
+
+          // using Carto SQl API: https://carto.com/developers/sql-api/guides/making-calls/
+          // get polygon boundary info of census tract clicked through PostGIS query
           const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${new_polygon_selected}`;
           const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
 
+          //https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+          //https://www.javascripttutorial.net/es6/promise-chaining/
           fetch(boundsUrl)
             .then(response => {
                 return response.json();
               })
               .then(json => {
-                new_polygon = L.geoJson(JSON.parse(json.rows[0].geom), {
+                polygon = L.geoJson(JSON.parse(json.rows[0].geom), {
                   style: {
                     color: "#15F4EE",
                     fillColor: "#15F4EE",
@@ -670,95 +571,43 @@
                     opacity: 0.65
                   }
                 })
-              // if polygon has stayed the same, don't update add/remove: this is for the hover case bc will lag
-              // if (typeof polygon === 'undefined') {
-              //   console.log('old polygon undefined');
-              //   map.addLayer(new_polygon);
-              // } else if (polygon != new_polygon){
-              //   console.log("diff polygon");
-              //   map.removeLayer(polygon);
-              //   map.addLayer(new_polygon);
-              // }
-              polygon = new_polygon;
-              // if (!map.hasLayer(polygon)) {
-              //   console.log('adding layer!!');
-              //   map.addLayer(polygon);
-              // }
               map.addLayer(polygon);
-
-              // .addTo(map);
-              // map.addLayer(polygon);
               });
         };
-        old_polygon_selected = new_polygon_selected;
       };
-
-      // function resetHighlight(featureEvent) {
-      //   console.log("did reset?");
-      //   // map.removeLayer(polygon);
-      //   client.removeLayer(polygon)
-      //   .then(() => {
-      //    console.log('Layer removed');
-      //   })
-      //   .catch(cartoError => {
-      //    console.error(cartoError.message);
-      //   });
-      // }
-
-      // layer.on('mouseover', showFeature);
-      // layer.on('mouseout', function (e) {
-      //     this.closePopup();
-      // });
-      //next: code to remove clicked polygon highlight when popup closes and go back to hover highlight
-      //next: code to keep clicked polygon highlight and stop hover highlight when click
-      //maybe a second parameter?
-
-      // layer.on('featureClicked', showFeature);
-
-      //on hover
-      // layer.on('featureOver', showFeature);
-      // layer.off('featureOut', showFeature);
 
       //on click
       layer.on('featureClicked', showFeature);
+      // highlight layer is then removed upon popup closing in the popup code section
 
-      //remove the layer on featureOut...
-
-      //on featureClick, layer.off('featureOver')
 
 /////////////////////////// populate dropdown using JSON data ///////////////////////////////
 
-
+      // using HTML DOM innerHTML to dynamically update the values of bootstrap select, written above
+      // https://www.w3schools.com/jsref/prop_html_innerhtml.asp
       window.onload = function() {
-        replace_dropdown();
-      }
-
-      function replace_dropdown() {
-        var dropdown_html = `<option value="final_rank" style="font-weight:bold !important;" selected>Final Rank</option>`; //code apart from others because want this to be default selected
+        var dropdown_html;
         for (var key in ind_dict) {
-          var get_value = ind_dict[key];
-          if ((key == 'pop_char') || (key == 'pollution_') || (key == 'pop_densit')) {
+          var get_value = ind_dict[key]; //JSON object for that key
+          if (key == "final_rank") {
+            //code apart from others because want this to be default selected
+            dropdown_html += `<option value="final_rank" style="font-weight:bold !important;" selected>Final Percentile</option>`;
+          } else if (get_value.parent == "") {  //if parent indicator bold and don't indent
             dropdown_html += `<option value="${key}" style="font-weight:bold !important;">${get_value.indicator_name}</option>`;
-          } else if (key != 'final_rank') {
+          } else { //else indent for childen indicators
               dropdown_html += `<option value="${key}">&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
           }
         }
         document.getElementById("js-dropdown-selector").innerHTML = dropdown_html;
-        // $('#wrapper-dropdown-selector').selectpicker('render');
-        console.log(document.getElementById("wrapper-dropdown-selector").innerHTML);
         $('.selectpicker').selectpicker('refresh');
-      }
+      };
 
 /////////////////////////// change layers on dropdown select using JSON data ////////////////////////
 
-      //change content styling with dropdown values
+      //change map coloring with change in dropdown value selected
       $("#js-dropdown-selector").on('change', function(e) {
-        console.log('hi');
-        let value = e.target.value;
-        console.log(value);
+        let value = e.target.value; //value picked from dropdown
         var returned_value = ind_dict[value];
-        //don't need to fix for null values because in turbo-carto, null gets the low value from the ramp.
-        //which means the oil and gas nulls which are really 0 values get rendered as so--thank you Carto <3
         layerStyle.setContent(`
           #layer {
             polygon-fill: ramp([${returned_value.indicator_score}], (${returned_value.choropleth_colors}), quantiles(${returned_value.num_quantiles}));
@@ -781,13 +630,14 @@
 
 /////////////////////////// popups using indicator JSON ///////////////////////////////
 
-    // create popups
+    // create popup
     const popup = L.popup({closeButton: true, maxHeight: 280, maxWidth: 400});
 
+    // set corresponding popup content
     function openPopup(featureEvent) {
-      let content = '<div class="widget" id="first_page_popup">';
-      console.log(featureEvent);
-      console.log(featureEvent.data);
+
+      //"first page" content
+      let content = '<div id="first_page_popup">';
 
       //FIPS tract id title
       content += `<h4 class="open-sans" style="line-height: 200%; color:#015ba0;">Census tract: ${featureEvent.data.fips_tract}</h4>`;
@@ -806,11 +656,14 @@
         content += `<h5 class="open-sans">Total Population: ${featureEvent.data.total_pop.toFixed(0)}</h5></br>`;
       }
 
-      //start table
+      // start table
+      // using HTML tables: https://www.w3schools.com/html/html_tables.asp
+      // making table responsive with Bootstrap collapse: https://getbootstrap.com/docs/4.0/components/collapse/
+      // tutorial: https://stackoverflow.com/questions/52737398/how-do-i-do-a-bootstrap-responsive-table-inside-another-table
       content += '<table id="popup-table" class="table table-responsive table-hover">';
 
       //table head
-      content += '<thead><tr><th>Indicators</th><th>Percentile <i class="fa fa-info-circle fa-xs" aria-hidden="true"></i></th></tr></thead>';
+      content += '<thead><tr><th>Indicators</th><th>Percentile <i class="fa fa-info-circle fa-xs" id="percentile_info" aria-hidden="true"></i></th></tr></thead>';
 
       //table parent entry: population characteristics
       content += '<tbody><tr class="clickable" data-toggle="collapse" data-target="#group-of-rows-1" aria-expanded="false" aria-controls="group-of-rows-1">';
@@ -825,24 +678,25 @@
       //table child entries: of population characteristics
       content += '<tbody id="group-of-rows-1" class="collapse">';
       for (var key in ind_dict) {
-        var use_this_key = key;
-        var percentile_display;
-        if (featureEvent.data[key] == null) {
-          percentile_display= "N/A";
-        } else {
-          percentile_display=featureEvent.data[key].toFixed(2);
-        }
-        content += `<tr data-key=${use_this_key} data-percentile=${percentile_display} style="cursor:pointer;">`;
-        if ((key== 'nonwhite_r') || (key== 'poverty_ra') || (key== 'edu_rank') || (key== 'lin_rank') || (key== 'unemploy_r') || (key== 'housebur_1') || (key== 'asthma_ran') || (key== 'lb_rank') || (key== 'hd_rank')) {
-          var actual_name = ind_dict[key];
-          content += `<td>&nbsp;&nbsp;&nbsp;${actual_name.indicator_name}</td>`;
+        if (ind_dict[key].parent == "pop_char") {
+          var percentile_display;
           if (featureEvent.data[key] == null) {
-            content += '<td>N/A <i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>';
+            percentile_display= "N/A";
           } else {
-            content += `<td>${featureEvent.data[key].toFixed(2)}<i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>`;
+            percentile_display=featureEvent.data[key].toFixed(2);
           }
+          // using HTML dataset https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/dataset
+          // save each rows' indicator rank col name (key) in data-key and its percentile in data-percentile for this tract within row entry html to use for its corres. "2nd page" of popup when clicked
+          content += `<tr data-key=${key} data-percentile=${percentile_display} style="cursor:pointer;">`;
+            var get_data = ind_dict[key];
+            content += `<td>&nbsp;&nbsp;&nbsp;${get_data.indicator_name}</td>`; //indented
+            if (featureEvent.data[key] == null) {
+              content += '<td>N/A <i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>';
+            } else {
+              content += `<td>${featureEvent.data[key].toFixed(2)}<i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>`;
+            }
+            content += '</tr>';
         }
-        content += '</tr>';
       }
       content += '</tbody>';
 
@@ -859,76 +713,66 @@
       //table child entries: of pollution burden
       content += '<tbody id="group-of-rows-2" class="collapse">';
       for (var key in ind_dict) {
-        var use_this_key = key;
-        var percentile_display;
-        if (featureEvent.data[key] == null) {
-          percentile_display= "N/A";
-        } else {
-          percentile_display=featureEvent.data[key].toFixed(2);
-        }
-        content += `<tr data-key=${use_this_key} data-percentile=${percentile_display} style="cursor:pointer;">`;
-        if ((key== 'ozone_rank') || (key== 'diesel_ran') || (key== 'lead_rank') || (key== 'toxics_ran') || (key== 'pm25_rank') || (key== 'ptraf_rank') || (key== 'oil_score') || (key== 'oil_densit')
-              || (key== 'ptsdf_rank') || (key== 'prmp_rank') ||(key== 'pwdis_rank') || (key== 'pnpl_rank')) {
-          var actual_name = ind_dict[key];
-          content += `<td>&nbsp;&nbsp;&nbsp;${actual_name.indicator_name}</td>`;
+        if (ind_dict[key].parent == "pollution_") {
+          var percentile_display;
           if (featureEvent.data[key] == null) {
-            content += '<td>N/A <i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>';
+            percentile_display= "N/A";
           } else {
-            content += `<td>${featureEvent.data[key].toFixed(2)}<i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>`;
+            percentile_display=featureEvent.data[key].toFixed(2);
           }
+          content += `<tr data-key=${key} data-percentile=${percentile_display} style="cursor:pointer;">`;
+            var get_data = ind_dict[key];
+            content += `<td>&nbsp;&nbsp;&nbsp;${get_data.indicator_name}</td>`;
+            if (featureEvent.data[key] == null) {
+              content += '<td>N/A <i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>';
+            } else {
+              content += `<td>${featureEvent.data[key].toFixed(2)}<i class="fa fa-angle-right" aria-hidden="true" style="vertical-align:middle; float:right; padding-left:2em;"></i></td>`;
+            }
+            content += '</tr>';
         }
-        content += '</tr>';
       }
       content += '</tbody>';
 
       content += '</table>';
       content += '</div>';
 
-      //second page content
-      content += '<div class="widget" id="second_page_popup">';
+      // "second page" of popup
+      content += '<div id="second_page_popup">';
       content += `<h5 class="open-sans" id="go_back_button" style="color: #949494; cursor: pointer;"><i class="fa fa-angle-left" aria-hidden="true"></i>  Back</h5>`;
       content += '<div id="indicator_specific_description"></div>';
       content += '</div>';
 
 
       popup.setContent(content);
-      console.log('latlng');
-      console.log(featureEvent.latLng);
       popup.setLatLng(featureEvent.latLng);
       if (!popup.isOpen()) {
         popup.openOn(map);
       }
-      // const custom_marker = L.divIcon({
-      //   html: '<i class="fa fa-dot-circle-o fa-xs" aria-hidden="true"></i>',
-      //   iconSize: [1, 1],
-      //   className: 'myDivIcon'
-      // });
-      // var marker = L.marker(featureEvent.latLng, {opacity:0, icon:custom_marker}).addTo(map);
-      // if (!popup.isOpen()) {
-      //   marker.bindPopup(popup).openPopup();
-      // }
     }
 
-    //click-on popup (can change to hover too)
+    // open popup on click
     layer.off('featureOut');
     layer.on('featureClicked', openPopup);
 
-    map.on('popupclose', function(e) {
-      console.log('popup closed');
-      map.removeLayer(polygon);
-    });
-
+    // on popup open, hide the "second page" content from view
     map.on('popupopen', function(e) {
-      console.log('popup opened');
       $("#second_page_popup").hide();
     });
 
+    //removes border highlight from click after user closes corres. popup
+    map.on('popupclose', function(e) {
+      map.removeLayer(polygon);
+    });
+
+    // custom "second page" content shown for each popup depending on what row/indicator is selected within "first page" table
+    // tutorial: https://www.youtube.com/watch?v=6BdKUO2QbA0
+    // using HTML dataset https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/dataset
     $(document).ready(function() {
-      $(document.body).on("click", "tr[data-key]", function () {
-        // window.open(this.dataset.href);
+      $(document.body).on("click", "tr[data-key]", function () { //once a table row is clicked:
         $("#first_page_popup").hide();
-        console.log('desc');
-        console.log(this.dataset.description);
+        // set innerHTML of the indicator_specific_description on the "second page" of popup corres. to row clicked
+        // using data-key saved in row to retrieve corres. indicator display name and indicator description from JSON dictionary
+        // using data-percentile in explanation
         if (this.dataset.percentile == "N/A") {
           document.getElementById("indicator_specific_description").innerHTML =
             `<span><h4 class="open-sans" style="line-height: 150%; color:#015ba0;">${ind_dict[this.dataset.key].indicator_name}</h4></span><span style="display:block;"><p>${ind_dict[this.dataset.key].description}</p>
@@ -946,6 +790,7 @@
               <a target="_blank" href="https://mappingforej.berkeley.edu/about-our-map/">More info</a>
               </span>`;
         }
+
         $("#second_page_popup").show();
         $("#go_back_button").click(function(){
           $("#second_page_popup").hide();
@@ -954,53 +799,37 @@
       });
     });
 
-    // console.log("is popup open");
-    // console.log(popup.isOpen());
-    // if (!popup.isOpen() && !(typeof polygon === 'undefined')) {
-    //   console.log('removing highlight');
-    //   map.removeLayer(polygon);
-    // }
 
 ///////////////////////////// add/change legend ///////////////////////////////
 
+      // will probably redesign this code:
+
+      // make legend a Leaflet Control to control positioning
+      // https://leafletjs.com/reference-1.6.0.html#control
       var legend  = L.control({position: 'bottomright'})
 
       layer.on('metadataChanged', function(event){
 
-        // console.log(event.styles[0]._buckets); //print array of buckets
-
-        console.log('checkingg');
-        console.log(event.styles[0]._column);
-
-        // get buckets
+        // get buckets/quantiles and their colors from map coloring set by TurboCarto
         var buckets = event.styles[0]._buckets;
-        //each Bucket has props: min, max, and value (which here is the color string code)
+        //each Bucket has props: min (min value of the quantile), max (max value of quantile), and value (which here is the color/hex code of the quantile)
 
         legend.onAdd = function (map) {
-          var div = L.DomUtil.create('div', 'info legend');
+          var div = L.DomUtil.create('div', 'info legend'); // create div with classes info and legend
 
-          var column = event.styles[0]._column;
-          var max_buckets = buckets.length - 1;
+          var column = event.styles[0]._column; // indicator key
+          var max_buckets = buckets.length - 1; //num quantiles
 
           div.innerHTML += '<h5 class="open-sans">Highest</br>Percentiles</h5>';
-          if ((column == 'oil_densit') || (column == 'oil_score')) {
-            for (var i = max_buckets; i > 0; i--) {
-              div.innerHTML +=
-                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[i].value}"></i>${i*10} - ${(i+1)*10}</ul>`;
-              // div.innerHTML +=
-              //   `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[i].value}"></i>${parseFloat(buckets[i].min).toFixed(2)} - ${parseFloat(buckets[i].max).toFixed(2)}</ul>`;
-            }
+          for (var i = max_buckets; i >= 0; i--) { //from highest percentiles to lowest
             div.innerHTML +=
-                `<ul style="list-style-type:none; padding:0;"><i style="background: ${buckets[0].value}"></i>0 - 10</ul>`;
-          }
-          else {
-            for (var i = max_buckets; i >= 0; i--) {
-              div.innerHTML +=
-                `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${i*10} - ${(i+1)*10}</span></ul>`;
-            }
+              `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${i*10} - ${(i+1)*10}</span></ul>`;
           }
           div.innerHTML += '<h5 class="open-sans" style="padding-bottom:5px;">Lowest</br>Percentiles</h5>';
+
+          // gray for null tracts
           div.innerHTML +=  `<ul style="list-style-type:none; padding-left:0"><i style="background: #d3d3d3"></i> <span style="display:block;">Missing</span><span style="display:block;">data</span></ul>`;
+
           return div;
         };
         legend.addTo(map);
@@ -1008,8 +837,7 @@
 
 ///////////////////////////// animate legend to collapse and expand ///////////////////////////////
 
-      //legend always shows when different indicator selected from dropdown
-      //even if the different indicator has the same map colors
+      // if different indicator selected from dropdown, legend will expand if originally collapsed
       layer.on('metadataChanged', function(event){
           $(".legend").show();
           $(".btn2").hide();
