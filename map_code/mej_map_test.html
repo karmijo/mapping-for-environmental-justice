@@ -104,6 +104,9 @@
         color: #555;
         z-index: 900;
         opacity: 1 !important;
+        position: absolute;
+        bottom: 20px;
+        right: 10px;
       }
       .legend i {
         width: 18px;
@@ -121,11 +124,6 @@
         border-radius: 5px;
         opacity: 1 !important;
         z-index: 900;
-      }
-      .info h4 {
-        margin: 0 0 5px;
-        color: #777;
-        opacity: 1 !important;
       }
       .fa-angle-down:hover {
         color: #000000 !important;
@@ -160,6 +158,9 @@
         box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
         color: #333;
         background-color: #e6e6e6;
+      }
+      .legend_colors {
+        margin: 0px 0px 0px 0px !important;
       }
       /* popup */
       #popup-table {
@@ -283,6 +284,10 @@
       <h5 style="color: #004086;"><i class="fa fa-info-circle fa-xs" aria-hidden="true"></i>  Click on a census tract for more information.&nbsp;&nbsp;<i class="fa fa-close" style="color: #648cbd;"></i></h5>
     </div>
 
+    <!-- legend -->
+    <div id="legend_outer_html" class="info legend">
+    </div>
+
     <!-- toggle legend buttons-->
     <i class="fa fa-angle-down fa-2x down-arrow" aria-hidden="true" style="color:#949494; position: absolute; right:18px; bottom:410px; z-index: 100000 !important;"></i>
     <button id="legend-button" class="btn2" style="position: absolute; right:8px; bottom:20px; z-index: 100000 !important;">Show legend</button>
@@ -375,7 +380,7 @@
       //form: dictionary =
         // key as rank column title,
         // value as JSON object with the categories: official display name, column rank, column score, parent indicator (pop_char or pollution_), choropleth colors, number of quantiles for ramp, and indicator descriptions for the popup
-      //order of entries = order of content in popup for now
+      //order of entries = order of content in popup and legend for now
       //also: Carto automatically truncates column names to 10 letters or less...
       ind_dict = {'final_rank': {"indicator_name" : "Final Percentile", "indicator_score" : "finalscore", "parent": "", "choropleth_colors":['#409493','#68a7ad','#8bb9c3','#aacad6','#c7dbe4','#f0d6c6','#ebc4ab','#e4b08d','#db996b','#cf8146'], "num_quantiles": 10,
           "description": ""},
@@ -604,10 +609,13 @@
 
 /////////////////////////// change layers on dropdown select using JSON data ////////////////////////
 
+      // save as variable to use in the legend title feature
+      var legend_title_key;
+
       //change map coloring with change in dropdown value selected
       $("#js-dropdown-selector").on('change', function(e) {
-        let value = e.target.value; //value picked from dropdown
-        var returned_value = ind_dict[value];
+        legend_title_key = e.target.value; //value picked from dropdown
+        var returned_value = ind_dict[legend_title_key];
         layerStyle.setContent(`
           #layer {
             polygon-fill: ramp([${returned_value.indicator_score}], (${returned_value.choropleth_colors}), quantiles(${returned_value.num_quantiles}));
@@ -802,37 +810,43 @@
 
 ///////////////////////////// add/change legend ///////////////////////////////
 
-      // will probably redesign this code:
 
-      // make legend a Leaflet Control to control positioning
-      // https://leafletjs.com/reference-1.6.0.html#control
-      var legend  = L.control({position: 'bottomright'})
+      $(document).ready(function() {
+        var legend_inner_html_load =
+          `<h5 class="open-sans" style="text-align:center; font-weight: bold;">Cumulative EJ Impact</h5>`;
+        legend_inner_html_load += '<p style="text-align:left;">Lowest<span style="float:right;">Highest</span></p>';
+        var colors = ind_dict['final_rank'].choropleth_colors;
+        for (var i = 0; i<ind_dict['final_rank'].num_quantiles; i++) {
+          legend_inner_html_load +=
+            `<i class="legend_colors" style="background: ${colors[i]}"></i>`;
+        }
+        document.getElementById("legend_outer_html").innerHTML = legend_inner_html_load;
+      });
 
       layer.on('metadataChanged', function(event){
 
-        // get buckets/quantiles and their colors from map coloring set by TurboCarto
-        var buckets = event.styles[0]._buckets;
-        //each Bucket has props: min (min value of the quantile), max (max value of quantile), and value (which here is the color/hex code of the quantile)
+        if (legend_title_key != null) {
 
-        legend.onAdd = function (map) {
-          var div = L.DomUtil.create('div', 'info legend'); // create div with classes info and legend
+          // get buckets/quantiles and their colors from map coloring set by TurboCarto
+          var buckets = event.styles[0]._buckets;
+          //each Bucket has props: min (min value of the quantile), max (max value of quantile), and value (which here is the color/hex code of the quantile)
 
-          var column = event.styles[0]._column; // indicator key
-          var max_buckets = buckets.length - 1; //num quantiles
+          // maybe add a "legend title" for each indicator in dictionary
+          var legend_inner_html_changed =
+            `<h5 class="open-sans" style="text-align:center; font-weight: bold;">${ind_dict[legend_title_key].indicator_name}</h5>`;
 
-          div.innerHTML += '<h5 class="open-sans">Highest</br>Percentiles</h5>';
-          for (var i = max_buckets; i >= 0; i--) { //from highest percentiles to lowest
-            div.innerHTML +=
-              `<ul style="list-style-type:none; padding-left:0"><i style="background: ${buckets[i].value}"></i> <span>${i*10} - ${(i+1)*10}</span></ul>`;
+          legend_inner_html_changed += '<p style="text-align:left;">Lowest<span style="float:right;">Highest</span></p>';
+
+          for (var i = 0; i < buckets.length; i++) {
+            legend_inner_html_changed +=
+              `<i class="legend_colors" style="background: ${buckets[i].value}"></i>`;
           }
-          div.innerHTML += '<h5 class="open-sans" style="padding-bottom:5px;">Lowest</br>Percentiles</h5>';
 
           // gray for null tracts
-          div.innerHTML +=  `<ul style="list-style-type:none; padding-left:0"><i style="background: #d3d3d3"></i> <span style="display:block;">Missing</span><span style="display:block;">data</span></ul>`;
+          // div.innerHTML +=  `<ul style="list-style-type:none; padding-left:0"><i style="background: #d3d3d3"></i> <span style="display:block;">Missing</span><span style="display:block;">data</span></ul>`;
 
-          return div;
-        };
-        legend.addTo(map);
+          document.getElementById("legend_outer_html").innerHTML = legend_inner_html_changed;
+        }
       });
 
 ///////////////////////////// animate legend to collapse and expand ///////////////////////////////
