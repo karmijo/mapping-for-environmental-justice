@@ -125,40 +125,6 @@
         opacity: 1 !important;
         z-index: 900;
       }
-      .fa-angle-down:hover {
-        color: #000000 !important;
-      }
-      #legend-button {
-        width: 120px;
-        font-size: 16px;
-        padding: 6px;
-        margin-bottom: 0;
-        color: #333;
-        background-color: #fff;
-        border: 0px;
-        border-radius: 3px;
-        box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
-        white-space: nowrap;
-        z-index: 100000;
-      }
-      #legend-button:hover {
-        color: #333;
-        background-color: #e6e6e6;
-      }
-      #legend-button:active:focus {
-          outline: thin dotted;
-          outline: 5px auto -webkit-focus-ring-color;
-          outline-offset: -2px;
-      }
-      #legend-button:focus {
-        color: #333;
-        background-color: #e6e6e6;
-      }
-      #legend-button:active {
-        box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
-        color: #333;
-        background-color: #e6e6e6;
-      }
       .legend_colors {
         margin: 0px 0px 0px 0px !important;
       }
@@ -275,7 +241,7 @@
     <!-- dropdown selector-->
     <div id="wrapper-dropdown-selector">
       <!-- using bootstrap select to style https://developer.snapappointments.com/bootstrap-select/examples/ -->
-      <select id="js-dropdown-selector" class="selectpicker" data-style="btn-dropdown" data-width="250px" style="z-index: 999999 !important;">
+      <select id="js-dropdown-selector" class="selectpicker" title="Choose a layer" selectOnTab="true" data-style="btn-dropdown" data-width="250px" style="z-index: 999999 !important;">
       </select>
     </div>
 
@@ -287,10 +253,6 @@
     <!-- legend -->
     <div id="legend_outer_html" class="info legend">
     </div>
-
-    <!-- toggle legend buttons-->
-    <i class="fa fa-angle-down fa-2x down-arrow" aria-hidden="true" style="color:#949494; position: absolute; right:18px; bottom:410px; z-index: 100000 !important;"></i>
-    <button id="legend-button" class="btn2" style="position: absolute; right:8px; bottom:20px; z-index: 100000 !important;">Show legend</button>
 
     <script>
 
@@ -594,10 +556,7 @@
         var dropdown_html;
         for (var key in ind_dict) {
           var get_value = ind_dict[key]; //JSON object for that key
-          if (key == "final_rank") {
-            //code apart from others because want this to be default selected
-            dropdown_html += `<option value="final_rank" style="font-weight:bold !important;" selected>Final Percentile</option>`;
-          } else if (get_value.parent == "") {  //if parent indicator bold and don't indent
+          if (get_value.parent == "") {  //if parent indicator bold and don't indent
             dropdown_html += `<option value="${key}" style="font-weight:bold !important;">${get_value.indicator_name}</option>`;
           } else { //else indent for childen indicators
               dropdown_html += `<option value="${key}">&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
@@ -810,32 +769,35 @@
 
 ///////////////////////////// add/change legend ///////////////////////////////
 
-
+      // add the final percentile legend on load
       $(document).ready(function() {
         var legend_inner_html_load =
-          `<h5 class="open-sans" style="text-align:center; font-weight: bold;">Cumulative EJ Impact</h5>`;
-        legend_inner_html_load += '<p style="text-align:left;">Lowest<span style="float:right;">Highest</span></p>';
+          `<h5 class="open-sans" style="text-align:center; font-weight: bold;">${ind_dict['final_rank'].indicator_name}</h5>`;
+        legend_inner_html_load += '<p style="text-align:left;">Lowest<span style="float:right; padding-right:5px;">N/A</span><span style="float:right; padding-right:15px;">Highest</span></p>';
         var colors = ind_dict['final_rank'].choropleth_colors;
         for (var i = 0; i<ind_dict['final_rank'].num_quantiles; i++) {
           legend_inner_html_load +=
             `<i class="legend_colors" style="background: ${colors[i]}"></i>`;
         }
+        // gray for null tracts
+        legend_inner_html_load += `<i style="background: #d3d3d3; margin-left:20px !important;"></i>`;
         document.getElementById("legend_outer_html").innerHTML = legend_inner_html_load;
       });
 
+      // then update the legend on changing layer colors
       layer.on('metadataChanged', function(event){
 
+        // get the indicator value selected in dropdown from variable legend_title_key saved earlier in dropdown code
         if (legend_title_key != null) {
 
           // get buckets/quantiles and their colors from map coloring set by TurboCarto
           var buckets = event.styles[0]._buckets;
           //each Bucket has props: min (min value of the quantile), max (max value of quantile), and value (which here is the color/hex code of the quantile)
 
-          // maybe add a "legend title" for each indicator in dictionary
           var legend_inner_html_changed =
             `<h5 class="open-sans" style="text-align:center; font-weight: bold;">${ind_dict[legend_title_key].indicator_name}</h5>`;
 
-          legend_inner_html_changed += '<p style="text-align:left;">Lowest<span style="float:right;">Highest</span></p>';
+          legend_inner_html_changed += '<p style="text-align:left;">Lowest<span style="float:right; padding-right:5px;">N/A</span><span style="float:right; padding-right:15px;">Highest</span></p>';
 
           for (var i = 0; i < buckets.length; i++) {
             legend_inner_html_changed +=
@@ -843,35 +805,11 @@
           }
 
           // gray for null tracts
-          // div.innerHTML +=  `<ul style="list-style-type:none; padding-left:0"><i style="background: #d3d3d3"></i> <span style="display:block;">Missing</span><span style="display:block;">data</span></ul>`;
+          legend_inner_html_changed += `<i style="background: #d3d3d3; margin-left:20px !important;"></i>`;
 
           document.getElementById("legend_outer_html").innerHTML = legend_inner_html_changed;
         }
       });
-
-///////////////////////////// animate legend to collapse and expand ///////////////////////////////
-
-      // if different indicator selected from dropdown, legend will expand if originally collapsed
-      layer.on('metadataChanged', function(event){
-          $(".legend").show();
-          $(".btn2").hide();
-          $(".fa-angle-down").show();
-      });
-
-      $(document).ready(function(){
-        $(".btn2").hide();
-        $(".fa-angle-down").click(function(){
-          $(".legend").hide();
-          $(".fa-angle-down").hide();
-          $(".btn2").show();
-        });
-        $(".btn2").click(function(){
-          $(".legend").show();
-          $(".btn2").hide();
-          $(".fa-angle-down").show();
-        });
-      });
-
   </script>
   </body>
 </html>
