@@ -173,7 +173,7 @@
       }
       /* tooltip for "Percentile" in popup */
       #percentile_info:hover:after {
-        content: "Every indicator is ranked as a percentile from 0 to 100, indicating the value below which a given percentage of observations fall. For example, if a census tract has a final percentile of 75, that means 75% of census tracts are experiencing an equal or lesser amount of environmental injustice than the census tract at which you are looking.";
+        content: "Every indicator is ranked from lowest to highest out of the 1,249 census tracts in CO. For example, if a census tract has a poverty rate ranked 937th highest out of all 1,249 tracts, that translates to a percentile of 75. This means that this census tract’s poverty rate is higher than 75% of all other census tracts in CO.";
         font-family: arial;
         display: block;
         z-index: 1;
@@ -342,7 +342,7 @@
         // value as JSON object with the categories: official display name, column rank, column score, parent indicator (pop_rank or pltn_rank), choropleth colors, number of quantiles for ramp, and indicator descriptions for the popup
       //order of entries = order of content in popup and legend for now
       //also: Carto automatically truncates column names to 10 letters or less...
-      ind_dict = {'fin_rank': {"indicator_name" : "Cumulative EJ Impacts", "indicator_score" : "fin_score", "parent": "", "choropleth_colors":['#409493','#68a7ad','#8bb9c3','#aacad6','#c7dbe4','#f0d6c6','#ebc4ab','#e4b08d','#db996b','#cf8146'], "num_quantiles": 10,
+      ind_dict = {'fin_rank': {"indicator_name" : "Final Percentile", "indicator_score" : "fin_score", "parent": "", "choropleth_colors":['#409493','#68a7ad','#8bb9c3','#aacad6','#c7dbe4','#f0d6c6','#ebc4ab','#e4b08d','#db996b','#cf8146'], "num_quantiles": 10,
           "description": ""},
       // 'pop_densit': {"indicator_name" : "Population Density", "indicator_score" : "pop_densit", "parent": "", "choropleth_colors":["#edf8e9","#d4eece","#bae4b4","#a1d99b","#83cb82","#64bc6e","#41ab5d","#2e964d","#187a3f","#005a32"], "num_quantiles": 10,
       //     "description": ""},
@@ -612,9 +612,9 @@
 
       //final rank
       if (featureEvent.data['fin_rank'] == null) {
-        content += `<p style="font-size: 14px; margin-bottom: 3px !important;">${ind_dict['fin_rank'].indicator_name} Percentile: N/A  <i class="fa fa-info-circle fa-xs" id="fin_rank_null_info" aria-hidden="true"></i></p>`;
+        content += `<p style="font-size: 14px; margin-bottom: 3px !important;">${ind_dict['fin_rank'].indicator_name}: N/A  <i class="fa fa-info-circle fa-xs" id="fin_rank_null_info" aria-hidden="true"></i></p>`;
       } else {
-        content += `<p style="font-size: 14px; margin-bottom: 3px !important;">${ind_dict['fin_rank'].indicator_name} Percentile: ${featureEvent.data.fin_rank.toFixed(2)}</p>`;
+        content += `<p style="font-size: 14px; margin-bottom: 3px !important;">${ind_dict['fin_rank'].indicator_name}: ${featureEvent.data.fin_rank.toFixed(2)}</p>`;
       }
 
       //total pop
