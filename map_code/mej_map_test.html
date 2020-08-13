@@ -554,10 +554,12 @@
         var dropdown_html;
         for (var key in ind_dict) {
           var get_value = ind_dict[key]; //JSON object for that key
-          if (get_value.parent == "") {  //if parent indicator bold and don't indent
+          if (key == "fin_rank") {
             dropdown_html += `<option value="${key}" style="font-weight:bold !important;">${get_value.indicator_name}</option>`;
+          } else if (get_value.parent == "") {  //if parent indicator bold and don't indent
+            dropdown_html += `<option value="${key}" style="font-weight:bold !important;">&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
           } else { //else indent for childen indicators
-              dropdown_html += `<option value="${key}">&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
+              dropdown_html += `<option value="${key}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
           }
         }
         document.getElementById("js-dropdown-selector").innerHTML = dropdown_html;
@@ -610,16 +612,16 @@
 
       //final rank
       if (featureEvent.data['fin_rank'] == null) {
-        content += `<p style="margin-bottom: 3px !important;">${ind_dict['fin_rank'].indicator_name} Percentile: N/A  <i class="fa fa-info-circle fa-xs" id="fin_rank_null_info" aria-hidden="true"></i></p>`;
+        content += `<p style="font-size: 14px; margin-bottom: 3px !important;">${ind_dict['fin_rank'].indicator_name} Percentile: N/A  <i class="fa fa-info-circle fa-xs" id="fin_rank_null_info" aria-hidden="true"></i></p>`;
       } else {
-        content += `<p style="margin-bottom: 3px !important;">${ind_dict['fin_rank'].indicator_name} Percentile: ${featureEvent.data.fin_rank.toFixed(2)}</p>`;
+        content += `<p style="font-size: 14px; margin-bottom: 3px !important;">${ind_dict['fin_rank'].indicator_name} Percentile: ${featureEvent.data.fin_rank.toFixed(2)}</p>`;
       }
 
       //total pop
       if (featureEvent.data['total_pop'] == null) {
-        content += `<p style="margin-bottom: -6px !important; margin-top: 3px !important;">Total Population: N/A</p></br>`;
+        content += `<p style="font-size: 14px; margin-bottom: -6px !important; margin-top: 3px !important;">Total Population: N/A</p></br>`;
       } else {
-        content += `<p style="margin-bottom: -6px !important; margin-top: 3px !important;">Total Population: ${featureEvent.data.total_pop.toFixed(0)}</p></br>`;
+        content += `<p style="font-size: 14px; margin-bottom: -6px !important; margin-top: 3px !important;">Total Population: ${featureEvent.data.total_pop.toFixed(0)}</p></br>`;
       }
 
       // start table
