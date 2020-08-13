@@ -555,9 +555,9 @@
         for (var key in ind_dict) {
           var get_value = ind_dict[key]; //JSON object for that key
           if (key == "fin_rank") {
-            dropdown_html += `<option value="${key}" style="font-weight:bold !important;">${get_value.indicator_name}</option>`;
+            dropdown_html += `<option value="${key}" style="font-weight:bold !important; color:#015ba0;">${get_value.indicator_name}</option>`;
           } else if (get_value.parent == "") {  //if parent indicator bold and don't indent
-            dropdown_html += `<option value="${key}" style="font-weight:bold !important;">&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
+            dropdown_html += `<option value="${key}" style="font-weight:bold !important; color:#015ba0;">&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
           } else { //else indent for childen indicators
               dropdown_html += `<option value="${key}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${get_value.indicator_name}</option>`;
           }
