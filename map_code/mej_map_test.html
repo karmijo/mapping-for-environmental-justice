@@ -152,6 +152,9 @@
       #popup-table tbody tr {
         border-top: 1px solid #dddddd;
       }
+      #table_row_child:hover {
+        background: #cde5ff;
+      }
       #popup-table tbody tr.active-row {
         font-weight: bold;
         color: #009879;
@@ -186,8 +189,8 @@
         padding: 12px 15px;
       }
       /* tooltip for null final percentiles in popup */
-      #final_rank_null_info:hover:after {
-        content: "Final percentile is not available due to missing data for 4 or more indicators.";
+      #fin_rank_null_info:hover:after {
+        content: "Final percentile is not available due to missing data for 2 or more indicators.";
         font-family: arial;
         display: block;
         z-index: 1;
@@ -246,7 +249,7 @@
 
     <!-- info tag on load -->
     <div id="info_tag">
-      <h5 style="color: #004086;"><i class="fa fa-info-circle fa-xs" aria-hidden="true"></i>  Click on a census tract for more information.&nbsp;&nbsp;<i class="fa fa-close" style="color: #648cbd;"></i></h5>
+      <h5 style="color: #004086;"><i class="fa fa-info-circle fa-xs" aria-hidden="true"></i>  Click on the map for more information.&nbsp;&nbsp;<i class="fa fa-close" style="color: #648cbd;"></i></h5>
     </div>
 
     <!-- legend -->
@@ -277,21 +280,21 @@
         username: 'tiffanyhuynh'
       });
 
-      // synced with dataset uploaded to Carto, "colorado_final" set to public view
-      const source = new carto.source.Dataset('colorado_final');
+      // synced with dataset uploaded to Carto, "mej_colorado_final" set to public view
+      const source = new carto.source.Dataset('mej_colorado_final');
 
-      // onload map coloring: finalscore
+      // onload map coloring: fin_score
       // color using Turbo-Carto CSS https://carto.com/developers/styling/turbocarto/
       // set null value tracts to light gray
       const layerStyle = new carto.style.CartoCSS(`
         #layer {
-          polygon-fill: ramp([finalscore], (#409493,#68a7ad,#8bb9c3,#aacad6,#c7dbe4,#f0d6c6,#ebc4ab,#e4b08d,#db996b,#cf8146), quantiles(10));
+          polygon-fill: ramp([fin_score], (#409493,#68a7ad,#8bb9c3,#aacad6,#c7dbe4,#f0d6c6,#ebc4ab,#e4b08d,#db996b,#cf8146), quantiles(10));
             ::outline {
               line-width: 0.5;
               line-color: #CCCCCC;
               line-opacity: 0.5;
             }
-          [finalscore=null] {
+          [fin_score=null] {
             polygon-fill: #d3d3d3;
           }
         }
@@ -299,38 +302,34 @@
 
       const layer = new carto.layer.Layer(source, layerStyle, {
         //columns needed in popup
-        featureOverColumns: ['cartodb_id', 'name',
+        featureOverColumns: ['cartodb_id',
+          'name',
+          'county',
          'fips_tract',
          'lead_rank',
          'total_pop',
-         'pop_densit',
-         'poverty_ra',
-         'edu_rank',
-         'lin_rank',
-         'unemploy_r',
-         'nonwhite_r',
-         'housebur_1',
-         'ozone_rank',
-         'diesel_ran',
-         'oil_score',
-         'oil_densit',
-         'toxics_ran',
+         'pov_rank',
+         'nohs_rank',
+         'liso_rank',
+         'unem_rank',
+         'poc_rank',
+         'hbrd_rank',
+         'ozn_rank',
+         'dsl_rank',
+         'oil_rank',
+         'txcs_rank',
          'pm25_rank',
-         'ptraf_rank',
-         'ptsdf_rank',
-         'prmp_rank',
-         'pwdis_rank',
-         'pnpl_rank',
-         'asthma_ran',
-         'lb_rank',
+         'traf_rank',
+         'hazw_rank',
+         'chem_rank',
+         'wat_rank',
+         'cln_rank',
+         'asth_rank',
+         'lbw_rank',
          'hd_rank',
-         'demographi',
-         'exposure_s',
-         'effects_sc',
-         'sensitive_',
-         'pollution_',
-         'pop_char',
-         'final_rank']
+         'pop_rank',
+         'pltn_rank',
+         'fin_rank']
       });
 
       client.addLayer(layer);
@@ -340,62 +339,62 @@
 
       //form: dictionary =
         // key as rank column title,
-        // value as JSON object with the categories: official display name, column rank, column score, parent indicator (pop_char or pollution_), choropleth colors, number of quantiles for ramp, and indicator descriptions for the popup
+        // value as JSON object with the categories: official display name, column rank, column score, parent indicator (pop_rank or pltn_rank), choropleth colors, number of quantiles for ramp, and indicator descriptions for the popup
       //order of entries = order of content in popup and legend for now
       //also: Carto automatically truncates column names to 10 letters or less...
-      ind_dict = {'final_rank': {"indicator_name" : "Final Percentile", "indicator_score" : "finalscore", "parent": "", "choropleth_colors":['#409493','#68a7ad','#8bb9c3','#aacad6','#c7dbe4','#f0d6c6','#ebc4ab','#e4b08d','#db996b','#cf8146'], "num_quantiles": 10,
+      ind_dict = {'fin_rank': {"indicator_name" : "Cumulative EJ Impacts", "indicator_score" : "fin_score", "parent": "", "choropleth_colors":['#409493','#68a7ad','#8bb9c3','#aacad6','#c7dbe4','#f0d6c6','#ebc4ab','#e4b08d','#db996b','#cf8146'], "num_quantiles": 10,
           "description": ""},
-      'pop_densit': {"indicator_name" : "Population Density", "indicator_score" : "pop_densit", "parent": "", "choropleth_colors":["#edf8e9","#d4eece","#bae4b4","#a1d99b","#83cb82","#64bc6e","#41ab5d","#2e964d","#187a3f","#005a32"], "num_quantiles": 10,
-          "description": ""},
-      'pop_char': {"indicator_name" : "Population Characteristics", "indicator_score" : "pop_char", "parent": "", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      // 'pop_densit': {"indicator_name" : "Population Density", "indicator_score" : "pop_densit", "parent": "", "choropleth_colors":["#edf8e9","#d4eece","#bae4b4","#a1d99b","#83cb82","#64bc6e","#41ab5d","#2e964d","#187a3f","#005a32"], "num_quantiles": 10,
+      //     "description": ""},
+      // 'total_pop': {"indicator_name" : "Population Density", "indicator_score" : "total_pop", "parent": "", "choropleth_colors":["#edf8e9","#d4eece","#bae4b4","#a1d99b","#83cb82","#64bc6e","#41ab5d","#2e964d","#187a3f","#005a32"], "num_quantiles": 10,
+      //     "description": ""},
+      'pop_rank': {"indicator_name" : "Population Characteristics", "indicator_score" : "pop_score", "parent": "", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": ""},
       // 'demographi': {"indicator_name" : "Socioeconomic Factors", "indicator_score" : "demographi", "parent": "", "choropleth_colors":["#f0f9e8","#d8f0d1","#c0e6c0","#a8ddb5","#8bd2bf","#6ec4c9","#4eb3d3","#3899c5","#237ab3","#08589e"], "num_quantiles": 10},
-      'nonwhite_r': {"indicator_name" : "People of Color", "indicator_score" : "nonwhitepe", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'poc_rank': {"indicator_name" : "People of Color", "indicator_score" : "poc_score", "parent": "pop_rank", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The proportion of adults who identify as anything aside from “white only” on the census. People of color are drastically more affected by and exposed to pollution, have higher levels of stress, and are often systematically excluded from healthy housing, quality healthcare, and access to wealth."},
-      'poverty_ra': {"indicator_name" : "Poverty", "indicator_score" : "poverty_sc", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'pov_rank': {"indicator_name" : "Poverty", "indicator_score" : "pov_score", "parent": "pop_rank", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The proportion of households with an income below double the Federal poverty line: $52,400 for a family of four. These households have higher stress, less access to healthcare, and are often much more affected by pollution."},
-      'edu_rank': {"indicator_name" : "No HS Degree", "indicator_score" : "edu_score", "parent": "pop_char","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'nohs_rank': {"indicator_name" : "No HS Degree", "indicator_score" : "nohs_score", "parent": "pop_rank","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The proportion of the population that is over 25 years old without a high school degree. There are strong links between higher levels of education and resistance to environmental toxic exposure."},
-      'lin_rank': {"indicator_name" : "Linguistic Isolation", "indicator_score" : "lin_score", "parent": "pop_char","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'liso_rank': {"indicator_name" : "Linguistic Isolation", "indicator_score" : "liso_score", "parent": "pop_rank","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The percentage of households reporting that no-one over the age of 5 speaks English “very well.” These households tend to receive lower-quality medical care, and are often left out of decision-making by their local government."},
-      'unemploy_r': {"indicator_name" : "Unemployment", "indicator_score" : "unemploy_s", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'unem_rank': {"indicator_name" : "Unemployment", "indicator_score" : "unem_score", "parent": "pop_rank", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The proportion of adults who are unemployed. Unemployed people face high levels of stress, which is closely linked to health outcomes."},
-      'housebur_1': {"indicator_name" : "Extreme Housing Burden", "indicator_score" : "houseburde", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'hbrd_rank': {"indicator_name" : "Extreme Housing Burden", "indicator_score" : "hbrd_score", "parent": "pop_rank", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "The proportion of low-income households that have to spend more than half their income on rent. These households experience higher levels of stress, report lower health, and may delay medical treatment because of its high cost."},
       // 'sensitive_': {"indicator_name" : "Sensitive Populations", "indicator_score" : "sensitive_","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10},
-      'asthma_ran': {"indicator_name" : "Asthma", "indicator_score" : "asthma_sco", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'asth_rank': {"indicator_name" : "Asthma", "indicator_score" : "asth_score", "parent": "pop_rank", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "Asthma is a chronic lung disease that causes breathlessness, wheezing, coughing, and chest tightness, which may be caused or made worse by exposure to traffic and outdoor air pollutants. It also makes people much more vulnerable to some forms of pollution."},
-      'lb_rank': {"indicator_name" : "Low Birthweight Infants", "indicator_score" : "lb_score", "parent": "pop_char","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'lbw_rank': {"indicator_name" : "Low Birthweight Infants", "indicator_score" : "lbw_score", "parent": "pop_rank","choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "Low birthweight infants are infants born early or underweight, weighing 5 pounds and 8 ounces or less. They have a high risk of infant mortality or of having chronic health conditions later in life that may increase sensitivity to pollution."},
-      'hd_rank': {"indicator_name" : "Heart Disease",  "indicator_score" : "hd_score", "parent": "pop_char", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
+      'hd_rank': {"indicator_name" : "Heart Disease",  "indicator_score" : "hd_score", "parent": "pop_rank", "choropleth_colors":["#f6eff7","#dddbec","#c2cae2","#a6bddb","#7eb0d3","#59a1ca","#3690c0","#1c869c","#057776","#016450"], "num_quantiles": 10,
           "description": "Heart disease, specifically coronary heart disease, can partially or completely block blood flow in the large arteries of the heart, causing chest pain or a heart attack. There is strong evidence that air pollution contributes to coronary heart disease and death following a heart attack."},
-      'pollution_': {"indicator_name" : "Pollution Burden", "indicator_score" : "pollution_", "parent": "", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'pltn_rank': {"indicator_name" : "Pollution Burden", "indicator_score" : "pltn_score", "parent": "", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": ""},
       // 'exposure_s': {"indicator_name" : "Exposures", "indicator_score" : "exposure_s","choropleth_colors":["#ede5cf","#e5ceb1","#dcb598","#d39c83","#c78376","#b86b6a","#a65461","#8d4158","#722f4c","#541f3f"], "num_quantiles": 10},
-      'ozone_rank': {"indicator_name" : "Ozone", "indicator_score" : "ozone_scor", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'ozn_rank': {"indicator_name" : "Ozone", "indicator_score" : "ozn_score", "parent": "pltn_rank", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Ozone is a chemical that combines with other air pollutants to form smog and is a widespread and significant health threat."},
-      'diesel_ran': {"indicator_name" : "Diesel PM", "indicator_score" : "diesel_sco", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'dsl_rank': {"indicator_name" : "Diesel PM", "indicator_score" : "dsl_score", "parent": "pltn_rank", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Diesel particulate matter (Diesel PM) is small particles made by burning diesel. Diesel PM is known to cause eye and throat irritation, along with heart and lung disease and lung cancer. "},
-      'lead_rank': {"indicator_name" : "Lead Paint", "indicator_score" : "lead_score", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'lead_rank': {"indicator_name" : "Lead Paint", "indicator_score" : "lead_score", "parent": "pltn_rank", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "The proportion of older residences that may have lead-based paint, which can cause developmental delays, seizures, miscarriages, and other serious health problems."},
-      'toxics_ran': {"indicator_name" : "Air Toxics", "indicator_score" : "toxics_sco", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'txcs_rank': {"indicator_name" : "Air Toxics", "indicator_score" : "txcs_score", "parent": "pltn_rank", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Air toxics are hazardous air pollutants from many sources including cars, trucks, and industrial facilities, and may cause cancer or other serious health effects. These include reproductive problems and birth defects."},
-      'pm25_rank': {"indicator_name" : "PM2.5", "indicator_score" : "pm25_score", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'pm25_rank': {"indicator_name" : "PM2.5", "indicator_score" : "pm25_score", "parent": "pltn_rank", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Particulate Matter 2.5 (PM 2.5) is a mix of particles smaller than 2.5 micrometers in the air produced by cars, trucks, and industries. PM 2.5 is harmful to humans because it can move deep into our lungs and cause irritation, heart and lung disease, or cancer."},
-      'ptraf_rank': {"indicator_name" : "Traffic", "indicator_score" : "avg_ptraf", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'traf_rank': {"indicator_name" : "Traffic", "indicator_score" : "traf_score", "parent": "pltn_rank", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Traffic is a significant source of air pollution, particularly in urban areas, and has a wide range of negative effects including noise, vibration, injuries, illnesses and diseases due to air pollution. "},
       // 'effects_sc': {"indicator_name" : "Environmental Effects", "indicator_score" : "effects_sc","choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10},
-      'oil_score': {"indicator_name" : "Oil and Gas", "indicator_score" : "oil_score", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'oil_rank': {"indicator_name" : "Oil and Gas", "indicator_score" : "oil_score", "parent": "pltn_rank", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Oil and gas facilities include wells, wastewater pits, and tanks of oil or other dangerous chemicals located near populated areas. Oil and gas operations have been linked to many health problems in nearby communities including headaches, nausea, cancer, asthma, and birth defects."},
-      'oil_densit': {"indicator_name" : "Oil Density", "indicator_score" : "oil_densit", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
-          "description": ""},
-      'ptsdf_rank': {"indicator_name" : "Hazardous Waste Facilities", "indicator_score" : "avg_ptsdf", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'hazw_rank': {"indicator_name" : "Hazardous Waste Facilities", "indicator_score" : "hazw_score", "parent": "pltn_rank", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Hazardous waste facilities treat, store, or dispose of volatile substances that are dangerous to humans and may reach people through the air or water."},
-      'prmp_rank': {"indicator_name" : "High-Risk Chemical Facilities", "indicator_score" : "avg_prmp", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'chem_rank': {"indicator_name" : "High-Risk Chemical Facilities", "indicator_score" : "chem_score", "parent": "pltn_rank", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "High-risk chemical facilities maintain highly toxic, flammable, or explosive substances that may release acutely toxic substances which can cause serious health effects or death."},
-      'pwdis_rank': {"indicator_name" : "Wastewater Releases", "indicator_score" : "avg_pwdis", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'wat_rank': {"indicator_name" : "Wastewater Releases", "indicator_score" : "wat_score", "parent": "pltn_rank", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Wastewater in streams and other water sources may come from industrial, commercial, or agricultural sources and contain pollutants that can cause water-borne illnesses and diseases."},
-      'pnpl_rank': {"indicator_name" : "Federal Cleanup Sites", "indicator_score" : "avg_pnpl", "parent": "pollution_", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
+      'cln_rank': {"indicator_name" : "Federal Cleanup Sites", "indicator_score" : "cln_score", "parent": "pltn_rank", "choropleth_colors":["#e4f1e1","#c4e1d3","#a6d1c5","#89c0b6","#70afa7","#599d99","#448c8a","#327b7b","#20696d","#0d585f"], "num_quantiles": 10,
           "description": "Federal cleanup sites, or “Superfund sites,” are locations where extremely hazardous chemicals have been dumped or otherwise poorly managed and may reach humans through the air or water, threatening human health."}};
 
 ///////////////////////////// closable info tag on load ///////////////////////////
@@ -519,7 +518,7 @@
 
           // using Carto SQl API: https://carto.com/developers/sql-api/guides/making-calls/
           // get polygon boundary info of census tract clicked through PostGIS query
-          const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM colorado_final WHERE cartodb_id = ${new_polygon_selected}`;
+          const boundsQuery = `SELECT ST_asGeoJSON(ST_Boundary(the_geom)) as geom FROM mej_colorado_final WHERE cartodb_id = ${new_polygon_selected}`;
           const boundsUrl = `https://tiffanyhuynh.carto.com/api/v2/sql?q=${boundsQuery}&api_key=default_public`
 
           //https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
@@ -605,21 +604,22 @@
       //"first page" content
       let content = '<div id="first_page_popup">';
 
-      //FIPS tract id title
-      content += `<h4 class="open-sans" style="line-height: 200%; color:#015ba0;">Census tract: ${featureEvent.data.fips_tract}</h4>`;
+      //FIPS tract id and county title
+      content += `<h4 class="open-sans" style="color:#015ba0; margin-bottom:0 !important; margin-top:30 !important; padding-bottom:0 !important; line-height:0.7em !important;">Census tract: ${featureEvent.data.fips_tract}</h4>`;
+      content += `<h5 class="open-sans" style="color:#3475af; margin-top: 8px !important; margin-bottom: 10px !important;">${featureEvent.data.county}, Colorado</h5>`;
 
       //final rank
-      if (featureEvent.data['final_rank'] == null) {
-        content += `<h5 class="open-sans">Final Percentile: N/A  <i class="fa fa-info-circle fa-xs" id="final_rank_null_info" aria-hidden="true"></i></h5>`;
+      if (featureEvent.data['fin_rank'] == null) {
+        content += `<p style="margin-bottom: 3px !important;">${ind_dict['fin_rank'].indicator_name} Percentile: N/A  <i class="fa fa-info-circle fa-xs" id="fin_rank_null_info" aria-hidden="true"></i></p>`;
       } else {
-        content += `<h5 class="open-sans">Final Percentile: ${featureEvent.data.final_rank.toFixed(2)}</h5>`;
+        content += `<p style="margin-bottom: 3px !important;">${ind_dict['fin_rank'].indicator_name} Percentile: ${featureEvent.data.fin_rank.toFixed(2)}</p>`;
       }
 
       //total pop
       if (featureEvent.data['total_pop'] == null) {
-        content += `<h5 class="open-sans">Total Population: N/A</h5></br>`;
+        content += `<p style="margin-bottom: -6px !important; margin-top: 3px !important;">Total Population: N/A</p></br>`;
       } else {
-        content += `<h5 class="open-sans">Total Population: ${featureEvent.data.total_pop.toFixed(0)}</h5></br>`;
+        content += `<p style="margin-bottom: -6px !important; margin-top: 3px !important;">Total Population: ${featureEvent.data.total_pop.toFixed(0)}</p></br>`;
       }
 
       // start table
@@ -634,17 +634,17 @@
       //table parent entry: population characteristics
       content += '<tbody><tr class="clickable" data-toggle="collapse" data-target="#group-of-rows-1" aria-expanded="false" aria-controls="group-of-rows-1">';
       content += '<td style="padding-left:-5px; cursor:pointer;"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<b>Population Characteristics</b></td>';
-      if (featureEvent.data['pop_char'] == null) {
+      if (featureEvent.data['pop_rank'] == null) {
         content += '<td><b>N/A</b></td>';
       } else {
-        content += `<td><b>${featureEvent.data.pop_char.toFixed(2)}</b></td>`;
+        content += `<td><b>${featureEvent.data.pop_rank.toFixed(2)}</b></td>`;
       }
       content += '</tr></tbody>';
 
       //table child entries: of population characteristics
       content += '<tbody id="group-of-rows-1" class="collapse">';
       for (var key in ind_dict) {
-        if (ind_dict[key].parent == "pop_char") {
+        if (ind_dict[key].parent == "pop_rank") {
           var percentile_display;
           if (featureEvent.data[key] == null) {
             percentile_display= "N/A";
@@ -653,7 +653,7 @@
           }
           // using HTML dataset https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/dataset
           // save each rows' indicator rank col name (key) in data-key and its percentile in data-percentile for this tract within row entry html to use for its corres. "2nd page" of popup when clicked
-          content += `<tr data-key=${key} data-percentile=${percentile_display} style="cursor:pointer;">`;
+          content += `<tr id="table_row_child" data-key=${key} data-percentile=${percentile_display} style="cursor:pointer;">`;
             var get_data = ind_dict[key];
             content += `<td>&nbsp;&nbsp;&nbsp;${get_data.indicator_name}</td>`; //indented
             if (featureEvent.data[key] == null) {
@@ -669,24 +669,24 @@
       //table parent entry: pollution burden
       content += '<tbody><tr class="clickable" data-toggle="collapse" data-target="#group-of-rows-2" aria-expanded="false" aria-controls="group-of-rows-2">';
       content += '<td style="padding-left:-5px; cursor:pointer;"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-minus" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<b>Pollution Burden</b></td>';
-      if (featureEvent.data['pollution_'] == null) {
+      if (featureEvent.data['pltn_rank'] == null) {
         content += '<td><b>N/A</b></td>';
       } else {
-        content += `<td><b>${featureEvent.data.pollution_.toFixed(2)}</b></td>`;
+        content += `<td><b>${featureEvent.data.pltn_rank.toFixed(2)}</b></td>`;
       }
       content += '</tr></tbody>';
 
       //table child entries: of pollution burden
       content += '<tbody id="group-of-rows-2" class="collapse">';
       for (var key in ind_dict) {
-        if (ind_dict[key].parent == "pollution_") {
+        if (ind_dict[key].parent == "pltn_rank") {
           var percentile_display;
           if (featureEvent.data[key] == null) {
             percentile_display= "N/A";
           } else {
             percentile_display=featureEvent.data[key].toFixed(2);
           }
-          content += `<tr data-key=${key} data-percentile=${percentile_display} style="cursor:pointer;">`;
+          content += `<tr id="table_row_child" data-key=${key} data-percentile=${percentile_display} style="cursor:pointer;">`;
             var get_data = ind_dict[key];
             content += `<td>&nbsp;&nbsp;&nbsp;${get_data.indicator_name}</td>`;
             if (featureEvent.data[key] == null) {
@@ -771,10 +771,10 @@
       // add the final percentile legend on load
       $(document).ready(function() {
         var legend_inner_html_load =
-          `<h5 class="open-sans" style="text-align:center; font-weight: bold;">${ind_dict['final_rank'].indicator_name}</h5>`;
+          `<h5 class="open-sans" style="text-align:center; font-weight: bold;">${ind_dict['fin_rank'].indicator_name}</h5>`;
         legend_inner_html_load += '<p style="text-align:left;">Lowest<span style="float:right; padding-right:5px;">N/A</span><span style="float:right; padding-right:15px;">Highest</span></p>';
-        var colors = ind_dict['final_rank'].choropleth_colors;
-        for (var i = 0; i<ind_dict['final_rank'].num_quantiles; i++) {
+        var colors = ind_dict['fin_rank'].choropleth_colors;
+        for (var i = 0; i<ind_dict['fin_rank'].num_quantiles; i++) {
           legend_inner_html_load +=
             `<i class="legend_colors" style="background: ${colors[i]}"></i>`;
         }
