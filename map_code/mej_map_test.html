@@ -111,8 +111,6 @@
       .legend i {
         width: 18px;
         height: 18px;
-        float: left;
-        margin-right: 8px;
         opacity: 1 !important;
       }
       .info {
@@ -127,6 +125,22 @@
       }
       .legend_colors {
         margin: 0px 0px 0px 0px !important;
+      }
+      #final_percentile_expl:hover:after {
+        content: "The final percentile represents the cumulative environmental impact of a census tract in comparison to other census tracts within the state.";
+        font-family: arial;
+        display: block;
+        z-index: 1;
+        position: absolute;
+        bottom: 50%;
+        right: 3%;
+        background-color: #ffffff;
+        color: #000000;
+        width: 200px;
+        text-align: center;
+        border-radius: 6px;
+        box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.3);
+        padding: 12px 15px;
       }
       /* popup */
       #popup-table {
@@ -773,15 +787,15 @@
       // add the final percentile legend on load
       $(document).ready(function() {
         var legend_inner_html_load =
-          `<h5 class="open-sans" style="text-align:center; font-weight: bold;">${ind_dict['fin_rank'].indicator_name}</h5>`;
+          `<h5 class="open-sans" style="text-align:center; font-weight: bold;">${ind_dict['fin_rank'].indicator_name}  <i class="fa fa-info-circle fa-xs" id="final_percentile_expl"  aria-hidden="true" style="text-align:center; margin=0 !important; padding=0 !important;"></i></h5>`;
         legend_inner_html_load += '<p style="text-align:left;">Lowest<span style="float:right; padding-right:5px;">N/A</span><span style="float:right; padding-right:15px;">Highest</span></p>';
         var colors = ind_dict['fin_rank'].choropleth_colors;
         for (var i = 0; i<ind_dict['fin_rank'].num_quantiles; i++) {
           legend_inner_html_load +=
-            `<i class="legend_colors" style="background: ${colors[i]}"></i>`;
+            `<i class="legend_colors" style="background: ${colors[i]}; float: left; margin-right:8px;"></i>`;
         }
         // gray for null tracts
-        legend_inner_html_load += `<i style="background: #d3d3d3; margin-left:20px !important;"></i>`;
+        legend_inner_html_load += `<i style="background: #d3d3d3; float:left; margin-right:8px; margin-left:20px !important;"></i>`;
         document.getElementById("legend_outer_html").innerHTML = legend_inner_html_load;
       });
 
@@ -795,18 +809,23 @@
           var buckets = event.styles[0]._buckets;
           //each Bucket has props: min (min value of the quantile), max (max value of quantile), and value (which here is the color/hex code of the quantile)
 
-          var legend_inner_html_changed =
-            `<h5 class="open-sans" style="text-align:center; font-weight: bold;">${ind_dict[legend_title_key].indicator_name}</h5>`;
+          if (legend_title_key == "fin_rank") {
+            var legend_inner_html_changed =
+              `<h5 class="open-sans" style="text-align:center; font-weight: bold;">${ind_dict[legend_title_key].indicator_name}  <i id="final_percentile_expl" class="fa fa-info-circle fa-xs" aria-hidden="true"></i></h5>`;
+          } else {
+            var legend_inner_html_changed =
+              `<h5 class="open-sans" style="text-align:center; font-weight: bold;">${ind_dict[legend_title_key].indicator_name}</h5>`;
+          }
 
           legend_inner_html_changed += '<p style="text-align:left;">Lowest<span style="float:right; padding-right:5px;">N/A</span><span style="float:right; padding-right:15px;">Highest</span></p>';
 
           for (var i = 0; i < buckets.length; i++) {
             legend_inner_html_changed +=
-              `<i class="legend_colors" style="background: ${buckets[i].value}"></i>`;
+              `<i class="legend_colors" style="background: ${buckets[i].value}; float:left; margin-right:8px;"></i>`;
           }
 
           // gray for null tracts
-          legend_inner_html_changed += `<i style="background: #d3d3d3; margin-left:20px !important;"></i>`;
+          legend_inner_html_changed += `<i style="background: #d3d3d3; float:left; margin-right:8px; margin-left:20px !important;"></i>`;
 
           document.getElementById("legend_outer_html").innerHTML = legend_inner_html_changed;
         }
