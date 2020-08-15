@@ -2,7 +2,7 @@
 
 ## 1. Web mapping solution
 ### Carto.js version 4.2.0
-  - Our shapefile data is uploaded to Carto as a public dataset named "colorado_final" (supports advanced PostGIS capabilities as a geospatial database) and is synced with our map
+  - Our shapefile data is uploaded to Carto as a public dataset named "mej_colorado_final" (supports advanced PostGIS capabilities as a geospatial database) and is synced with our map
   - Custom web interface created using mainly the Carto.js v4.2.0 library and the Leaflet.js library
 
 ## 2. Features
