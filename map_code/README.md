@@ -14,7 +14,7 @@
   - using Turbo-Carto CSS (https://carto.com/developers/styling/turbocarto/) to style choropleth map
 3. **Data dictionary**
   - key: rank column title in dataset
-  - value: JSON object with the categories: official display name, rank column name, score column name, parent indicator (ex. population characteristics or pollution burden), choropleth colors, number of quantiles for ramp, and indicator descriptions for the popup
+  - value: JSON object with the categories: official display name, score column name, parent indicator (ex. population characteristics or pollution burden), choropleth colors, number of quantiles for ramp, and indicator descriptions for the popup
 4. **Home button within zoom bar**
  - using tutorial: http://jsfiddle.net/pqfche83/1/
 5. **Geocoder/search bar**
