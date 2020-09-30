@@ -374,21 +374,22 @@
       }
   `);
   // define CartoCSS code to style data on map
-  const style = new carto.style.CartoCSS(`
-      #layer[adm0name = "Spain"]{
-          marker-fill: #fbb4ae;
-          marker-allow-overlap: true;
-      }
-      #layer[adm0name = "Portugal"]{
-          marker-fill: #ccebc5;
-          marker-allow-overlap: true;
-      }
-      #layer[adm0name = "France"]{
-          marker-fill: #b3cde3;
-          marker-allow-overlap: true;
-      }
-
-  `);
+  //Do I need to do something like this for CO
+  // const style = new carto.style.CartoCSS(`
+  //     #layer[adm0name = "Spain"]{
+  //         marker-fill: #fbb4ae;
+  //         marker-allow-overlap: true;
+  //     }
+  //     #layer[adm0name = "Portugal"]{
+  //         marker-fill: #ccebc5;
+  //         marker-allow-overlap: true;
+  //     }
+  //     #layer[adm0name = "France"]{
+  //         marker-fill: #b3cde3;
+  //         marker-allow-overlap: true;
+  //     }
+  //
+  // `);
   // create CARTO layer from source and style variables
   const Cartolayer = new carto.layer.Layer(source, layerStyle);
 
