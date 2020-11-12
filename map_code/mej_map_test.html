@@ -335,8 +335,9 @@
 
       const style = new carto.style.CartoCSS(`
             #layer {
-            marker-width: 15;
-            marker-fill: #EE4D5A;
+            marker-width: 26;
+            marker-fill: #000000;
+            marker-file: url('https://s3.amazonaws.com/com.cartodb.users-assets.production/maki-icons/library-18.svg');
             marker-line-color: #FFFFFF;
             }
         `);
@@ -611,50 +612,6 @@
            console.error('Error updating the cartoCSS for the layer');
          });
       });
-/////////////////////////// story popups ///////////////////////////////
-
-      const story_popup = L.popup({ closeButton: false });
-
-      function story_openPopup(featureEvent) {
-        let content = '<div class="widget">';
-
-        if (featureEvent.data.Name) {
-          content += `<h2 class="h2">${featureEvent.data.name}</h2>`;
-        }
-
-        // if (featureEvent.data. || featureEvent.data.pop_min) {
-        //   content += `<ul>`;
-        //
-        //   if (featureEvent.data.pop_max) {
-        //     content += `<li><h3>Max:</h3><p class="open-sans">${featureEvent.data.pop_max}</p></li>`;
-        //   }
-        //
-        //   if (featureEvent.data.pop_min) {
-        //     content += `<li><h3>Min:</h3><p class="open-sans">${featureEvent.data.pop_min}</p></li>`;
-        //   }
-        //
-        //   content += `</ul>`;
-        // }
-
-        content += `</div>`;
-
-        story_popup.setContent(content);
-        story_popup.setLatLng(featureEvent.latLng);
-        if (!story_popup.isOpen()) {
-          story_popup.openOn(map);
-        }
-      }
-
-      function story_closePopup(featureEvent) {
-        story_popup.removeFrom(map);
-      }
-
-      function setPopupsClick() {
-        story_layer.off('featureOver');
-        story_layer.off('featureOut');
-        story_layer.on('featureClicked', story_openPopup);
-      }
-
 
 
 /////////////////////////// popups using indicator JSON ///////////////////////////////
@@ -825,7 +782,29 @@
       });
     });
 
+    /////////////////////////// story popups ///////////////////////////////
 
+          const story_popup = L.popup({ closeButton: true });
+
+          function story_openPopup(featureEvent) {
+            let content = '<div class="widget">';
+              content += `<h2 class="h2">${featureEvent.data.name}</h2>`;
+              content += `<img src =${featureEvent.data.image} align = "right" width = "200" height = "120">`;
+              content += `<p> <a href= ${featureEvent.data.source_url}> ${featureEvent.data.source}</a> </p>`;
+              content += `<p> ${featureEvent.data.story} </p>`;
+
+            content += `</div>`;
+
+            story_popup.setContent(content);
+            story_popup.setLatLng(featureEvent.latLng);
+            if (!story_popup.isOpen()) {
+              story_popup.openOn(map);
+            }
+          }
+
+          // open popup on click
+          story_layer.off('featureOut');
+          story_layer.on('featureClicked', story_openPopup);
 
 
 ///////////////////////////// add/change legend ///////////////////////////////
